@@ -16,6 +16,15 @@ build/local_licensing.zip:
 	mkdir -p $(TOP)build/local_licensing
 	cp -rv $(TOP)src-local_licensing $(TOP)build/local_licensing/licensing
 	cp $(TOP)README.md $(TOP)build/local_licensing/licensing/README.txt
+	$(TOP)node_modules/mustache-wax/lib/templates/compile.sh \
+		$(TOP)lib/mustache.template.js
+	cd $(TOP)/build/local_licensing/licensing \
+		&& $(TOP)node_modules/.bin/wax \
+			-f yui/src/productdialogue/js/templates.js \
+			-n Moodle.local_licensing.productdialogue \
+			-p moodle-local_licensing-productdialogue \
+			-t $(TOP)lib/mustache.js \
+			-b -v handlebars
 	cd $(TOP)build/local_licensing/licensing \
 		&& rm -rfv handlebars
 	cd $(TOP)build/local_licensing \
