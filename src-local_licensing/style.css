@@ -1,0 +1,41 @@
+/**
+ * Moodle licensing enrolment plugin.
+ *
+ * @author Luke Carrier <luke@carrier.im>
+ * @author Luke Carrier <luke@tdm.co>
+ * @copyright 2014 Luke Carrier, The Development Manager Ltd
+ */
+
+/*
+ * Back to all XXXs link.
+ */
+
+.path-admin-local-licensing .back-to-all:before {
+    content: "\00ab";
+    margin-right: 5px;
+}
+
+/*
+ * Action buttons in tables.
+ */
+
+.path-admin-local-licensing .action-buttons {
+    margin: 0;
+}
+
+.path-admin-local-licensing .action-buttons li {
+    display: inline-block;
+    list-style-type: none;
+}
+
+.path-admin-local-licensing .action-buttons li:not(:first-child) {
+    padding-left: 5px;
+}
+
+/*
+ * Product selection dialogue
+ */
+
+.yui3-moodle-local_licensing-productdialogue-hidden {
+    visibility: hidden
+}
