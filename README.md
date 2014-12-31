@@ -37,6 +37,9 @@ distributions made available on Moodle.org.
 * Write a bunch of targets for Totara organisations and audiences
 * Write the UI
 * Write the cron
+* Move all the selectors and other magic values in the client-side product
+  dialogue code into module attributes for cleanliness and recognition
+* Display course icons in the product dialogue for Totara users
 
 ## Thanks
 

@@ -4,6 +4,7 @@
             "base",
             "event",
             "handlebars-base",
+            "io",
             "moodle-core-notification-dialogue",
             "node"
         ]

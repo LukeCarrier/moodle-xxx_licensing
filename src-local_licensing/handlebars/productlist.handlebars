@@ -1,1 +1,19 @@
-Sample product list template to make sure wax does what it's told.
+<div class="yui3-moodle-local_licensing-productdialogue-content-row">
+    <input type="text" name="searchterm" value="{{searchTerm}}" />
+    <input type="button" name="search" value="Search {{productType}}" />
+</div>
+
+<div class="yui3-moodle-local_licensing-productdialogue-content-row">
+    Found {{products.length}} {{productType}}
+</div>
+
+<div class="yui3-moodle-local_licensing-productdialogue-content-row">
+    <ul>
+        {{#products}}
+            <li>
+                <h4>{{fullname}}</h4>
+                {{id}}
+            </li>
+        {{/products}}
+    </ul>
+</div>

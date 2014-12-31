@@ -50,6 +50,7 @@ class course extends base_product {
         $courses = array();
         foreach ($rawcourses as $course) {
             $courses[] = (object) array(
+                'id'        => $course->id,
                 'idnumber'  => $course->idnumber,
                 'fullname'  => $course->fullname,
                 'shortname' => $course->shortname,

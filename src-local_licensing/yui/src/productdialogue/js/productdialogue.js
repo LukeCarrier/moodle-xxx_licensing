@@ -28,7 +28,8 @@ M.local_licensing = M.local_licensing || {};
  * Product dialogue.
  *
  * Prompts the user to select a bunch of products of a specified type, then
- * inserts the comma-separated IDs of the selected items into a form field.
+ * inserts the comma-separated IDs of the selected items into a form field. The
+ * ability to search products is provided via a simple text field.
  *
  * @see ProductDialogue.initializer
  */
@@ -66,26 +67,9 @@ Y.extend(ProductDialogue, M.core.dialogue, {
      * @return void
      */
     initializer: function(config) {
-        var body = Y.Moodle.local_licensing.productlisttemplate({}),
-            head = Y.Node.create('<h1>' + this.selectString() + '</h1>');
-
-        this.setDialogueContent(body, head);
+        this.initialiseDialogueContents();
         this.setupForm();
         this.setupEvents();
-    },
-
-    /**
-     * Handle a change to the search field.
-     */
-    handleQueryChange: function(e) {
-        console.log(query);
-
-        Y.io(M.cfg.wwwroot + this.get('ajaxurl'), {
-            context: this,
-            on: {
-                complete: this.updateProductsList
-            }
-        });
     },
 
     /**
@@ -100,15 +84,14 @@ Y.extend(ProductDialogue, M.core.dialogue, {
     /**
      * Set the dialogue's content.
      *
-     * @param DOMNode body
      * @param DOMNode head
      *
      * @return void
      */
-    setDialogueContent: function(body, head) {
-        this.setStdModContent(Y.WidgetStdMod.BODY, body,
-                              Y.WidgetStdMod.REPLACE);
-        this.setStdModContent(Y.WidgetStdMod.HEADER, head,
+    initialiseDialogueContents: function() {
+        this.updateDialogueBody([]);
+        this.setStdModContent(Y.WidgetStdMod.HEADER,
+                              Y.Node.create('<h1>' + this.selectString() + '</h1>'),
                               Y.WidgetStdMod.REPLACE);
     },
 
@@ -118,7 +101,10 @@ Y.extend(ProductDialogue, M.core.dialogue, {
      * @return void
      */
     setupEvents: function() {
+        var body   = this.getStdModNode(Y.WidgetStdMod.BODY),
+            search = body.one('input[name="search"]');
 
+        search.on('click', this.handleSearch, this);
     },
 
     /**
@@ -173,6 +159,37 @@ Y.extend(ProductDialogue, M.core.dialogue, {
     },
 
     /**
+     * Handle a click on the search button.
+     *
+     * We need get the current value of the search field, query the server for
+     * matching products and then update the dialogue body with the new result
+     * set.
+     *
+     * @param DOMEventFacade e
+     *
+     * @return void
+     */
+    handleSearch: function(e) {
+        var submitNode = e.currentTarget,
+            termNode   = submitNode.previous('input[name="searchterm"]'),
+            term       = termNode.get("value");
+
+        Y.io(M.cfg.wwwroot + this.get('ajaxurl'), {
+            method: 'GET',
+            data: build_querystring({
+                type: 'product',
+                producttype: this.get('type'),
+                term: term
+            }),
+
+            context: this,
+            on: {
+                complete: this.handleQueryComplete
+            }
+        });
+    },
+
+    /**
      * Update the products list.
      *
      * For use as a callback once
@@ -183,19 +200,40 @@ Y.extend(ProductDialogue, M.core.dialogue, {
      *
      * @return void
      */
-    updateProductsList: function(tid, response, args) {
-        console.log(tid, response, args);
-
+    handleQueryComplete: function(tid, response, args) {
         try {
-            var products = Y.JSON.parse(outcome.responseText);
+            var products = Y.JSON.parse(response.responseText);
             if (products.error) {
                 new M.core.ajaxException(products);
             } else {
-                this.setCohorts(products.response);
+                this.updateDialogueBody(products.response);
             }
         } catch (e) {
             return new M.core.exception(e);
         }
+    },
+
+    /**
+     * Update the dialogue's body with a new product list.
+     *
+     * A list of products matching the user's search term was successfully
+     * retrieved, so we now need to update the dialogue's contents to reflect
+     * the user's query.
+     *
+     * @param mixed[][] products
+     *
+     * @return void
+     */
+    updateDialogueBody: function(products) {
+        var params = {
+            products: products,
+            productType: this.typeString(),
+            searchTerm: ""
+        };
+
+        this.setStdModContent(Y.WidgetStdMod.BODY,
+                              Y.Moodle.local_licensing.productlisttemplate(params),
+                              Y.WidgetStdMod.REPLACE);
     }
 });
 
