@@ -35,9 +35,9 @@ $PAGE->set_url(new moodle_url('/local/licensing/ajax.php'));
 
 require_login();
 
-$type  = required_param('type',  PARAM_ALPHA);
-$query = required_param('query', PARAM_TEXT);
-$query = strlen($query) ? $query : null;
+$type = required_param('type', PARAM_ALPHA);
+$term = required_param('term', PARAM_TEXT);
+$term = strlen($term) ? $term : null;
 
 $result = (object) array(
     'success'  => true,
@@ -52,7 +52,7 @@ switch ($type) {
         $producttype = required_param('producttype', PARAM_ALPHA);
         $typeclass   = product_factory::get_class_name($producttype);
 
-        $result->response = $typeclass::search($query);
+        $result->response = $typeclass::search($term);
 
         break;
 
