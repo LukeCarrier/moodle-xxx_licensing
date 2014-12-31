@@ -88,6 +88,11 @@ Y.extend(ProductDialogue, M.core.dialogue, {
         });
     },
 
+    /**
+     * Get the "select {product type}s" string.
+     *
+     * @return string
+     */
     selectString: function() {
         return this.string('selectxs', this.typeString());
     },
@@ -126,7 +131,7 @@ Y.extend(ProductDialogue, M.core.dialogue, {
      */
     setupForm: function() {
         var type      = this.get('type'),
-            container = Y.one('#fitem_id_products' + type),
+            container = Y.one('#fitem_id_products' + type + ' .felement'),
             textInput = container.one('#id_products' + type),
             button    = Y.Node.create('<button id="licensing_' + type + '">'
                                       + this.selectString() + '</button>');
@@ -167,6 +172,17 @@ Y.extend(ProductDialogue, M.core.dialogue, {
         return this.string('productset:products:' + this.get('type'));
     },
 
+    /**
+     * Update the products list.
+     *
+     * For use as a callback once
+     *
+     * @param tid
+     * @param response
+     * @param args
+     *
+     * @return void
+     */
     updateProductsList: function(tid, response, args) {
         console.log(tid, response, args);
 
@@ -184,7 +200,6 @@ Y.extend(ProductDialogue, M.core.dialogue, {
 });
 
 Y.Moodle.local_licensing.productdialogue = ProductDialogue;
-
 
 /**
  * Moodle wrapper around the product dialogue.
