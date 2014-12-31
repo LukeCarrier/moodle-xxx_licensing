@@ -66,7 +66,7 @@ Y.extend(ProductDialogue, M.core.dialogue, {
      * @return void
      */
     initializer: function(config) {
-        var body = Y.Node.create('<p>Body text goes here</p>'),
+        var body = Y.Moodle.local_licensing.productlisttemplate({}),
             head = Y.Node.create('<h1>' + this.selectString() + '</h1>');
 
         this.setDialogueContent(body, head);
