@@ -19,6 +19,7 @@
     ],
 
     "devDependencies": {
-        "mustache-wax": "^0.4.1"
+        "mustache-wax": "^0.4.1",
+        "shifter": "^0.5.0"
     }
 }

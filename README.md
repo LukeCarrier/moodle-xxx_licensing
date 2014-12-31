@@ -25,7 +25,10 @@ distributions made available on Moodle.org.
 
 1. Clone the source.
 2. ```cd``` into it.
-3.
+3. Install the build dependencies with ```npm install```.
+4. Build the plugins with ```make```.
+5. Each of the plugins will now be packaged into zip files under the
+   ```build/``` directory.
 
 ## To do
 
