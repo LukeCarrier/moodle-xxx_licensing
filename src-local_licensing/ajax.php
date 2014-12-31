@@ -30,6 +30,7 @@ define('AJAX_SCRIPT', true);
 require_once dirname(dirname(__DIR__)) . '/config.php';
 require_once "{$CFG->libdir}/coursecatlib.php";
 
+$PAGE->set_cacheable(false);
 $PAGE->set_context(context_system::instance());
 $PAGE->set_url(new moodle_url('/local/licensing/ajax.php'));
 
