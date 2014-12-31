@@ -71,6 +71,7 @@ class product_selector_dialogue {
             throw new moodle_exception();
         }
 
+        $ajaxurl      = url_generator::ajax();
         $name         = "products{$type}";
         $dialoguename = "licensing-dialogue-{$type}";
         $namestring   = "productset:products:{$type}";
@@ -83,7 +84,7 @@ class product_selector_dialogue {
         $PAGE->requires->yui_module('moodle-local_licensing-productdialogue',
                                     'M.local_licensing.init_product_dialogue',
                                     array(array(
-            'ajaxurl' => url_generator::ajax(),
+            'ajaxurl' => $ajaxurl->out_as_local_url(),
             'base'    => $dialoguename,
             'type'    => $type,
         )));
