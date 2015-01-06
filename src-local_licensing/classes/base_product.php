@@ -69,6 +69,14 @@ class base_product {
     }
 
     /**
+     * Get a specific set of products by ID.
+     *
+     * @param integer[] $ids
+     */
+    public static function get($ids) {
+    }
+
+    /**
      * Search for a specific product.
      *
      * @param string $query

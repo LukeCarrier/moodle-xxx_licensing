@@ -43,6 +43,18 @@ class course extends base_product {
     /**
      * @override \local_licensing\base_product
      */
+    public static function get($ids) {
+        global $DB;
+
+        list($sql, $params) = $DB->get_in_or_equal($ids);
+
+        return $DB->get_records_sql("SELECT * FROM {course} WHERE id {$sql}",
+                                    $params);
+    }
+
+    /**
+     * @override \local_licensing\base_product
+     */
     public static function search($query) {
         list($rawcourses, $count, $totalcount)
                 = helper::search_courses($query, null, null);

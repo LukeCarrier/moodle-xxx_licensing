@@ -69,3 +69,6 @@ $string['productset:products:program'] = 'Programs';
 
 // Product selector dialogue
 $string['selectxs'] = 'Select {$a}';
+
+// Exceptions
+$string['exception:input']                    = 'Invalid input';
