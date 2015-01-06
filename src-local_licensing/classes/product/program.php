@@ -25,7 +25,9 @@
 
 namespace local_licensing\product;
 
+use coursecat;
 use local_licensing\base_product;
+use local_licensing\util;
 
 /**
  * Program product type.
@@ -41,6 +43,36 @@ class program extends base_product {
     /**
      * @override \local_licensing\base_product
      */
+    public static function get($ids) {
+        global $DB;
+
+        list($sql, $params) = $DB->get_in_or_equal($ids);
+        $sql = <<<SQL
+SELECT id, idnumber, fullname, shortname
+FROM {prog}
+WHERE id {$sql}
+SQL;
+
+        return array_values($DB->get_records_sql($sql, $params));
+    }
+
+    /**
+     * @override \local_licensing\base_product
+     */
     public static function search($query) {
+        $rawprograms = coursecat::search_programs(
+                array('search' => $query));
+
+        $programs = array();
+        foreach ($rawprograms as $program) {
+            $programs[] = (object) array(
+                'id'        => $program->id,
+                'idnumber'  => $program->idnumber,
+                'fullname'  => $program->fullname,
+                'shortname' => $program->shortname,
+            );
+        }
+
+        return $programs;
     }
 }
