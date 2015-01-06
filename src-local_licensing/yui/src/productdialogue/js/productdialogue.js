@@ -70,6 +70,8 @@ Y.extend(ProductDialogue, M.core.dialogue, {
         this.initialiseDialogueContents();
         this.setupForm();
         this.setupEvents();
+
+        this.refreshProductList();
     },
 
     /**
@@ -232,8 +234,7 @@ Y.extend(ProductDialogue, M.core.dialogue, {
         selectedProductIds.push(productId);
         this.setSelectedProductIds(selectedProductIds);
 
-        this.getProductList('ids', this.getSelectedProductIdString(),
-                            this.updateListBody);
+        this.refreshProductList();
     },
 
     /**
@@ -340,6 +341,19 @@ Y.extend(ProductDialogue, M.core.dialogue, {
             productListItems = Y.Moodle.local_licensing.selectedproductlisttemplate(params);
 
         productList.setHTML(productListItems);
+    },
+
+    /**
+     * Refresh the list of selected products displayed in the form.
+     *
+     * @return void
+     */
+    refreshProductList: function() {
+        var ids = this.getSelectedProductIdString();
+
+        if (ids !== '') {
+            this.getProductList('ids', ids, this.updateListBody);
+        }
     }
 });
 
