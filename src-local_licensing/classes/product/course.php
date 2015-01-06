@@ -47,9 +47,13 @@ class course extends base_product {
         global $DB;
 
         list($sql, $params) = $DB->get_in_or_equal($ids);
+        $sql = <<<SQL
+SELECT id, idnumber, fullname, shortname
+FROM {course}
+WHERE id {$sql}
+SQL;
 
-        return $DB->get_records_sql("SELECT * FROM {course} WHERE id {$sql}",
-                                    $params);
+        return array_values($DB->get_records_sql($sql, $params));
     }
 
     /**

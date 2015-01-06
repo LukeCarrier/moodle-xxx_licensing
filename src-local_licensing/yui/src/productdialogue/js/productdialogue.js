@@ -90,11 +90,20 @@ Y.extend(ProductDialogue, M.core.dialogue, {
         var selectedIdInput = this.getSelectedProductIdInput(),
             selectedIds     = selectedIdInput.get('value');
 
-        if (selectedIds === '') {
-            return [];
-        } else {
-            return Y.Array.dedupe(selectedIds.split(','));
-        }
+        return (selectedIds === '') ? []
+                                    : Y.Array.dedupe(selectedIds.split(','));
+    },
+
+    /**
+     * Get a comma-separated list of all of the selected products' IDs.
+     *
+     * This is necessary since Moodle doesn't allow us to access arrays of GET
+     * parameters in ajax.php.
+     *
+     * @return string
+     */
+    getSelectedProductIdString: function() {
+        return this.getSelectedProductIds().join(',');
     },
 
     /**
@@ -221,8 +230,10 @@ Y.extend(ProductDialogue, M.core.dialogue, {
             selectedProductIds = this.getSelectedProductIds();
 
         selectedProductIds.push(productId);
-
         this.setSelectedProductIds(selectedProductIds);
+
+        this.getProductList('ids', this.getSelectedProductIdString(),
+                            this.updateListBody);
     },
 
     /**
@@ -239,44 +250,61 @@ Y.extend(ProductDialogue, M.core.dialogue, {
     handleSearch: function(e) {
         var submitNode = e.currentTarget,
             termNode   = submitNode.previous('input[name="searchterm"]'),
-            term       = termNode.get("value");
+            term       = termNode.get('value');
+
+        this.getProductList('term', term, this.updateDialogueBody);
+    },
+
+    /**
+     * Get a list of products matching the specified query.
+     *
+     * @param string field Either "ids" or "term".
+     * @param string query Either an array of ID numbers or a search term as a
+     *                     string.
+     * @param callable onComplete The callback to call when complete.
+     */
+    getProductList: function(field, query, onComplete) {
+        var params = {
+            type: 'product',
+            producttype: this.get('type')
+        };
+
+        params[field] = query;
 
         Y.io(M.cfg.wwwroot + this.get('ajaxurl'), {
             method: 'GET',
-            data: build_querystring({
-                type: 'product',
-                producttype: this.get('type'),
-                term: term
-            }),
+            data: build_querystring(params),
 
             context: this,
             on: {
-                complete: this.handleQueryComplete
+                complete: this.handleQueryComplete(onComplete)
             }
         });
     },
 
     /**
-     * Update the products list.
+     * Wrap a callback in the YUI JSON parse dance.
      *
-     * For use as a callback once
-     *
-     * @param tid
-     * @param response
-     * @param args
+     * @param callable onComplete The function to call with the JSON-decoded
+     *                            response body.
      *
      * @return void
      */
-    handleQueryComplete: function(tid, response, args) {
-        try {
-            var products = Y.JSON.parse(response.responseText);
-            if (products.error) {
-                new M.core.ajaxException(products);
-            } else {
-                this.updateDialogueBody(products.response);
+    handleQueryComplete: function(onComplete) {
+        onComplete = Y.bind(onComplete, this);
+
+        return function(tid, response, args) {
+            try {
+                response = Y.JSON.parse(response.responseText);
+
+                if (response.error) {
+                    new M.core.ajaxException(response);
+                } else {
+                    onComplete(response.response);
+                }
+            } catch (e) {
+               return new M.core.exception(e);
             }
-        } catch (e) {
-            return new M.core.exception(e);
         }
     },
 
@@ -308,7 +336,10 @@ Y.extend(ProductDialogue, M.core.dialogue, {
             selectedProducts: selectedProducts
         };
 
-        Y.Moodle.local_licensing.formtemplate(params);
+        var productList      = this.getSelectedProductList(),
+            productListItems = Y.Moodle.local_licensing.selectedproductlisttemplate(params);
+
+        productList.setHTML(productListItems);
     }
 });
 
