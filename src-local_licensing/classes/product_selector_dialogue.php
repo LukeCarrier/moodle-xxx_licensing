@@ -121,7 +121,7 @@ class product_selector_dialogue {
         global $PAGE;
 
         $PAGE->requires->strings_for_js(array(
-            'selectxs',
+            'addxs',
         ), static::MOODLE_MODULE);
     }
 }

@@ -73,12 +73,12 @@ Y.extend(ProductDialogue, M.core.dialogue, {
     },
 
     /**
-     * Get the 'select {product type}s' string.
+     * Get the 'add {product type}s' string.
      *
      * @return string
      */
-    selectString: function() {
-        return this.string('selectxs', this.typeString());
+    addString: function() {
+        return this.string('addxs', this.typeString());
     },
 
     /**
@@ -120,6 +120,15 @@ Y.extend(ProductDialogue, M.core.dialogue, {
     },
 
     /**
+     * Get the selected product list.
+     *
+     * @return Y_Node
+     */
+    getSelectedProductList: function() {
+        return Y.one('#licensing_' + this.get('type') + '_list');
+    },
+
+    /**
      * Set the dialogue's content.
      *
      * @param DOMNode head
@@ -129,7 +138,7 @@ Y.extend(ProductDialogue, M.core.dialogue, {
     initialiseDialogueContents: function() {
         this.updateDialogueBody([]);
         this.setStdModContent(Y.WidgetStdMod.HEADER,
-                              Y.Node.create('<h1>' + this.selectString() + '</h1>'),
+                              Y.Node.create('<h1>' + this.addString() + '</h1>'),
                               Y.WidgetStdMod.REPLACE);
     },
 
@@ -154,15 +163,19 @@ Y.extend(ProductDialogue, M.core.dialogue, {
      * @return void
      */
     setupForm: function() {
-        var type      = this.get('type'),
-            container = Y.one('#fitem_id_products' + type + ' .felement'),
-            textInput = container.one('#id_products' + type),
-            button    = Y.Node.create('<button id="licensing_' + type + '">'
-                                      + this.selectString() + '</button>');
+        var type         = this.get('type'),
+            container    = Y.one('#fitem_id_products' + type + ' .felement'),
+            textInput    = container.one('#id_products' + type);
 
-        container.append(button);
+        var formElements = Y.Moodle.local_licensing.formtemplate({
+            add:  this.addString(),
+            type: type
+        });
+
         textInput.hide();
-        button.on('click', function(e) {
+
+        container.append(formElements);
+        Y.one('#licensing_' + type + '_add').on('click', function(e) {
             this.show();
 
             e.preventDefault();
@@ -288,6 +301,14 @@ Y.extend(ProductDialogue, M.core.dialogue, {
         this.setStdModContent(Y.WidgetStdMod.BODY,
                               Y.Moodle.local_licensing.productlisttemplate(params),
                               Y.WidgetStdMod.REPLACE);
+    },
+
+    updateListBody: function(selectedProducts) {
+        var params = {
+            selectedProducts: selectedProducts
+        };
+
+        Y.Moodle.local_licensing.formtemplate(params);
     }
 });
 

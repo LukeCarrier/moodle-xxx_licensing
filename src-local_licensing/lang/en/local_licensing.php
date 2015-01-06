@@ -68,7 +68,8 @@ $string['productset:products:course']  = 'Courses';
 $string['productset:products:program'] = 'Programs';
 
 // Product selector dialogue
-$string['selectxs'] = 'Select {$a}';
+$string['addxs'] = 'Add {$a}';
 
 // Exceptions
 $string['exception:input']                    = 'Invalid input';
+$string['exception:incompleteimplementation'] = 'Incomplete implementation';
