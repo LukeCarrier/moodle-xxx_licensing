@@ -105,7 +105,7 @@ class product_set extends base_model {
 
         $productids = array_fill_keys(product_factory::get_list(), array());
         foreach ($this->get_products() as $product) {
-            $productids[$product->type][] = $product->id;
+            $productids[$product->type][] = $product->itemid;
         }
         foreach ($productids as $type => $ids) {
             $formdata->{"products{$type}"} = implode(',', $ids);
