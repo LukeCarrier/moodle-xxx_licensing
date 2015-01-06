@@ -43,6 +43,15 @@ class program extends base_product {
     /**
      * @override \local_licensing\base_product
      */
+    public static function get_item_fullname($itemid) {
+        global $DB;
+
+        return $DB->get_field('prog', 'fullname', array('id' => $itemid));
+    }
+
+    /**
+     * @override \local_licensing\base_product
+     */
     public static function get($ids) {
         global $DB;
 

@@ -26,6 +26,7 @@
 namespace local_licensing\model;
 
 use local_licensing\base_model;
+use local_licensing\factory\product_factory;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -62,9 +63,33 @@ class product extends base_model {
     /**
      * Product set ID.
      *
-     * @var itneger
+     * @var integer
      */
     protected $productsetid;
+
+    /**
+     * Initialiser.
+     *
+     * @param integer $productsetid
+     * @param string  $type
+     * @param integer $itemid
+     */
+    public function __construct($productsetid=null, $type=null, $itemid=null) {
+        $this->productsetid = $productsetid;
+        $this->type         = $type;
+        $this->itemid       = $itemid;
+    }
+
+    /** 
+     * Get the name of the product.
+     *
+     * @return string The name of the product.
+     */
+    final public function get_name() {
+        $productclass = product_factory::get_class_name($this->type);
+
+        return $productclass::get_item_fullname($this->itemid);
+    }
 
     /**
      * @override \local_licensing\base_model

@@ -85,7 +85,7 @@ class local_licensing_renderer extends plugin_renderer_base {
     public function product_list($products) {
         $productnames = array();
         foreach ($products as &$product) {
-            $productnames[] = $product->name;
+            $productnames[] = $product->get_name();
         }
 
         return html_writer::alist($productnames);

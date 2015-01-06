@@ -49,7 +49,17 @@ class base_product {
     }
 
     /**
-     * Get the friendly name.
+     * Get the name of a given product.
+     *
+     * @param integer $itemid The ID of the product.
+     *
+     * @return string The name of the product.
+     */
+    public static function get_item_name($itemid) {
+    }
+
+    /**
+     * Get the friendly name of the product plugin.
      *
      * @return string The friendly name.
      */
