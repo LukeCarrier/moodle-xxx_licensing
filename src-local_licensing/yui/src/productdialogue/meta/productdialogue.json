@@ -1,6 +1,7 @@
 {
     "moodle-local_licensing-productdialogue": {
         "requires": [
+            "array",
             "base",
             "event",
             "handlebars-base",

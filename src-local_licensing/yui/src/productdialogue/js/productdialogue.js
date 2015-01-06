@@ -73,12 +73,50 @@ Y.extend(ProductDialogue, M.core.dialogue, {
     },
 
     /**
-     * Get the "select {product type}s" string.
+     * Get the 'select {product type}s' string.
      *
      * @return string
      */
     selectString: function() {
         return this.string('selectxs', this.typeString());
+    },
+
+    /**
+     * Get the selected product IDs.
+     *
+     * @return integer[]
+     */
+    getSelectedProductIds: function() {
+        var selectedIdInput = this.getSelectedProductIdInput(),
+            selectedIds     = selectedIdInput.get('value');
+
+        if (selectedIds === '') {
+            return [];
+        } else {
+            return Y.Array.dedupe(selectedIds.split(','));
+        }
+    },
+
+    /**
+     * Set the selected product IDs.
+     *
+     * @param integer[] selectedIds
+     *
+     * @return void
+     */
+    setSelectedProductIds: function(selectedIds) {
+        var selectedIdInput = this.getSelectedProductIdInput();
+
+        selectedIdInput.set('value', Y.Array.dedupe(selectedIds));
+    },
+
+    /**
+     * Get the selected product ID input.
+     *
+     * @return Y_Node
+     */
+    getSelectedProductIdInput: function() {
+        return Y.one('#id_products' + this.get('type'));
     },
 
     /**
@@ -101,10 +139,10 @@ Y.extend(ProductDialogue, M.core.dialogue, {
      * @return void
      */
     setupEvents: function() {
-        var body   = this.getStdModNode(Y.WidgetStdMod.BODY),
-            search = body.one('input[name="search"]');
+        var root = this.get('srcNode');
 
-        search.on('click', this.handleSearch, this);
+        root.delegate('click', this.handleSearch, '.search', this);
+        root.delegate('click', this.handleAdd,    '.add',    this);
     },
 
     /**
@@ -156,6 +194,22 @@ Y.extend(ProductDialogue, M.core.dialogue, {
      */
     typeString: function() {
         return this.string('productset:products:' + this.get('type'));
+    },
+
+    /**
+     * Handle the addition of a product to
+     *
+     * @param DOMEventFacade e
+     *
+     * @return void
+     */
+    handleAdd: function(e) {
+        var productId          = e.target.getData('productId'),
+            selectedProductIds = this.getSelectedProductIds();
+
+        selectedProductIds.push(productId);
+
+        this.setSelectedProductIds(selectedProductIds);
     },
 
     /**
@@ -228,7 +282,7 @@ Y.extend(ProductDialogue, M.core.dialogue, {
         var params = {
             products: products,
             productType: this.typeString(),
-            searchTerm: ""
+            searchTerm: ''
         };
 
         this.setStdModContent(Y.WidgetStdMod.BODY,

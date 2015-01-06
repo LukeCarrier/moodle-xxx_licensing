@@ -1,6 +1,6 @@
 <div class="yui3-moodle-local_licensing-productdialogue-content-row">
     <input type="text" name="searchterm" value="{{searchTerm}}" />
-    <input type="button" name="search" value="Search {{productType}}" />
+    <button class="search">Search {{productType}}</button>
 </div>
 
 <div class="yui3-moodle-local_licensing-productdialogue-content-row">
@@ -12,7 +12,7 @@
         {{#products}}
             <li>
                 <h4>{{fullname}}</h4>
-                {{id}}
+                <button class="add" data-productId="{{id}}">Add</button>
             </li>
         {{/products}}
     </ul>
