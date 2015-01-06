@@ -25,7 +25,7 @@
 
 namespace local_licensing\product;
 
-use core_course\management\helper;
+use coursecat;
 use local_licensing\base_product;
 use local_licensing\util;
 
@@ -60,8 +60,8 @@ SQL;
      * @override \local_licensing\base_product
      */
     public static function search($query) {
-        list($rawcourses, $count, $totalcount)
-                = helper::search_courses($query, null, null);
+        $rawcourses = coursecat::search_courses(
+                array('search' => $query));
 
         $courses = array();
         foreach ($rawcourses as $course) {
