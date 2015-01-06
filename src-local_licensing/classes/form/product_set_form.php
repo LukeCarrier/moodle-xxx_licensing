@@ -25,9 +25,7 @@
 
 namespace local_licensing\form;
 
-use local_licensing\model\product;
 use local_licensing\product_selector_dialogue;
-use local_licensing\url_generator;
 use local_licensing\util;
 use moodleform;
 

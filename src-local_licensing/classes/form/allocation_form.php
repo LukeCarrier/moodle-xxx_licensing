@@ -25,10 +25,39 @@
 
 namespace local_licensing\form;
 
+use local_licensing\util;
 use moodleform;
 
 defined('MOODLE_INTERNAL') || die;
 
+/**
+ * Allocation form.
+ */
 class allocation_form extends moodleform {
-    public function definition() {}
+    /**
+     * @override \moodleform
+     */
+    public function definition() {
+        $data  = $this->_customdata['record'];
+        $mform = $this->_form;
+
+        $mform->addElement('hidden', 'id', $data->id);
+        $mform->setType('id', PARAM_INT);
+
+        $mform->addElement('select', 'targetid',
+                           util::string('allocation:target'));
+        $mform->setDefault('targetid', $data->targetid);
+        $mform->setType('targetid', PARAM_INT);
+
+        $mform->addElement('select', 'productsetid',
+                           util::string('allocation:productset'));
+        $mform->setDefault('productsetid', $data->productsetid);
+        $mform->setType('productsetid', PARAM_INT);
+
+        $mform->addElement('text', 'count', util::string('allocation:count'));
+        $mform->setDefault('count', $data->count);
+        $mform->setType('count', PARAM_INT);
+
+        $this->add_action_buttons();
+    }
 }

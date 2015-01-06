@@ -75,6 +75,17 @@ class url_generator {
     }
 
     /**
+     * Get the URL to delete an allocation.
+     *
+     * @param integer $id The (optional) allocation ID.
+     *
+     * @return \moodle_url The URL.
+     */
+    public static function delete_allocation($id=null) {
+        return static::delete_url('allocation', $id);
+    }
+
+    /**
      * Get the URL to delete a product set.
      *
      * @param integer $id The (optional) product set ID.

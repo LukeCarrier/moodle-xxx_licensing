@@ -73,6 +73,15 @@ class allocation extends base_model {
     }
 
     /**
+     * Get the associated product set.
+     *
+     * @return \local_licensing\model\product_set The product set.
+     */
+    public function get_product_set() {
+        product_set::get_by_id($this->productsetid);
+    }
+
+    /**
      * Get the number of remaining licences.
      *
      * @return integer The number of remaining licences.

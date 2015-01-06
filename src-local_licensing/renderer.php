@@ -130,11 +130,38 @@ class local_licensing_renderer extends plugin_renderer_base {
     /**
      * Allocation table.
      *
-     * @param \local_licensing\model\allocation $allocations
+     * @param \local_licensing\model\allocation[] $allocations
      *
      * @return string The generated HTML.
      */
-    public function allocation_table($allocations) {}
+    public function allocation_table($allocations) {
+        $head = array(
+            util::string('allocation'),
+            util::string('productset'),
+            util::string('actions', null, 'moodle'),
+        );
+
+        $editurl   = url_generator::edit_allocation();
+        $deleteurl = url_generator::delete_allocation();
+
+        list($table, $editurl, $deleteurl) = $this->generic_table($head,
+                                                                  $editurl,
+                                                                  $deleteurl);
+
+        foreach ($allocations as $allocation) {
+            $editurl->url->param('id', $allocation->id);
+            $deleteurl->url->param('id', $allocation->id);
+            $actionbuttons = array($editurl, $deleteurl);
+
+            $table->data[] = array(
+                $allocation->name,
+                $allocation->get_product_set(),
+                $this->action_buttons($actionbuttons),
+            );
+        }
+
+        return html_writer::table($table);
+    }
 
     /**
      * Administration tabs.

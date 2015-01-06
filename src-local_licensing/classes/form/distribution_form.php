@@ -29,6 +29,12 @@ use moodleform;
 
 defined('MOODLE_INTERNAL') || die;
 
+/**
+ * Distribution form.
+ */
 class distribution_form extends moodleform {
+    /**
+     * @override \moodleform
+     */
     public function definition() {}
 }
