@@ -10,9 +10,18 @@
 
 TOP                   := $(dir $(CURDIR)/$(word $(words $(MAKEFILE_LIST)), $(MAKEFILE_LIST)))
 NPM_BIN               := $(TOP)node_modules/.bin/
+BUILD_ENROL_LICENSING := $(TOP)build/enrol_licensing/
 BUILD_LOCAL_LICENSING := $(TOP)build/local_licensing/
 
-all: build/local_licensing.zip
+all: build/enrol_licensing.zip build/local_licensing.zip
+
+build/enrol_licensing.zip:
+	mkdir -p $(BUILD_ENROL_LICENSING)
+	cp -rv $(TOP)src-enrol_licensing $(BUILD_ENROL_LICENSING)licensing
+	cp $(TOP)README.md $(BUILD_ENROL_LICENSING)licensing/README.txt
+	cd $(BUILD_ENROL_LICENSING) \
+		&& zip -r ../enrol_licensing.zip licensing
+	rm -rfv $(BUILD_ENROL_LICENSING)
 
 build/local_licensing.zip:
 	mkdir -p $(BUILD_LOCAL_LICENSING)
