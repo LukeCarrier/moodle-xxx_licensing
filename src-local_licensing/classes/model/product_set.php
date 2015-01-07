@@ -67,6 +67,22 @@ class product_set extends base_model {
     }
 
     /**
+     * Retrieve a menu of product sets.
+     *
+     * @return string[]
+     */
+    final public static function menu() {
+        $productsets = static::all('name');
+        $menu = array();
+
+        foreach ($productsets as $productset) {
+            $menu[$productset->id] = $productset->name;
+        }
+
+        return $menu;
+    }
+
+    /**
      * @override \local_licensing\base_model
      */
     final public static function model_accessors() {

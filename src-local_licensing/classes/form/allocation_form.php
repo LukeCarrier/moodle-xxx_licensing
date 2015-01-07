@@ -25,6 +25,7 @@
 
 namespace local_licensing\form;
 
+use local_licensing\model\product_set;
 use local_licensing\util;
 use moodleform;
 
@@ -60,7 +61,8 @@ class allocation_form extends moodleform {
         }
 
         $mform->addElement('select', 'productsetid',
-                           util::string('allocation:productset'));
+                           util::string('allocation:productset'),
+                           product_set::menu());
         $mform->setDefault('productsetid', $data->productsetid);
         $mform->setType('productsetid', PARAM_INT);
 
