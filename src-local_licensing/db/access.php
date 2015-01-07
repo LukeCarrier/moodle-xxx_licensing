@@ -30,7 +30,7 @@ $capabilities = array(
      */
     'local/licensing:allocatelicenses' => array(
         'captype'      => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
 
         'riskbitmask' => RISK_CONFIG,
 
@@ -44,7 +44,7 @@ $capabilities = array(
      */
     'local/licensing:distributelicenses' => array(
         'captype'      => 'write',
-        'contextlevel' => CONTEXT_COURSE,
+        'contextlevel' => CONTEXT_SYSTEM,
 
         'riskbitmask' => RISK_CONFIG,
 
