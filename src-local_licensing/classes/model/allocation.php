@@ -64,6 +64,20 @@ class allocation extends base_model {
     protected $targetid;
 
     /**
+     * Start date.
+     *
+     * @var integer
+     */
+    protected $startdate;
+
+    /**
+     * End date.
+     *
+     * @var integer
+     */
+    protected $enddate;
+
+    /**
      * Get the number of consumed licences.
      *
      * @return integer The number of consumed licences.
@@ -106,6 +120,8 @@ class allocation extends base_model {
             'count',
             'productsetid',
             'targetid',
+            'startdate',
+            'enddate',
         );
     }
 

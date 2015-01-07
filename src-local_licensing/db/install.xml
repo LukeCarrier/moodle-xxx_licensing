@@ -21,6 +21,10 @@
                        NOTNULL="true" SEQUENCE="false" />
                 <FIELD NAME="targetid" TYPE="int" LENGTH="10"
                        NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="startdate" TYPE="int" LENGTH="10"
+                       NOTNULL="false" SEQUENCE="true" />
+                <FIELD NAME="enddate" TYPE="int" LENGTH="10"
+                       NOTNULL="false" SEQUENCE="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />

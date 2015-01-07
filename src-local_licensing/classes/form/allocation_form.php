@@ -49,6 +49,16 @@ class allocation_form extends moodleform {
         $mform->setDefault('targetid', $data->targetid);
         $mform->setType('targetid', PARAM_INT);
 
+        foreach (array('start', 'end') as $field) {
+            $name = "{$field}date";
+            $time = ($field === 'start') ? time() : (time() + DAYSECS);
+
+            $mform->addElement('date_selector', $name,
+                               util::string("allocation:{$name}"));
+            $mform->setDefault($name, time());
+            $mform->setType($name, PARAM_INT);
+        }
+
         $mform->addElement('select', 'productsetid',
                            util::string('allocation:productset'));
         $mform->setDefault('productsetid', $data->productsetid);
