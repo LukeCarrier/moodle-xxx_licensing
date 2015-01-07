@@ -8,7 +8,7 @@
 
 .PHONY: all clean
 
-TOP 				  := $(dir $(CURDIR)/$(word $(words $(MAKEFILE_LIST)), $(MAKEFILE_LIST)))
+TOP                   := $(dir $(CURDIR)/$(word $(words $(MAKEFILE_LIST)), $(MAKEFILE_LIST)))
 NPM_BIN               := $(TOP)node_modules/.bin/
 BUILD_LOCAL_LICENSING := $(TOP)build/local_licensing/
 
