@@ -47,6 +47,7 @@ $string['error:invalidtab'] = 'Please select a tab from the menu above.';
 
 // Allocation
 $string['allocation']            = 'Allocation';
+$string['allocations']           = 'Allocations';
 $string['allocation:backtoall']  = 'Back to all allocations';
 $string['allocation:create']     = 'Allocate licenses for a product set';
 $string['allocation:count']      = 'Licence count';
@@ -57,7 +58,8 @@ $string['allocation:target']     = 'Target';
 $string['addallocation']         = 'Add allocation';
 
 // Distribution
-$string['distribution'] = 'Distribution';
+$string['distribution']  = 'Distribution';
+$string['distributions'] = 'Distributions';
 
 // Product sets
 $string['addproductset']        = 'Add product set';

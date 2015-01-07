@@ -175,11 +175,11 @@ class local_licensing_renderer extends plugin_renderer_base {
             new tabobject('overview', url_generator::index(),
                           util::string('overview')),
             new tabobject('product_set', url_generator::list_product_sets(),
-                          util::string('productset')),
+                          util::string('productsets')),
             new tabobject('allocation', url_generator::list_allocations(),
-                          util::string('allocation')),
+                          util::string('allocations')),
             new tabobject('distribution', url_generator::list_distributions(),
-                          util::string('distribution')),
+                          util::string('distributions')),
         ), $selected);
     }
 
