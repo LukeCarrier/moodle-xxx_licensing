@@ -37,7 +37,7 @@ $PAGE->set_url(new moodle_url('/local/licensing/ajax.php'));
 
 require_login();
 
-$type = required_param('type', PARAM_ALPHA);
+$objecttype = required_param('objecttype', PARAM_ALPHA);
 
 $result = (object) array(
     'success'  => true,
@@ -45,7 +45,7 @@ $result = (object) array(
     'response' => new stdClass(),
 );
 
-switch ($type) {
+switch ($objecttype) {
     case 'product':
         require_capability('local/licensing:allocatelicenses', $PAGE->context);
 
@@ -60,7 +60,7 @@ switch ($type) {
             throw new input_exception();
         }
 
-        $producttype = required_param('producttype', PARAM_ALPHA);
+        $producttype = required_param('type', PARAM_ALPHA);
         $typeclass   = product_factory::get_class_name($producttype);
 
         $result->response = $ids !== null ? $typeclass::get($ids)

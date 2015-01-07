@@ -81,7 +81,7 @@ class product_selector_dialogue {
         $mform->setType($name, PARAM_TEXT);
 
         $PAGE->requires->string_for_js($namestring, static::MOODLE_MODULE);
-        $PAGE->requires->yui_module('moodle-local_licensing-productdialogue',
+        $PAGE->requires->yui_module('moodle-local_licensing-productchooserdialogue',
                                     'M.local_licensing.init_product_dialogue',
                                     array(array(
             'ajaxurl' => $ajaxurl->out_as_local_url(),

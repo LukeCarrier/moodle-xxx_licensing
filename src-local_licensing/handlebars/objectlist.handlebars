@@ -1,0 +1,19 @@
+<div class="yui3-moodle-local_licensing-chooserdialogue-content-row">
+    <input type="text" name="searchterm" value="{{searchTerm}}" />
+    <button class="search">Search {{type}}</button>
+</div>
+
+<div class="yui3-moodle-local_licensing-chooserdialogue-content-row">
+    Found {{objects.length}} {{type}}
+</div>
+
+<div class="yui3-moodle-local_licensing-chooserdialogue-content-row">
+    <ul>
+        {{#objects}}
+            <li>
+                <h4>{{fullname}}</h4>
+                <button class="add" data-objectId="{{id}}">Add</button>
+            </li>
+        {{/objects}}
+    </ul>
+</div>

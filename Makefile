@@ -32,9 +32,9 @@ build/local_licensing.zip:
 	mv $(TOP)lib/mustache.js $(BUILD_LOCAL_LICENSING)mustache.js
 	cd $(TOP)build/local_licensing/licensing \
 		&& $(NPM_BIN)wax \
-			-f yui/src/productdialogue/js/templates.js \
-			-n Moodle.local_licensing.productdialogue \
-			-p moodle-local_licensing-productdialogue \
+			-f yui/src/chooserdialogue/js/templates.js \
+			-n Moodle.local_licensing.chooserdialogue \
+			-p moodle-local_licensing-chooserdialogue \
 			-t $(BUILD_LOCAL_LICENSING)mustache.js \
 			-b -v handlebars
 	cd $(TOP)build/local_licensing/licensing/yui/src \

@@ -1,0 +1,11 @@
+{
+    "name": "moodle-local_licensing-chooserdialogue",
+    "builds": {
+        "moodle-local_licensing-chooserdialogue": {
+            "jsfiles": [
+                "chooserdialogue.js",
+                "templates.js"
+            ]
+        }
+    }
+}

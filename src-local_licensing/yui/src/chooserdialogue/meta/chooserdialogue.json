@@ -1,5 +1,5 @@
 {
-    "moodle-local_licensing-productdialogue": {
+    "moodle-local_licensing-chooserdialogue": {
         "requires": [
             "base",
             "event",
