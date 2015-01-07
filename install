@@ -24,3 +24,6 @@ for plugin in ${plugins[@]}; do
     unzip "$pluginzip"
     mv "$pluginname" "${moodledirroot}/${plugintype}"
 done
+
+php "${moodledirroot}/admin/cli/purge_caches.php"
+
