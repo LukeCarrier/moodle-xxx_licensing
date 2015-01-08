@@ -65,51 +65,7 @@ util::init_requirements();
 if ($mform->is_cancelled()) {
     redirect($redirecturl);
 } elseif ($data = $mform->get_data()) {
-    $productset = model_factory::instance_from_form($tab, $data);
-    $productset->id = ($id === 0) ? null : $id;
-    $productset->save();
-
-    $formproducts = array();
-    foreach (product_factory::get_list() as $type) {
-        $value = $data->{"products{$type}"};
-        $formproducts[$type] = ($value === '') ? array() : explode(',', $value);
-    }
-
-    $existingproducts = $productset->get_products();
-
-    $deleteproducts = array();
-    foreach ($existingproducts as $product) {
-        if (!in_array($product->id, $formproducts[$product->type])) {
-            $deleteproducts[] = $product;
-        }
-    }
-
-    $createproducts = array();
-    foreach ($formproducts as $type => $products) {
-        foreach ($products as $productid) {
-            $found = false;
-            foreach ($existingproducts as $existingproduct) {
-                if (!$found
-                        && $existingproduct->type !== $type
-                        && $existingproduct->itemid != $productid) {
-                    $found = true;
-                }
-            }
-
-            if (!$found) {
-                $createproducts[] = new product($productset->id, $type,
-                                                $productid);
-            }
-        }
-    }
-
-    foreach ($createproducts as $product) {
-        $product->save();
-    }
-
-    foreach ($deleteproducts as $product) {
-        $product->delete();
-    }
+    $mform->save();
 
     redirect($redirecturl);
 } else {

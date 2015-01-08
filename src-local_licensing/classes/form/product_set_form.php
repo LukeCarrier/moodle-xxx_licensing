@@ -27,6 +27,8 @@ namespace local_licensing\form;
 
 use local_licensing\chooser_dialogue\product_chooser_dialogue;
 use local_licensing\factory\product_factory;
+use local_licensing\model\product;
+use local_licensing\model\product_set;
 use local_licensing\util;
 use moodleform;
 
@@ -75,5 +77,60 @@ class product_set_form extends moodleform {
 
         product_chooser_dialogue::add_form_field($this->_form, $type,
                                                  $default);
+    }
+
+    /**
+     * Save the form values.
+     *
+     * @return void
+     */
+    public function save() {
+        $data = $this->get_data();
+
+        $productset = product_set::model_from_form($data);
+        $productset->id = ($data->id == 0) ? null : $data->id;
+        $productset->save();
+
+        $formproducts = array();
+        foreach (product_factory::get_list() as $type) {
+            $value = $data->{"products{$type}"};
+            $formproducts[$type] = ($value === '') ? array() : explode(',', $value);
+        }
+
+        $existingproducts = $productset->get_products();
+
+        $deleteproducts = array();
+        foreach ($existingproducts as $product) {
+            if (!in_array($product->id, $formproducts[$product->type])) {
+                $deleteproducts[] = $product;
+            }
+        }
+
+        $createproducts = array();
+        foreach ($formproducts as $type => $products) {
+            foreach ($products as $productid) {
+                $found = false;
+                foreach ($existingproducts as $existingproduct) {
+                    if (!$found
+                            && $existingproduct->type !== $type
+                            && $existingproduct->itemid != $productid) {
+                        $found = true;
+                    }
+                }
+
+                if (!$found) {
+                    $createproducts[] = new product($productset->id, $type,
+                                                    $productid);
+                }
+            }
+        }
+
+        foreach ($createproducts as $product) {
+            $product->save();
+        }
+
+        foreach ($deleteproducts as $product) {
+            $product->delete();
+        }
     }
 }
