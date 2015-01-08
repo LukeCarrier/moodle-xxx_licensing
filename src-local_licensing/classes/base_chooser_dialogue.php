@@ -111,7 +111,7 @@ abstract class base_chooser_dialogue {
      */
     protected static function get_name_string($name) {
         throw new incomplete_implementation_exception();
-    },
+    }
 
     /**
      * Get the object type.
