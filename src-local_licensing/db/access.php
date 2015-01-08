@@ -53,4 +53,32 @@ $capabilities = array(
         'clonepermissionsfrom' => 'moodle/site:config',
     ),
 
+    /*
+     * Manage sets of products against which licenses can be allocated.
+     */
+    'local/licensing:manageproductsets' => array(
+        'captype'      => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+
+        'riskbitmask' => RISK_CONFIG,
+
+        'archetypes' => array(),
+
+        'clonepermissionsfrom' => 'moodle/site:config',
+    ),
+
+    /*
+     * Manage sets of targets to which licenses can be allocated.
+     */
+    'local/licensing:managetargetsets' => array(
+        'captype'      => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+
+        'riskbitmask' => RISK_CONFIG,
+
+        'archetypes' => array(),
+
+        'clonepermissionsfrom' => 'moodle/site:config',
+    ),
+
 );

@@ -23,22 +23,33 @@
  * @copyright 2014 Luke Carrier, The Development Manager Ltd
  */
 
-namespace local_licensing;
+namespace local_licensing\factory;
 
-/**
- * Base product type.
- *
- * Product types are extensible, enabling "enrolment" into courses and programs.
- * Other enrolment types may be added via children of this class.
- */
-class base_target extends base_pluggable {
+use local_licensing\base_factory;
+
+class target_factory extends base_factory {
     /**
-     * Get the friendly name of the product plugin.
+     * Product types.
      *
-     * @return string The friendly name.
+     * @var string[]
      */
-    public static function get_name() {
-        $type = static::get_type();
-        return util::string("product:{$type}");
+    protected static $targettypes = array(
+        'organisation',
+    );
+
+    /**
+     * @override \local_licensing\base_factory
+     */
+    public static function get_class_name_format() {
+        return '\local_licensing\target\%s';
+    }
+
+    /**
+     * Get a list of all target types.
+     *
+     * @return string[] The names of all the target types.
+     */
+    public static function get_list() {
+        return static::$targettypes;
     }
 }

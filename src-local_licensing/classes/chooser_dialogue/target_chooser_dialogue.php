@@ -9,11 +9,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle. If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Moodle licensing enrolment plugin.
@@ -23,22 +23,27 @@
  * @copyright 2014 Luke Carrier, The Development Manager Ltd
  */
 
-namespace local_licensing;
+namespace local_licensing\chooser_dialogue;
+
+use local_licensing\base_chooser_dialogue;
+
+defined('MOODLE_INTERNAL') || die;
 
 /**
- * Base product type.
- *
- * Product types are extensible, enabling "enrolment" into courses and programs.
- * Other enrolment types may be added via children of this class.
+ * Traget chooser dialogue.
  */
-class base_target extends base_pluggable {
+class target_chooser_dialogue extends base_chooser_dialogue {
     /**
-     * Get the friendly name of the product plugin.
-     *
-     * @return string The friendly name.
+     * @override \local_licensing\base_chooser_dialogue
      */
-    public static function get_name() {
-        $type = static::get_type();
-        return util::string("product:{$type}");
+    protected static function get_name_string($name) {
+        return "targetset:target:{$name}";
+    }
+
+    /**
+     * @override \local_licensing\base_chooser_dialogue
+     */
+    protected static function get_object_type() {
+        return 'target';
     }
 }

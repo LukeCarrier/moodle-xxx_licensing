@@ -26,6 +26,7 @@
 use local_licensing\capabilities;
 use local_licensing\exception\input_exception;
 use local_licensing\factory\product_factory;
+use local_licensing\factory\target_factory;
 
 define('AJAX_SCRIPT', true);
 
@@ -65,6 +66,11 @@ switch ($objecttype) {
         $typeclass = product_factory::get_class_name($type);
 
         break;
+
+    case 'target':
+        require_capability(capabilities::MANAGE_TARGET_SETS, $PAGE->context);
+
+        $typeclass = target_factory::get_class_name($type);
 
     case 'user':
         require_capability(capabilities::DISTRIBUTE, $PAGE->context);

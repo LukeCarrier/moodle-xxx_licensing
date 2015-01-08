@@ -26,19 +26,52 @@
 namespace local_licensing;
 
 /**
- * Base product type.
- *
- * Product types are extensible, enabling "enrolment" into courses and programs.
- * Other enrolment types may be added via children of this class.
+ * I am so sorry about the name of this class.
  */
-class base_target extends base_pluggable {
+abstract class base_pluggable {
+    /**
+     * Moodle module.
+     *
+     * @var string
+     */
+    const MOODLE_MODULE = 'local_licensing';
+
+    /**
+     * Get a specific set of products by ID.
+     *
+     * @param integer[] $ids
+     */
+    public static function get($ids) {}
+
+    /**
+     * Get the name of a given product.
+     *
+     * @param integer $itemid The ID of the product.
+     *
+     * @return string The name of the product.
+     */
+    public static function get_item_name($itemid) {}
+
     /**
      * Get the friendly name of the product plugin.
      *
      * @return string The friendly name.
      */
-    public static function get_name() {
-        $type = static::get_type();
-        return util::string("product:{$type}");
+    public static function get_name() {}
+
+    /**
+     * Get the type name.
+     *
+     * @return string The type name.
+     */
+    public static function get_type() {
+        return get_called_class();
     }
+
+    /**
+     * Search for a specific product.
+     *
+     * @param string $query
+     */
+    public static function search($query) {}
 }

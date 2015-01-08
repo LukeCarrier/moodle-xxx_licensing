@@ -72,9 +72,21 @@ $string['productset:create']    = 'Create a product set';
 $string['productset:edit']      = 'Edit a product set';
 $string['productset:name']      = 'Name';
 
+// Targets
+$string['addtargetset']        = 'Add target set';
+$string['targetset']           = 'Target set';
+$string['targetsets']          = 'Target sets';
+$string['targetset:backtoall'] = 'Back to all target sets';
+$string['targetset:create']    = 'Create a target set';
+$string['targetset:name']      = 'Name';
+$string['targetset:targets']   = 'Targets';
+
 // Products
 $string['productset:products:course']  = 'Courses';
 $string['productset:products:program'] = 'Programs';
+
+// Targets
+$string['targetset:target:organisation'] = 'Organisation';
 
 // Product selector dialogue
 $string['addxs'] = 'Add {$a}';

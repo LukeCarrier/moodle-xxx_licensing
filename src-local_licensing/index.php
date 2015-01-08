@@ -26,6 +26,7 @@
 use local_licensing\capabilities;
 use local_licensing\model\allocation;
 use local_licensing\model\product_set;
+use local_licensing\model\target_set;
 use local_licensing\url_generator;
 use local_licensing\util;
 
@@ -75,6 +76,15 @@ switch ($tab) {
              $renderer->product_set_table(product_set::all()),
              $OUTPUT->single_button(url_generator::add_product_set(),
                                     util::string('addproductset'),
+                                    'get');
+        break;
+
+    case 'target_set':
+        require_capability(capabilities::MANAGE_TARGET_SETS, $PAGE->context);
+        echo $OUTPUT->heading(util::string('targetsets'), 3),
+             $renderer->target_set_table(target_set::all()),
+             $OUTPUT->single_button(url_generator::add_target_set(),
+                                    util::string('addtargetset'),
                                     'get');
         break;
 

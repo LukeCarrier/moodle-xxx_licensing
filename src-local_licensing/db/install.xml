@@ -91,7 +91,23 @@
                        NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="itemid" TYPE="int" LENGTH="10"
                        NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="targetsetid" TYPE="int" LENGTH="10"
+                       NOTNULL="true" SEQUENCE="false" />
                 <FIELD NAME="type" TYPE="char" LENGTH="255"
+                       NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="fk_targetsetid" TYPE="foreign" FIELDS="targetsetid"
+                     REFTABLE="lic_targetset" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+
+        <TABLE NAME="lic_targetset" COMMENT="Groups of targets">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10"
+                       NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="name" TYPE="char" LENGTH="255"
                        NOTNULL="true" />
             </FIELDS>
             <KEYS>

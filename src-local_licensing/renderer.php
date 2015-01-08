@@ -31,6 +31,39 @@ use local_licensing\util;
  */
 class local_licensing_renderer extends plugin_renderer_base {
     /**
+     * Render a list of action buttons.
+     *
+     * @param \action_link[] $actionbuttons An array of action button components
+     *                                      to render.
+     *
+     * @return string The renderered HTML.
+     */
+    protected function action_buttons($actionbuttons) {
+        $renderedactionbuttons = array();
+        foreach ($actionbuttons as $actionbutton) {
+            $renderedactionbuttons[] = $this->render($actionbutton);
+        }
+
+        return html_writer::alist($renderedactionbuttons, array(
+            'class' => 'action-buttons',
+        ));
+    }
+
+    /**
+     * Back to all items link.
+     *
+     * @param string $tab           The name of the tab.
+     * @param string $tablangstring The name of the tab's language string key.
+     *
+     * @return string The generated HTML.
+     */
+    public function back_to_all($tab, $tablangstring) {
+        return html_writer::link(url_generator::list_url($tab),
+                                 util::string("{$tablangstring}:backtoall"),
+                                 array('class' => 'back-to-all'));
+    }
+
+    /**
      * Do the ground work for rendering a table.
      *
      * @param mixed[] $head      An array of html_table_cell objects or strings.
@@ -57,25 +90,6 @@ class local_licensing_renderer extends plugin_renderer_base {
     }
 
     /**
-     * Render a list of action buttons.
-     *
-     * @param \action_link[] $actionbuttons An array of action button components
-     *                                      to render.
-     *
-     * @return string The renderered HTML.
-     */
-    protected function action_buttons($actionbuttons) {
-        $renderedactionbuttons = array();
-        foreach ($actionbuttons as $actionbutton) {
-            $renderedactionbuttons[] = $this->render($actionbutton);
-        }
-
-        return html_writer::alist($renderedactionbuttons, array(
-            'class' => 'action-buttons',
-        ));
-    }
-
-    /**
      * List of products within a product set.
      *
      * @param \local_licensing\model\product[] $products
@@ -89,42 +103,6 @@ class local_licensing_renderer extends plugin_renderer_base {
         }
 
         return html_writer::alist($productnames);
-    }
-
-    /**
-     * Product set table.
-     *
-     * @param \local_licensing\model\product_set[] $productsets
-     *
-     * @return string The generated HTML.
-     */
-    public function product_set_table($productsets) {
-        $head = array(
-            util::string('productset'),
-            util::string('products'),
-            util::string('actions', null, 'moodle'),
-        );
-
-        $editurl   = url_generator::edit_product_set();
-        $deleteurl = url_generator::delete_product_set();
-
-        list($table, $editurl, $deleteurl) = $this->generic_table($head,
-                                                                  $editurl,
-                                                                  $deleteurl);
-
-        foreach ($productsets as $productset) {
-            $editurl->url->param('id', $productset->id);
-            $deleteurl->url->param('id', $productset->id);
-            $actionbuttons = array($editurl, $deleteurl);
-
-            $table->data[] = array(
-                $productset->name,
-                $this->product_list($productset->get_products()),
-                $this->action_buttons($actionbuttons),
-            );
-        }
-
-        return html_writer::table($table);
     }
 
     /**
@@ -164,6 +142,78 @@ class local_licensing_renderer extends plugin_renderer_base {
     }
 
     /**
+     * Product set table.
+     *
+     * @param \local_licensing\model\product_set[] $productsets
+     *
+     * @return string The generated HTML.
+     */
+    public function product_set_table($productsets) {
+        $head = array(
+            util::string('productset'),
+            util::string('products'),
+            util::string('actions', null, 'moodle'),
+        );
+
+        $editurl   = url_generator::edit_product_set();
+        $deleteurl = url_generator::delete_product_set();
+
+        list($table, $editurl, $deleteurl) = $this->generic_table($head,
+                                                                  $editurl,
+                                                                  $deleteurl);
+
+        foreach ($productsets as $productset) {
+            $editurl->url->param('id', $productset->id);
+            $deleteurl->url->param('id', $productset->id);
+            $actionbuttons = array($editurl, $deleteurl);
+
+            $table->data[] = array(
+                $productset->name,
+                $this->product_list($productset->get_products()),
+                $this->action_buttons($actionbuttons),
+            );
+        }
+
+        return html_writer::table($table);
+    }
+
+    /**
+     * Target table.
+     *
+     * @param \local_licensing\model\target[] $targets
+     *
+     * @return string The generated HTML.
+     */
+    public function target_set_table($targetsets) {
+        $head = array(
+            util::string('targetset'),
+            util::string('targetset:targets'),
+            util::string('actions', null, 'moodle'),
+        );
+
+        $editurl   = url_generator::edit_target_set();
+        $deleteurl = url_generator::delete_target_set();
+
+        list($table, $editurl, $deleteurl) = $this->generic_table($head,
+                                                                  $editurl,
+                                                                  $deleteurl);
+
+        foreach ($targetsets as $targetset) {
+            $editurl->url->param('id', $targetset->id);
+            $deleteurl->url->param('id', $targetset->id);
+            $actionbuttons = array($editurl, $deleteurl);
+
+            $table->data[] = array(
+                $targetset->name,
+                $this->target_include_list($targetset->get_targets()),
+                $this->action_buttons($actionbuttons),
+            );
+        }
+
+        return html_writer::table($table);
+    }
+
+    /**
      * Administration tabs.
      *
      * @param string $selected An (optional) selected tab's name.
@@ -174,6 +224,8 @@ class local_licensing_renderer extends plugin_renderer_base {
         return $this->tabtree(array(
             new tabobject('overview', url_generator::index(),
                           util::string('overview')),
+            new tabobject('target_set', url_generator::list_target_sets(),
+                          util::string('targetsets')),
             new tabobject('product_set', url_generator::list_product_sets(),
                           util::string('productsets')),
             new tabobject('allocation', url_generator::list_allocations(),
@@ -181,19 +233,5 @@ class local_licensing_renderer extends plugin_renderer_base {
             new tabobject('distribution', url_generator::list_distributions(),
                           util::string('distributions')),
         ), $selected);
-    }
-
-    /**
-     * Back to all items link.
-     *
-     * @param string $tab           The name of the tab.
-     * @param string $tablangstring The name of the tab's language string key.
-     *
-     * @return string The generated HTML.
-     */
-    public function back_to_all($tab, $tablangstring) {
-        return html_writer::link(url_generator::list_url($tab),
-                                 util::string("{$tablangstring}:backtoall"),
-                                 array('class' => 'back-to-all'));
     }
 }

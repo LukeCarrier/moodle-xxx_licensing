@@ -65,6 +65,10 @@ class url_generator {
         return static::edit_product_set();
     }
 
+    public static function add_target_set() {
+        return static::edit_target_set();
+    }
+
     /**
      * Get the AJAX base URL.
      *
@@ -94,6 +98,10 @@ class url_generator {
      */
     public static function delete_product_set($id=null) {
         return static::delete_url('product_set', $id);
+    }
+
+    public static function delete_target_set($id=null) {
+        return static::delete_url('target_set', $id);
     }
 
     /**
@@ -135,6 +143,10 @@ class url_generator {
         return static::edit_url('product_set', $id);
     }
 
+    public static function edit_target_set($id=null) {
+        return static::edit_url('target_set', $id);
+    }
+
     public static function edit_url($tab, $id) {
         $url = static::local_url('/edit.php', array(
             'tab' => $tab,
@@ -166,6 +178,10 @@ class url_generator {
 
     public static function list_product_sets() {
         return static::list_url('product_set');
+    }
+
+    public static function list_target_sets() {
+        return static::list_url('target_set');
     }
 
     /**

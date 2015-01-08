@@ -40,6 +40,7 @@ distributions made available on Moodle.org.
 * Move all the selectors and other magic values in the client-side product
   dialogue code into module attributes for cleanliness and recognition
 * Display course icons in the product dialogue for Totara users
+* Display Totara organisations in a tree view rather than just a list
 
 ## Thanks
 

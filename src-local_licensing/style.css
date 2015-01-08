@@ -36,7 +36,8 @@
  * Product selection dialogue.
  */
 
-.yui3-moodle-local_licensing-productchooserdialogue-hidden {
+.yui3-moodle-local_licensing-productchooserdialogue-hidden,
+.yui3-moodle-local_licensing-targetchooserdialogue-hidden {
     visibility: hidden
 }
 

@@ -30,11 +30,7 @@ use local_licensing\factory\target_factory;
 
 defined('MOODLE_INTERNAL') || die;
 
-/**
- * A target represents an individual group of users within a wider set of
- * groups.
- */
-class target extends base_model {
+class target_set extends base_model {
     /**
      * Record ID.
      *
@@ -43,60 +39,26 @@ class target extends base_model {
     protected $id;
 
     /**
-     * The ID of the target item.
-     *
-     * This value will be passed to the target class when location the target.
-     *
-     * @var integer
-     */
-    protected $itemid;
-
-    /**
-     * Product type.
-     *
-     * The value of this field should mirror the name of a class in the
-     * \local_licensing\target namespace.
+     * Name.
      *
      * @var string
      */
-    protected $type;
+    protected $name;
 
     /**
-     * Product set ID.
+     * Get the targets associated with the target set.
      *
-     * @var integer
+     * @return \local_licensing\model\target[] The products.
      */
-    protected $targetsetid;
-
-    /**
-     * Initialiser.
-     *
-     * @param integer $targetsetid
-     * @param string  $type
-     * @param integer $itemid
-     */
-    public function __construct($targetsetid=null, $type=null, $itemid=null) {
-        $this->targetsetid = $targetsetid;
-        $this->type         = $type;
-        $this->itemid       = $itemid;
-    }
-
-    /** 
-     * Get the name of the target.
-     *
-     * @return string The name of the target.
-     */
-    final public function get_name() {
-        $targetclass = target_factory::get_class_name($this->type);
-
-        return $targetclass::get_item_fullname($this->itemid);
+    public function get_targets() {
+        return target::find_by_targetsetid($this->id);
     }
 
     /**
      * @override \local_licensing\base_model
      */
     final public static function model_table() {
-        return 'lic_target';
+        return 'lic_targetset';
     }
 
     /**
@@ -105,9 +67,7 @@ class target extends base_model {
     final public static function model_fields() {
         return array(
             'id',
-            'itemid',
-            'targetsetid',
-            'type',
+            'name',
         );
     }
 
@@ -116,5 +76,22 @@ class target extends base_model {
      */
     final public static function model_accessors() {
         return array();
+    }
+
+    /**
+     * @override \local_licensing\base_model
+     */
+    final public function model_to_form() {
+        $formdata = parent::model_to_form();
+
+        $targetids = array_fill_keys(target_factory::get_list(), array());
+        foreach ($this->get_targets() as $target) {
+            $targetids[$target->type][] = $target->itemid;
+        }
+        foreach ($targetids as $type => $ids) {
+            $formdata->{"targets{$type}"} = implode(',', $ids);
+        }
+
+        return $formdata;
     }
 }

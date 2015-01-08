@@ -35,10 +35,12 @@ require_once "{$CFG->libdir}/adminlib.php";
 
 admin_externalpage_setup('local_licensing');
 
+$tabs = array('allocation', 'distribution', 'product_set', 'target_set');
+
 $id  = optional_param('id',  0, PARAM_INT);
 $tab = required_param('tab',    PARAM_ALPHAEXT);
 
-if (!in_array($tab, array('allocation', 'distribution', 'product_set'))) {
+if (!in_array($tab, $tabs)) {
     print_error('error:invalidtab', 'local_licensing');
 }
 

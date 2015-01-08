@@ -31,7 +31,7 @@ namespace local_licensing;
  * Product types are extensible, enabling "enrolment" into courses and programs.
  * Other enrolment types may be added via children of this class.
  */
-class base_product {
+class base_product extends base_pluggable {
     /**
      * Moodle module.
      *
@@ -76,21 +76,5 @@ class base_product {
      * @return void
      */
     public static function enrol($userids) {
-    }
-
-    /**
-     * Get a specific set of products by ID.
-     *
-     * @param integer[] $ids
-     */
-    public static function get($ids) {
-    }
-
-    /**
-     * Search for a specific product.
-     *
-     * @param string $query
-     */
-    public static function search($query) {
     }
 }
