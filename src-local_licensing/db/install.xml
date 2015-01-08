@@ -69,6 +69,8 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="fk_productsetid" TYPE="foreign" FIELDS="productsetid"
                      REFTABLE="lic_productset" REFFIELDS="id" />
+                <KEY NAME="uk_itemidproductsetidtype" TYPE="unique"
+                     FIELDS="itemid,productsetid,type" />
             </KEYS>
         </TABLE>
 
@@ -100,6 +102,8 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="fk_targetsetid" TYPE="foreign" FIELDS="targetsetid"
                      REFTABLE="lic_targetset" REFFIELDS="id" />
+                <KEY NAME="uk_itemidtargetsetidtype" TYPE="unique"
+                     FIELDS="itemid,targetsetid,type" />
             </KEYS>
         </TABLE>
 
