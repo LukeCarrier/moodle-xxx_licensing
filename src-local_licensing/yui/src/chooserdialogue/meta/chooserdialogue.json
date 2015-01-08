@@ -5,6 +5,9 @@
             "event",
             "handlebars-base",
             "io",
+            "json-parse",
+            "moodle-core-notification-ajaxexception",
+            "moodle-core-notification-exception",
             "moodle-core-notification-dialogue",
             "node"
         ]

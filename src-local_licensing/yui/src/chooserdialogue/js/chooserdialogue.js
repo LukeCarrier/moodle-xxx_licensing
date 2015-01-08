@@ -209,7 +209,7 @@ Y.extend(ChooserDialogue, M.core.dialogue, {
                     onComplete(response.response);
                 }
             } catch (e) {
-               return new M.core.exception(e);
+                return new M.core.exception(e);
             }
         }
     },
