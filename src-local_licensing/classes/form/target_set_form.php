@@ -26,6 +26,7 @@
 namespace local_licensing\form;
 
 use local_licensing\chooser_dialogue\target_chooser_dialogue;
+use local_licensing\factory\target_factory;
 use local_licensing\util;
 use moodleform;
 
@@ -49,7 +50,10 @@ class target_set_form extends moodleform {
         $mform->setDefault('name', $data->name);
         $mform->setType('name', PARAM_TEXT);
 
-        $this->target_chooser_dialogue('organisation');
+        $targettypes = target_factory::get_list();
+        foreach ($targettypes as $targettype) {
+            $this->target_chooser_dialogue($targettype);
+        }
 
         $this->add_action_buttons();
     }

@@ -26,6 +26,7 @@
 namespace local_licensing\form;
 
 use local_licensing\chooser_dialogue\product_chooser_dialogue;
+use local_licensing\factory\product_factory;
 use local_licensing\util;
 use moodleform;
 
@@ -49,8 +50,10 @@ class product_set_form extends moodleform {
         $mform->setDefault('name', $data->name);
         $mform->setType('name', PARAM_TEXT);
 
-        $this->product_chooser_dialogue('course');
-        $this->product_chooser_dialogue('program');
+        $producttypes = product_factory::get_list();
+        foreach ($producttypes as $producttype) {
+            $this->product_chooser_dialogue($producttype);
+        }
 
         $this->add_action_buttons();
     }
