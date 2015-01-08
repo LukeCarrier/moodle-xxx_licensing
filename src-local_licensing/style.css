@@ -40,23 +40,23 @@
     visibility: hidden
 }
 
-.yui3-moodle-local_licensing-productchooserdialogue-content-row ul {
+.yui3-moodle-local_licensing-chooserdialogue-content-row ul {
     margin-left: 0;
 }
 
-.yui3-moodle-local_licensing-productchooserdialogue-content-row ul li {
+.yui3-moodle-local_licensing-chooserdialogue-content-row ul li {
     list-style-type: none;
     padding: 10px;
 }
 
-.yui3-moodle-local_licensing-productchooserdialogue-content-row ul li h4 {
+.yui3-moodle-local_licensing-chooserdialogue-content-row ul li h4 {
     margin-top: 0;
 }
 
-.yui3-moodle-local_licensing-productchooserdialogue-content-row ul li .add {
+.yui3-moodle-local_licensing-chooserdialogue-content-row ul li .add {
     margin: 0;
 }
 
-.yui3-moodle-local_licensing-productchooserdialogue-content-row ul li:nth-child(2n+1) {
+.yui3-moodle-local_licensing-chooserdialogue-content-row ul li:nth-child(2n+1) {
     background-color: #eee;
 }
