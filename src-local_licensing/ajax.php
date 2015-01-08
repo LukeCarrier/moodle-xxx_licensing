@@ -23,6 +23,7 @@
  * @copyright 2014 Luke Carrier, The Development Manager Ltd
  */
 
+use local_licensing\capabilities;
 use local_licensing\exception\input_exception;
 use local_licensing\factory\product_factory;
 
@@ -47,7 +48,7 @@ $result = (object) array(
 
 switch ($objecttype) {
     case 'product':
-        require_capability('local/licensing:allocatelicenses', $PAGE->context);
+        require_capability(capabilities::ALLOCATE, $PAGE->context);
 
         $ids  = optional_param('ids',  '', PARAM_TEXT);
         $term = optional_param('term', '', PARAM_TEXT);
@@ -69,7 +70,7 @@ switch ($objecttype) {
         break;
 
     case 'user':
-        require_capability('local/licensing:distributelicenses', $PAGE->context);
+        require_capability(capabilities::DISTRIBUTE, $PAGE->context);
 
         // todo
 

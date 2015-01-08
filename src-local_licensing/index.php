@@ -23,6 +23,7 @@
  * @copyright 2014 Luke Carrier, The Development Manager Ltd
  */
 
+use local_licensing\capabilities;
 use local_licensing\model\allocation;
 use local_licensing\model\product_set;
 use local_licensing\url_generator;
@@ -37,10 +38,7 @@ $tab = optional_param('tab', 'overview', PARAM_ALPHAEXT);
 
 $renderer = $PAGE->get_renderer('local_licensing');
 
-$context       = context_system::instance();
-$canallocate   = 'local/licensing:allocatelicenses';
-$candistribute = 'local/licensing:distributelicenses';
-
+$PAGE->set_context(context_system::instance());
 util::init_requirements();
 
 echo $OUTPUT->header(),
@@ -49,7 +47,7 @@ echo $OUTPUT->header(),
 
 switch ($tab) {
     case 'allocation':
-        require_capability($canallocate, $context);
+        require_capability(capabilities::ALLOCATE, $PAGE->context);
         echo $OUTPUT->heading(util::string('allocation'), 3),
              $renderer->allocation_table(allocation::all()),
              $OUTPUT->single_button(url_generator::add_allocation(),
@@ -58,7 +56,7 @@ switch ($tab) {
         break;
 
     case 'distribution':
-        require_capability($candistribute, $context);
+        require_capability(capabilities::DISTRIBUTE, $PAGE->context);
         echo $OUTPUT->heading(util::string('distribution'), 3),
              $renderer->distribution_table(distribution::all()),
              $OUTPUT->single_button(url_generator::add_distribution(),
@@ -72,7 +70,7 @@ switch ($tab) {
         break;
 
     case 'product_set':
-        require_capability($canallocate, $context);
+        require_capability(capabilities::MANAGE_PRODUCT_SETS, $PAGE->context);
         echo $OUTPUT->heading(util::string('productsets'), 3),
              $renderer->product_set_table(product_set::all()),
              $OUTPUT->single_button(url_generator::add_product_set(),
