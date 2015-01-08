@@ -78,12 +78,30 @@ class allocation extends base_model {
     protected $enddate;
 
     /**
+     * Initialiser.
+     *
+     * @param integer $productsetid
+     * @param integer $targetid
+     * @param integer $count
+     * @param integer $startdate
+     * @param integer $enddate
+     */
+    public function __construct($productsetid=null, $targetid=null, $count=null,
+                                $startdate=null, $enddate=null) {
+        $this->productsetid = $productsetid;
+        $this->targetid     = $targetid;
+        $this->count        = $count;
+        $this->startdate    = $startdate;
+        $this->enddate      = $enddate;
+    }
+
+    /**
      * Get the number of consumed licences.
      *
      * @return integer The number of consumed licences.
      */
     public function get_consumed() {
-        return licence::count(array('allocationid' => $this->id));
+        return 0; // @todo
     }
 
     /**
@@ -92,7 +110,16 @@ class allocation extends base_model {
      * @return \local_licensing\model\product_set The product set.
      */
     public function get_product_set() {
-        product_set::get_by_id($this->productsetid);
+        return product_set::get_by_id($this->productsetid);
+    }
+
+    /**
+     * Get the associated target.
+     *
+     * @return \local_licensing\model\target The target.
+     */
+    public function get_target() {
+        return target::get_by_id($this->targetid);
     }
 
     /**
@@ -123,6 +150,14 @@ class allocation extends base_model {
             'startdate',
             'enddate',
         );
+    }
+
+    /**
+     * @override \local_licensing\base_model
+     */
+    final public static function model_from_form($data) {
+        return new static($data->productsetid, $data->targetid, $data->count,
+                          $data->startdate, $data->enddate);
     }
 
     /**

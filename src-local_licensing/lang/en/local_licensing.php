@@ -51,9 +51,11 @@ $string['allocations']           = 'Allocations';
 $string['allocation:backtoall']  = 'Back to all allocations';
 $string['allocation:create']     = 'Allocate licenses for a product set';
 $string['allocation:count']      = 'Licence count';
-$string['allocation:productset'] = 'Product set';
-$string['allocation:startdate']  = 'Start date';
 $string['allocation:enddate']    = 'End date';
+$string['allocation:productset'] = 'Product set';
+$string['allocation:progress']   = 'Progress';
+$string['allocation:remaining']  = 'Remaining';
+$string['allocation:startdate']  = 'Start date';
 $string['allocation:target']     = 'Target';
 $string['addallocation']         = 'Add allocation';
 

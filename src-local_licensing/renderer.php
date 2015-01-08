@@ -26,6 +26,8 @@
 use local_licensing\url_generator;
 use local_licensing\util;
 
+defined('MOODLE_INTERNAL') || die;
+
 /**
  * Renderer.
  */
@@ -36,7 +38,7 @@ class local_licensing_renderer extends plugin_renderer_base {
      * @param \action_link[] $actionbuttons An array of action button components
      *                                      to render.
      *
-     * @return string The renderered HTML.
+     * @return string The rendered HTML.
      */
     protected function action_buttons($actionbuttons) {
         $renderedactionbuttons = array();
@@ -46,6 +48,22 @@ class local_licensing_renderer extends plugin_renderer_base {
 
         return html_writer::alist($renderedactionbuttons, array(
             'class' => 'action-buttons',
+        ));
+    }
+
+    /**
+     * Allocation progress.
+     *
+     * @param integer $count    The total number of allocated licences.
+     * @param integer $consumed The number of licences which have actually been
+     *                          distributed.
+     *
+     * @return string The rendered HTML.
+     */
+    public function allocation_progress($count, $consumed) {
+        return html_writer::tag('progress', '', array(
+            'max'   => $count,
+            'value' => $consumed,
         ));
     }
 
@@ -114,8 +132,10 @@ class local_licensing_renderer extends plugin_renderer_base {
      */
     public function allocation_table($allocations) {
         $head = array(
-            util::string('allocation'),
+            util::string('allocation:target'),
             util::string('productset'),
+            util::string('allocation:remaining'),
+            util::string('allocation:progress'),
             util::string('actions', null, 'moodle'),
         );
 
@@ -132,8 +152,11 @@ class local_licensing_renderer extends plugin_renderer_base {
             $actionbuttons = array($editurl, $deleteurl);
 
             $table->data[] = array(
-                $allocation->name,
-                $allocation->get_product_set(),
+                $allocation->get_target()->get_name(),
+                $allocation->get_product_set()->name,
+                $allocation->get_remaining(),
+                $this->allocation_progress($allocation->count,
+                                           $allocation->get_consumed()),
                 $this->action_buttons($actionbuttons),
             );
         }

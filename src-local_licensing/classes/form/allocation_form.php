@@ -25,6 +25,8 @@
 
 namespace local_licensing\form;
 
+use local_licensing\model\allocation;
+use local_licensing\model\target_set;
 use local_licensing\model\product_set;
 use local_licensing\util;
 use moodleform;
@@ -45,10 +47,21 @@ class allocation_form extends moodleform {
         $mform->addElement('hidden', 'id', $data->id);
         $mform->setType('id', PARAM_INT);
 
+        $mform->addElement('select', 'productsetid',
+                           util::string('allocation:productset'),
+                           product_set::menu());
+        $mform->setDefault('productsetid', $data->productsetid);
+        $mform->setType('productsetid', PARAM_INT);
+
         $mform->addElement('select', 'targetid',
-                           util::string('allocation:target'));
+                           util::string('allocation:target'),
+                           target_set::menu());
         $mform->setDefault('targetid', $data->targetid);
         $mform->setType('targetid', PARAM_INT);
+
+        $mform->addElement('text', 'count', util::string('allocation:count'));
+        $mform->setDefault('count', $data->count);
+        $mform->setType('count', PARAM_INT);
 
         foreach (array('start', 'end') as $field) {
             $name = "{$field}date";
@@ -60,16 +73,19 @@ class allocation_form extends moodleform {
             $mform->setType($name, PARAM_INT);
         }
 
-        $mform->addElement('select', 'productsetid',
-                           util::string('allocation:productset'),
-                           product_set::menu());
-        $mform->setDefault('productsetid', $data->productsetid);
-        $mform->setType('productsetid', PARAM_INT);
-
-        $mform->addElement('text', 'count', util::string('allocation:count'));
-        $mform->setDefault('count', $data->count);
-        $mform->setType('count', PARAM_INT);
-
         $this->add_action_buttons();
+    }
+
+    /**
+     * Save the form values.
+     *
+     * @return void
+     */
+    public function save() {
+        $data = $this->get_data();
+
+        $allocation = allocation::model_from_form($data);
+        $allocation->id = ($data->id == 0) ? null : $data->id;
+        $allocation->save();
     }
 }

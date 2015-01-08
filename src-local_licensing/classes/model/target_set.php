@@ -64,6 +64,22 @@ class target_set extends base_model {
     }
 
     /**
+     * Retrieve a menu of product sets.
+     *
+     * @return string[]
+     */
+    final public static function menu() {
+        $targetsets = static::all('name');
+        $menu = array();
+
+        foreach ($targetsets as $targetset) {
+            $menu[$targetset->id] = $targetset->name;
+        }
+
+        return $menu;
+    }
+
+    /**
      * @override \local_licensing\base_model
      */
     final public static function model_table() {
