@@ -30,12 +30,12 @@ use moodle_exception;
 defined('MOODLE_INTERNAL') || die;
 
 /**
- * Product selector dialogue.
+ * Base chooser dialogue.
  *
  * Ensures all of the required dependencies for the dialogue are set up
  * correctly.
  */
-class product_selector_dialogue {
+abstract class base_chooser_dialogue {
     /**
      * What is the module's name?
      *
@@ -55,7 +55,7 @@ class product_selector_dialogue {
      *
      * @param HTML_QuickForm $mform   The form to which the field should be
      *                                added.
-     * @param string         $type    The type of the product the field should
+     * @param string         $type    The type of the object the field should
      *                                allow the selection of.
      * @param string         $default The default value of the hidden form
      *                                field.
@@ -72,17 +72,18 @@ class product_selector_dialogue {
         }
 
         $ajaxurl      = url_generator::ajax();
-        $name         = "products{$type}";
-        $dialoguename = "licensing-dialogue-{$type}";
-        $namestring   = "productset:products:{$type}";
+        $objecttype   = static::get_object_type();
+        $name         = "{$objecttype}s{$type}";
+        $dialoguename = "licensing-chooserdialogue-{$objecttype}-{$type}";
+        $namestring   = static::get_name_string($type);
 
         $mform->addElement('text', $name, util::string($namestring));
         $mform->setDefault($name, $default);
         $mform->setType($name, PARAM_TEXT);
 
         $PAGE->requires->string_for_js($namestring, static::MOODLE_MODULE);
-        $PAGE->requires->yui_module('moodle-local_licensing-productchooserdialogue',
-                                    'M.local_licensing.init_product_dialogue',
+        $PAGE->requires->yui_module("moodle-local_licensing-{$objecttype}chooserdialogue",
+                                    "M.local_licensing.init_{$objecttype}_dialogue",
                                     array(array(
             'ajaxurl' => $ajaxurl->out_as_local_url(),
             'base'    => $dialoguename,
@@ -91,14 +92,34 @@ class product_selector_dialogue {
     }
 
     /**
-     * Can the field for this product type be added?
+     * Can the field for this object's type be added?
      *
-     * @param string $type The product type.
+     * @param string $type The object's type.
      *
      * @return boolean Whether or not the form field can be added.
      */
     protected static function can_add_form_field($type) {
         return !in_array($type, static::$instances);
+    }
+
+    /**
+     * Get the name string for the object.
+     *
+     * @param string $name The name of the object.
+     *
+     * @return string The object's name string.
+     */
+    protected static function get_name_string($name) {
+        throw new incomplete_implementation_exception();
+    },
+
+    /**
+     * Get the object type.
+     *
+     * @return string The object type.
+     */
+    protected static function get_object_type() {
+        throw new incomplete_implementation_exception();
     }
 
     /**

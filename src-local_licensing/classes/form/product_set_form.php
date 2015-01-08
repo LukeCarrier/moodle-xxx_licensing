@@ -25,7 +25,7 @@
 
 namespace local_licensing\form;
 
-use local_licensing\product_selector_dialogue;
+use local_licensing\chooser_dialogue\product_chooser_dialogue;
 use local_licensing\util;
 use moodleform;
 
@@ -49,28 +49,28 @@ class product_set_form extends moodleform {
         $mform->setDefault('name', $data->name);
         $mform->setType('name', PARAM_TEXT);
 
-        $this->product_selector_dialogue('course');
-        $this->product_selector_dialogue('program');
+        $this->product_chooser_dialogue('course');
+        $this->product_chooser_dialogue('program');
 
         $this->add_action_buttons();
     }
 
     /**
-     * Add a product selector dialogue to the form.
+     * Add a product chooser dialogue to the form.
      *
      * Do not place multiple dialogs for the same product type in the same form.
      * We don't make any effort here to generate unique class names for the
      * dialogue, so weird things are likely to happen on calls to render().
      *
-     * @param string $type The type of the product to render the selector widget
-     *                     for.
+     * @param string $type The type of the product to render the chooser
+     *                     dialogue for.
      *
      * @return void
      */
-    protected function product_selector_dialogue($type) {
+    protected function product_chooser_dialogue($type) {
         $default = $this->_customdata['record']->{"products{$type}"};
 
-        product_selector_dialogue::add_form_field($this->_form, $type,
-                                                  $default);
+        product_chooser_dialogue::add_form_field($this->_form, $type,
+                                                 $default);
     }
 }
