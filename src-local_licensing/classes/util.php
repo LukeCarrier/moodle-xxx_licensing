@@ -38,6 +38,56 @@ class util {
     const MOODLE_MODULE = 'local_licensing';
 
     /**
+     * Delta diff a set of objects to determine which need creating and
+     * deleting.
+     *
+     * @param string                        $objecttype
+     * @param string                        $objectclass
+     * @param string[]                      $types
+     * @param \local_licensing\base_model[] $existing
+     * @param integer                       $setid
+     * @param \stdClass                     $data
+     *
+     * @return mixed[][] An array containing two arrays; the former containing
+     *                   items to create, the latter containing items to delete.
+     */
+    public static function delta_set($objecttype, $objectclass, $types,
+                                     $existing, $setid, $data) {
+        $formitems = array();
+        foreach ($types as $type) {
+            $value = $data->{"{$objecttype}s{$type}"};
+            $formitems[$type] = ($value === '') ? array() : explode(',', $value);
+        }
+
+        $todelete = array();
+        foreach ($existing as $existingitem) {
+            if (!in_array($existingitem->itemid, $formitems[$existingitem->type])) {
+                $todelete[] = $existingitem;
+            }
+        }
+
+        $tocreate = array();
+        foreach ($formitems as $type => $existingitems) {
+            foreach ($existingitems as $itemid) {
+                $found = false;
+                foreach ($existing as $existingitem) {
+                    if (!$found
+                            && $existingitem->type == $type
+                            && $existingitem->itemid == $itemid) {
+                        $found = true;
+                    }
+                }
+
+                if (!$found) {
+                    $tocreate[] = new $objectclass($setid, $type, $itemid);
+                }
+            }
+        }
+
+        return array($tocreate, $todelete);
+    }
+
+    /**
      * Get a language string.
      *
      * @param string          $string The name of the string to retrieve.

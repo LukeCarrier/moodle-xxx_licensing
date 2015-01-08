@@ -91,39 +91,11 @@ class product_set_form extends moodleform {
         $productset->id = ($data->id == 0) ? null : $data->id;
         $productset->save();
 
-        $formproducts = array();
-        foreach (product_factory::get_list() as $type) {
-            $value = $data->{"products{$type}"};
-            $formproducts[$type] = ($value === '') ? array() : explode(',', $value);
-        }
-
         $existingproducts = $productset->get_products();
-
-        $deleteproducts = array();
-        foreach ($existingproducts as $product) {
-            if (!in_array($product->id, $formproducts[$product->type])) {
-                $deleteproducts[] = $product;
-            }
-        }
-
-        $createproducts = array();
-        foreach ($formproducts as $type => $products) {
-            foreach ($products as $productid) {
-                $found = false;
-                foreach ($existingproducts as $existingproduct) {
-                    if (!$found
-                            && $existingproduct->type !== $type
-                            && $existingproduct->itemid != $productid) {
-                        $found = true;
-                    }
-                }
-
-                if (!$found) {
-                    $createproducts[] = new product($productset->id, $type,
-                                                    $productid);
-                }
-            }
-        }
+        list($createproducts, $deleteproducts)
+                = util::delta_set('product', 'local_licensing\model\product',
+                                  product_factory::get_list(),
+                                  $existingproducts, $productset->id, $data);
 
         foreach ($createproducts as $product) {
             $product->save();
