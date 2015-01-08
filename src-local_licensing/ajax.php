@@ -46,26 +46,23 @@ $result = (object) array(
     'response' => new stdClass(),
 );
 
+$type = required_param('type',     PARAM_ALPHA);
+$ids  = optional_param('ids',  '', PARAM_TEXT);
+$term = optional_param('term', '', PARAM_TEXT);
+
+$ids  = strlen($ids)  ? explode(',', $ids) : null;
+$term = strlen($term) ? $term              : null;
+
+if (($ids !== null && $term !== null)
+        || ($ids === null && $term === null)) {
+    throw new input_exception();
+}
+
 switch ($objecttype) {
     case 'product':
         require_capability(capabilities::ALLOCATE, $PAGE->context);
 
-        $ids  = optional_param('ids',  '', PARAM_TEXT);
-        $term = optional_param('term', '', PARAM_TEXT);
-
-        $ids  = strlen($ids)  ? explode(',', $ids) : null;
-        $term = strlen($term) ? $term              : null;
-
-        if (($ids !== null && $term !== null)
-                || ($ids === null && $term === null)) {
-            throw new input_exception();
-        }
-
-        $producttype = required_param('type', PARAM_ALPHA);
-        $typeclass   = product_factory::get_class_name($producttype);
-
-        $result->response = $ids !== null ? $typeclass::get($ids)
-                                          : $typeclass::search($term);
+        $typeclass = product_factory::get_class_name($type);
 
         break;
 
@@ -79,6 +76,11 @@ switch ($objecttype) {
     default:
         throw new moodle_exception();
 }
+
+
+
+$result->response = $ids !== null ? $typeclass::get($ids)
+                                  : $typeclass::search($term);
 
 echo $OUTPUT->header(),
      json_encode($result),
