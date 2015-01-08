@@ -46,6 +46,15 @@ class target_set extends base_model {
     protected $name;
 
     /**
+     * Initialiser.
+     *
+     * @param string $name Target set name.
+     */
+    final public function __construct($name=null) {
+        $this->name = $name;
+    }
+
+    /**
      * Get the targets associated with the target set.
      *
      * @return \local_licensing\model\target[] The products.
@@ -69,6 +78,13 @@ class target_set extends base_model {
             'id',
             'name',
         );
+    }
+
+    /**
+     * @override \local_licensing\base_model
+     */
+    final public static function model_from_form($data) {
+        return new static($data->name);
     }
 
     /**

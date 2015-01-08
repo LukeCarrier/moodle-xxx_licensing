@@ -27,6 +27,7 @@ namespace local_licensing\form;
 
 use local_licensing\chooser_dialogue\target_chooser_dialogue;
 use local_licensing\factory\target_factory;
+use local_licensing\model\target_set;
 use local_licensing\util;
 use moodleform;
 
@@ -56,6 +57,33 @@ class target_set_form extends moodleform {
         }
 
         $this->add_action_buttons();
+    }
+
+    /**
+     * Save the form values.
+     *
+     * @return void
+     */
+    public function save() {
+        $data = $this->get_data();
+
+        $targetset = target_set::model_from_form($data);
+        $targetset->id = ($data->id == 0) ? null : $data->id;
+        $targetset->save();
+
+        $existingtargets = $targetset->get_targets();
+        list($createtargets, $deletetargets)
+                = util::delta_set('target', 'local_licensing\model\target',
+                                  target_factory::get_list(),
+                                  $existingtargets, $targetset->id, $data);
+
+        foreach ($createtargets as $target) {
+            $target->save();
+        }
+
+        foreach ($deletetargets as $target) {
+            $target->delete();
+        }
     }
 
     /**

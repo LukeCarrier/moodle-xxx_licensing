@@ -47,7 +47,9 @@ class organisation extends base_target {
      * @override \local_licensing\base_target
      */
     public static function get_item_fullname($itemid) {
-        return '@todo';
+        global $DB;
+
+        return $DB->get_field('org', 'fullname', array('id' => $itemid));
     }
 
     /**

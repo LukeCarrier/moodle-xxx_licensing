@@ -90,19 +90,19 @@ class local_licensing_renderer extends plugin_renderer_base {
     }
 
     /**
-     * List of products within a product set.
+     * List of objects within a set.
      *
-     * @param \local_licensing\model\product[] $products
+     * @param \local_licensing\model\base_model[] $items
      *
      * @return string The generated HTML.
      */
-    public function product_list($products) {
-        $productnames = array();
-        foreach ($products as &$product) {
-            $productnames[] = $product->get_name();
+    public function set_list($items) {
+        $itemnames = array();
+        foreach ($items as &$item) {
+            $itemnames[] = $item->get_name();
         }
 
-        return html_writer::alist($productnames);
+        return html_writer::alist($itemnames);
     }
 
     /**
@@ -169,7 +169,7 @@ class local_licensing_renderer extends plugin_renderer_base {
 
             $table->data[] = array(
                 $productset->name,
-                $this->product_list($productset->get_products()),
+                $this->set_list($productset->get_products()),
                 $this->action_buttons($actionbuttons),
             );
         }
@@ -205,7 +205,7 @@ class local_licensing_renderer extends plugin_renderer_base {
 
             $table->data[] = array(
                 $targetset->name,
-                $this->target_include_list($targetset->get_targets()),
+                $this->set_list($targetset->get_targets()),
                 $this->action_buttons($actionbuttons),
             );
         }
