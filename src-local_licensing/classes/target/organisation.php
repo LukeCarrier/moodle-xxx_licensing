@@ -54,7 +54,15 @@ class organisation extends base_target {
      * @override \local_licensing\base_target
      */
     public static function get($ids) {
-        return array();
+        global $DB;
+
+        list($sql, $params) = $DB->get_in_or_equal($ids);
+        $sql = <<<SQL
+SELECT id, idnumber, fullname, shortname
+FROM {org}
+WHERE id {$sql}
+SQL;
+        return array_values($DB->get_records_sql($sql, $params));
     }
 
     /**
@@ -70,7 +78,7 @@ class organisation extends base_target {
                 = totara_search_get_keyword_where_clause($keywords, $fields);
 
         $sql = <<<SQL
-SELECT hierarchy.*
+SELECT hierarchy.id, hierarchy.idnumber, hierarchy.fullname, hierarchy.shortname
 FROM {org} hierarchy
 WHERE {$searchsql}
 ORDER BY sortthread
