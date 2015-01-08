@@ -27,7 +27,6 @@ namespace local_licensing\form;
 
 use local_licensing\chooser_dialogue\product_chooser_dialogue;
 use local_licensing\factory\product_factory;
-use local_licensing\model\product;
 use local_licensing\model\product_set;
 use local_licensing\util;
 use moodleform;
