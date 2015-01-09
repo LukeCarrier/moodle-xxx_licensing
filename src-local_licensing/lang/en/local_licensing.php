@@ -96,3 +96,8 @@ $string['addxs'] = 'Add {$a}';
 // Exceptions
 $string['exception:input']                    = 'Invalid input';
 $string['exception:incompleteimplementation'] = 'Incomplete implementation';
+// Capabilities
+$string['licensing:allocatelicenses']   = 'Allocate licenses to targets';
+$string['licensing:distributelicenses'] = 'Distribute licenses to learners';
+$string['licensing:manageproductsets']  = 'Manage product sets for allocation';
+$string['licensing:managetargetsets']   = 'Manage target sets for allocation';
