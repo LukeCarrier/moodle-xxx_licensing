@@ -3,7 +3,7 @@
 moodledirroot="$1"
 
 srcroot="$(readlink -fn "$(dirname "$0")")"
-plugins=( 'enrol_licensing' 'local_licensing' )
+plugins=( 'local_licensing' 'enrol_licensing' )
 
 if [ ! -f "${moodledirroot}/lib/moodlelib.php" ]; then
     echo "The supplied directory does not appear to contain a Moodle"
@@ -23,7 +23,8 @@ for plugin in ${plugins[@]}; do
     rm -rf "${moodledirroot}/${plugindir}"
     unzip "$pluginzip"
     mv "$pluginname" "${moodledirroot}/${plugintype}"
+
+    php "${moodledirroot}/admin/cli/upgrade.php" --non-interactive
 done
 
 php "${moodledirroot}/admin/cli/purge_caches.php"
-
