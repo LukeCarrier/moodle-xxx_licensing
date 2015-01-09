@@ -23,4 +23,25 @@
  * @copyright 2014 Luke Carrier, The Development Manager Ltd
  */
 
+use local_licensing\url_generator;
+use local_licensing\util;
+
 defined('MOODLE_INTERNAL') || die;
+
+/**
+ * Extend the settings navigation block.
+ *
+ * @param \settings_navigation $navroot
+ *
+ * @return void
+ */
+function local_licensing_extends_settings_navigation(settings_navigation $navroot) {
+    if (util::should_show_navigation()) {
+        $navlicensing = $navroot->add(util::string('licensing'), null,
+                                      navigation_node::TYPE_SETTING, null,
+                                      'local_licensing');
+
+        $navlicensing->add(util::string('licensing'), url_generator::index(),
+                           navigation_node::TYPE_SETTING, null, 'local_licensing');
+    }
+}

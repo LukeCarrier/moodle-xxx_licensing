@@ -25,6 +25,7 @@
 
 namespace local_licensing;
 
+use context_system;
 use lang_string;
 
 defined('MOODLE_INTERNAL') || die;
@@ -85,6 +86,16 @@ class util {
         }
 
         return array($tocreate, $todelete);
+    }
+
+    /**
+     * Should we display the navigation items?
+     *
+     * @return boolean Whether or not we should display the navigation items.
+     */
+    public static function should_show_navigation() {
+        return has_any_capability(capabilities::all(),
+                                  context_system::instance());
     }
 
     /**

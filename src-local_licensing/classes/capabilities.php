@@ -56,7 +56,21 @@ class capabilities {
     /**
      * Can manage target sets.
      *
-     * @var string\
+     * @var string
      */
     const MANAGE_TARGET_SETS = 'local/licensing:managetargetsets';
+
+    /**
+     * Get all capability names.
+     *
+     * @return string[] All capability names.
+     */
+    public static function all() {
+        return array(
+            capabilities::ALLOCATE,
+            capabilities::DISTRIBUTE,
+            capabilities::MANAGE_PRODUCT_SETS,
+            capabilities::MANAGE_TARGET_SETS,
+        );
+    }
 }
