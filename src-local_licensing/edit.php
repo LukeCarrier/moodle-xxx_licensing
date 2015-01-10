@@ -23,6 +23,7 @@
  * @copyright 2014 Luke Carrier, The Development Manager Ltd
  */
 
+use local_licensing\capabilities;
 use local_licensing\factory\form_factory;
 use local_licensing\factory\model_factory;
 use local_licensing\factory\product_factory;
@@ -33,8 +34,6 @@ use local_licensing\util;
 require_once dirname(dirname(__DIR__)) . '/config.php';
 require_once "{$CFG->libdir}/adminlib.php";
 
-admin_externalpage_setup('local_licensing');
-
 $tabs = array('allocation', 'distribution', 'product_set', 'target_set');
 
 $id  = optional_param('id',  0, PARAM_INT);
@@ -43,6 +42,11 @@ $tab = required_param('tab',    PARAM_ALPHAEXT);
 if (!in_array($tab, $tabs)) {
     print_error('error:invalidtab', 'local_licensing');
 }
+
+$PAGE->set_context(context_system::instance());
+$PAGE->set_url($ME);
+
+capabilities::require_for_tab($tab, $PAGE->context);
 
 $tablangstring = str_replace('_', '', $tab);
 $actionstring  = ($id === 0) ? 'create' : 'edit';
@@ -55,10 +59,6 @@ $mform       = form_factory::instance($tab, $mformaction->out(false),
                                       $record->model_to_form());
 
 $renderer = $PAGE->get_renderer('local_licensing');
-
-$context       = context_system::instance();
-$canallocate   = 'local/licensing:allocatelicenses';
-$candistribute = 'local/licensing:distributelicenses';
 
 util::init_requirements();
 

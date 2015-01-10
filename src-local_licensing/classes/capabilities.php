@@ -25,6 +25,8 @@
 
 namespace local_licensing;
 
+use local_licensing\exception\input_exception;
+
 /**
  * All of our capabilities.
  *
@@ -72,5 +74,52 @@ class capabilities {
             capabilities::MANAGE_PRODUCT_SETS,
             capabilities::MANAGE_TARGET_SETS,
         );
+    }
+
+    /**
+     * Get the capability required for accessing a specific tab.
+     *
+     * @param string $tab The tab being accessed.
+     *
+     * @return string The name of the corresponding capability.
+     */
+    public static function for_tab($tab) {
+        switch ($tab) {
+            case 'allocation':
+                $capability = static::ALLOCATE;
+                break;
+
+            case 'distribution':
+                $capability = static::DISTRIBUTE;
+                break;
+
+            case 'product_set':
+                $capability = static::MANAGE_PRODUCT_SETS;
+                break;
+
+            case 'target_set':
+                $capability = static::MANAGE_TARGET_SETS;
+                break;
+
+            default:
+                throw new input_exception();
+        }
+
+        return $capability;
+    }
+
+    /**
+     * Require the capability for the active tab.
+     *
+     * @param string   $tab     The tab being accessed.
+     * @param \context $context The context in which to check for the
+     *                          capability.
+     *
+     * @return void
+     */
+    public static function require_for_tab($tab, $context) {
+        if ($tab !== 'overview') {
+            require_capability(static::for_tab($tab), $context);
+        }
     }
 }

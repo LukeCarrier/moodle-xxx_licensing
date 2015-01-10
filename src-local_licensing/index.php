@@ -25,6 +25,7 @@
 
 use local_licensing\capabilities;
 use local_licensing\model\allocation;
+use local_licensing\model\distribution;
 use local_licensing\model\product_set;
 use local_licensing\model\target_set;
 use local_licensing\url_generator;
@@ -33,13 +34,15 @@ use local_licensing\util;
 require_once dirname(dirname(__DIR__)) . '/config.php';
 require_once "{$CFG->libdir}/adminlib.php";
 
-admin_externalpage_setup('local_licensing');
-
 $tab = optional_param('tab', 'overview', PARAM_ALPHAEXT);
+
+$PAGE->set_context(context_system::instance());
+$PAGE->set_url($ME);
 
 $renderer = $PAGE->get_renderer('local_licensing');
 
-$PAGE->set_context(context_system::instance());
+capabilities::require_for_tab($tab, $PAGE->context);
+
 util::init_requirements();
 
 echo $OUTPUT->header(),
@@ -48,7 +51,6 @@ echo $OUTPUT->header(),
 
 switch ($tab) {
     case 'allocation':
-        require_capability(capabilities::ALLOCATE, $PAGE->context);
         echo $OUTPUT->heading(util::string('allocation'), 3),
              $renderer->allocation_table(allocation::all()),
              $OUTPUT->single_button(url_generator::add_allocation(),
@@ -57,7 +59,6 @@ switch ($tab) {
         break;
 
     case 'distribution':
-        require_capability(capabilities::DISTRIBUTE, $PAGE->context);
         echo $OUTPUT->heading(util::string('distribution'), 3),
              $renderer->distribution_table(distribution::all()),
              $OUTPUT->single_button(url_generator::add_distribution(),
@@ -71,7 +72,6 @@ switch ($tab) {
         break;
 
     case 'product_set':
-        require_capability(capabilities::MANAGE_PRODUCT_SETS, $PAGE->context);
         echo $OUTPUT->heading(util::string('productsets'), 3),
              $renderer->product_set_table(product_set::all()),
              $OUTPUT->single_button(url_generator::add_product_set(),
@@ -80,7 +80,6 @@ switch ($tab) {
         break;
 
     case 'target_set':
-        require_capability(capabilities::MANAGE_TARGET_SETS, $PAGE->context);
         echo $OUTPUT->heading(util::string('targetsets'), 3),
              $renderer->target_set_table(target_set::all()),
              $OUTPUT->single_button(url_generator::add_target_set(),
