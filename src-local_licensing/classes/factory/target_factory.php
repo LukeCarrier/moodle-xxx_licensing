@@ -26,6 +26,7 @@
 namespace local_licensing\factory;
 
 use local_licensing\base_factory;
+use local_licensing\model\target;
 
 class target_factory extends base_factory {
     /**
@@ -42,6 +43,24 @@ class target_factory extends base_factory {
      */
     public static function get_class_name_format() {
         return '\local_licensing\target\%s';
+    }
+
+    /**
+     * Get the target for the specified user.
+     *
+     * @param integer $userid The ID of the user 
+     *
+     * @return \local_licensing\model\target
+     */
+    public static function for_user($userid) {
+        $targettypes = static::get_list();
+        foreach ($targettypes as $targettype) {
+            $typeclass = static::get_class_name($targettype);
+
+            if ($target = $typeclass::for_user($userid)) {
+                return $target;
+            }
+        }
     }
 
     /**

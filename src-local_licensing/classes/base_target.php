@@ -41,4 +41,14 @@ class base_target extends base_pluggable {
         $type = static::get_type();
         return util::string("product:{$type}");
     }
+
+    /**
+     * Search for a target for the given user.
+     *
+     * @param integer $userid The ID of the user we're seeking targets for.
+     *
+     * @return \local_licensing\model\target The target with the highest
+     *                                       priority.
+     */
+    public static function for_user($userid) {}
 }

@@ -25,7 +25,10 @@
 
 namespace local_licensing\target;
 
+use dml_missing_record_exception;
 use local_licensing\base_target;
+use local_licensing\model\target;
+use position_assignment;
 use totara_search_get_keyword_where_clause;
 
 defined('MOODLE_INTERNAL') || die;
@@ -36,6 +39,31 @@ require_once "{$CFG->dirroot}/totara/core/searchlib.php";
  * Organisation target type.
  */
 class organisation extends base_target {
+    /**
+     * @override \local_licensing\base_target
+     */
+    public static function for_user($userid) {
+        global $DB;
+
+        /* We can't use position_assignment because it has no fetch_all
+         * implementation. */
+        $positionassignments = $DB->get_records('pos_assignment',
+                                          array('userid' => $userid),
+                                          'type ASC', 'id, organisationid');
+
+        foreach ($positionassignments as $positionassignment) {
+            try {
+                return target::get(array(
+                    'type'   => 'organisation',
+                    'itemid' => $positionassignment->organisationid,
+                ));
+            } catch (dml_missing_record_exception $e) {
+                /* No target exists for this item -- fail to the next position
+                 * assignment or target type */
+            }
+        }
+    }
+
     /**
      * @override \local_licensing\base_target
      */
