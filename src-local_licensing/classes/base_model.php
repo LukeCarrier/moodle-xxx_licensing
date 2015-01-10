@@ -208,6 +208,25 @@ abstract class base_model {
     }
 
     /**
+     * Find records with raw SQL.
+     *
+     * @param string  $sql
+     * @param mixed[] $params
+     */
+    final public static function find_sql($sql, $params=null) {
+        global $DB;
+
+        if ($params === null) {
+            $params === array();
+        }
+
+        $records = $DB->get_records_sql($sql, $params);
+        $records = is_array($records) ? $records : array();
+
+        return static::model_from_many_dml($records);
+    }
+
+    /**
      * Get a single object matching the given criteria.
      *
      * @param mixed $criteria[] The criteria with which to populate a WHERE
