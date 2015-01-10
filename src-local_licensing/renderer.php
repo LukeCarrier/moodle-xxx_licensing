@@ -142,9 +142,8 @@ class local_licensing_renderer extends plugin_renderer_base {
         $editurl   = url_generator::edit_allocation();
         $deleteurl = url_generator::delete_allocation();
 
-        list($table, $editurl, $deleteurl) = $this->generic_table($head,
-                                                                  $editurl,
-                                                                  $deleteurl);
+        list($table, $editurl, $deleteurl)
+                = $this->generic_table($head, $editurl, $deleteurl);
 
         foreach ($allocations as $allocation) {
             $editurl->url->param('id', $allocation->id);
@@ -181,9 +180,8 @@ class local_licensing_renderer extends plugin_renderer_base {
         $editurl   = url_generator::edit_product_set();
         $deleteurl = url_generator::delete_product_set();
 
-        list($table, $editurl, $deleteurl) = $this->generic_table($head,
-                                                                  $editurl,
-                                                                  $deleteurl);
+        list($table, $editurl, $deleteurl)
+                = $this->generic_table($head, $editurl, $deleteurl);
 
         foreach ($productsets as $productset) {
             $editurl->url->param('id', $productset->id);
@@ -217,9 +215,8 @@ class local_licensing_renderer extends plugin_renderer_base {
         $editurl   = url_generator::edit_target_set();
         $deleteurl = url_generator::delete_target_set();
 
-        list($table, $editurl, $deleteurl) = $this->generic_table($head,
-                                                                  $editurl,
-                                                                  $deleteurl);
+        list($table, $editurl, $deleteurl)
+                = $this->generic_table($head, $editurl, $deleteurl);
 
         foreach ($targetsets as $targetset) {
             $editurl->url->param('id', $targetset->id);
