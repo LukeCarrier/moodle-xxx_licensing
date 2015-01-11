@@ -1,0 +1,10 @@
+{
+    "moodle-local_licensing-updateselectoptions": {
+        "requires": [
+            "base",
+            "node",
+            "io",
+            "json-parse"
+        ]
+    }
+}
