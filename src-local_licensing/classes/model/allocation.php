@@ -26,6 +26,7 @@
 namespace local_licensing\model;
 
 use local_licensing\base_model;
+use local_licensing\util;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -96,12 +97,45 @@ class allocation extends base_model {
     }
 
     /**
+     * Get the number of available (remaining) licences.
+     *
+     * @return integer The number of available licences.
+     */
+    public function get_available() {
+        return $this->get_consumption()->available;
+    }
+
+    /**
      * Get the number of consumed licences.
      *
      * @return integer The number of consumed licences.
      */
     public function get_consumed() {
-        return 0; // @todo
+        return $this->get_consumption()->consumed;
+    }
+
+    /**
+     * Get consumption data.
+     *
+     * @return \stdClass An object containing the consumed and available
+     *                   properties.
+     */
+    protected function get_consumption() {
+        global $DB;
+
+        $sql = <<<SQL
+SELECT
+    COUNT(l.id)           AS consumed,
+    a.count - count(l.id) AS available
+FROM mdl_lic_allocation a
+LEFT JOIN mdl_lic_distribution d
+    ON d.allocationid = a.id
+LEFT JOIN mdl_lic_licence l
+    ON l.distributionid = d.id
+WHERE a.id = ?
+SQL;
+
+        return $DB->get_record_sql($sql, array($this->id));
     }
 
     /**
@@ -123,12 +157,42 @@ class allocation extends base_model {
     }
 
     /**
-     * Get the number of remaining licences.
+     * Get a list of active allocations.
      *
-     * @return integer The number of remaining licences.
+     * @return \stdClass A raw DML record set.
      */
-    public function get_remaining() {
-        return $this->count - $this->get_consumed();
+    protected static function get_active_allocations($targetid) {
+        global $DB;
+
+        $sql = <<<SQL
+SELECT a.id, a.count,
+    a.count - count(l.id) AS remaining,
+    ps.name AS productsetname
+FROM mdl_lic_allocation a
+LEFT JOIN mdl_lic_productset ps
+    ON ps.id = a.productsetid
+LEFT JOIN mdl_lic_distribution d
+    ON d.allocationid = a.id
+LEFT JOIN mdl_lic_licence l
+    ON l.distributionid = d.id
+WHERE a.targetid = ?
+GROUP BY a.id
+HAVING COUNT(l.id) < a.count
+SQL;
+
+        return $DB->get_records_sql($sql, array($targetid));
+    }
+
+    public static function menu_for_target($targetid) {
+        $allocations = static::get_active_allocations($targetid);
+        $menu = array();
+
+        foreach ($allocations as $allocation) {
+            $menu[$allocation->id] = util::string('allocation:name',
+                                                  $allocation);
+        }
+
+        return $menu;
     }
 
     /**

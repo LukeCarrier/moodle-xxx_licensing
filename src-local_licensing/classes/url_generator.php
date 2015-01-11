@@ -90,6 +90,17 @@ class url_generator {
     }
 
     /**
+     * Get the URL to delete a distribution.
+     *
+     * @param integer $id The (optional) distribution ID.
+     *
+     * @return \moodle_url The URL.
+     */
+    public static function delete_distribution($id=null) {
+        return static::delete_url('distribution', $id);
+    }
+
+    /**
      * Get the URL to delete a product set.
      *
      * @param integer $id The (optional) product set ID.

@@ -25,6 +25,8 @@
 
 namespace local_licensing;
 
+use local_licensing\model\product;
+
 /**
  * Base product type.
  *
@@ -45,7 +47,6 @@ class base_product extends base_pluggable {
      * @return string The type name.
      */
     public static function get_type() {
-        return get_called_class();
     }
 
     /**
@@ -66,6 +67,25 @@ class base_product extends base_pluggable {
     public static function get_name() {
         $type = static::get_type();
         return util::string("product:{$type}");
+    }
+
+    /**
+     * Get products of this type within a specific product set.
+     *
+     * @param integer $productsetid
+     *
+     * @return \stdClass[]
+     */
+    public static function get_in_product_set($productsetid) {
+        global $DB;
+
+        $productids = $DB->get_records(product::model_table(), array(
+            'productsetid' => $productsetid,
+            'type'         => static::get_type(),
+        ), '', 'itemid');
+
+        return count($productids)
+                ? static::get(util::reduce($productids, 'itemid')) : array();
     }
 
     /**

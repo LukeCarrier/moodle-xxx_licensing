@@ -43,6 +43,13 @@ class program extends base_product {
     /**
      * @override \local_licensing\base_product
      */
+    public static function get_type() {
+        return 'program';
+    }
+
+    /**
+     * @override \local_licensing\base_product
+     */
     public static function get_item_fullname($itemid) {
         global $DB;
 

@@ -30,27 +30,27 @@ use local_licensing\base_chooser_dialogue;
 defined('MOODLE_INTERNAL') || die;
 
 /**
- * Product chooser dialogue.
+ * Traget chooser dialogue.
  */
-class product_chooser_dialogue extends base_chooser_dialogue {
+class user_chooser_dialogue extends base_chooser_dialogue {
     /**
      * @override \local_licensing\base_chooser_dialogue
      */
-    protected static function get_name_string($name) {
-        return "productset:products:{$name}";
+    protected static function get_name_string($type=null) {
+        return 'distribution:users';
     }
 
     /**
      * @override \local_licensing\base_chooser_dialogue
      */
     protected static function get_object_type() {
-        return 'product';
+        return 'user';
     }
 
     /**
      * @override \local_licensing\base_chooser_dialogue
      */
     protected static function has_subtypes() {
-        return true;
+        return false;
     }
 }

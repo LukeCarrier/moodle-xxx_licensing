@@ -76,8 +76,7 @@ class product_set_form extends moodleform {
     protected function product_chooser_dialogue($type) {
         $default = $this->_customdata['record']->{"products{$type}"};
 
-        product_chooser_dialogue::add_form_field($this->_form, $type,
-                                                 $default);
+        product_chooser_dialogue::add_form_field($this->_form, $default, $type);
     }
 
     /**

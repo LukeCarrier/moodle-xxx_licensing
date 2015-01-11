@@ -35,19 +35,35 @@
             </KEYS>
         </TABLE>
 
+        <TABLE NAME="lic_distribution" COMMENT="Sets of distributed licenses">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10"
+                       NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="allocationid" TYPE="int" LENGTH="10"
+                       NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="productid" TYPE="int" LENGTH="10"
+                       NOTNULL="true" SEQUENCE="false" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="fk_allocationid" TYPE="foreign" FIELDS="allocationid"
+                     REFTABLE="lic_allocation" REFFIELDS="id" />
+                <KEY NAME="fk_productid" TYPE="foreign" FIELDS="productid"
+                     REFTABLE="lic_product" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+
         <TABLE NAME="lic_licence" COMMENT="Distributed licences">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10"
                        NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="productid" TYPE="int" LENGTH="10"
+                <FIELD NAME="distributionid" TYPE="int" LENGTH="10"
                        NOTNULL="true" SEQUENCE="false" />
                 <FIELD NAME="userid" TYPE="int" LENGTH="10"
                        NOTNULL="true" SEQUENCE="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="fk_productid" TYPE="foreign" FIELDS="productid"
-                     REFTABLE="lic_product" REFFIELDS="id" />
                 <KEY NAME="fk_userid" TYPE="foreign" FIELDS="userid"
                      REFTABLE="user" REFFIELDS="id" />
             </KEYS>

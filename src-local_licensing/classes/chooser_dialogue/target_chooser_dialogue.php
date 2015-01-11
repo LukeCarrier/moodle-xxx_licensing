@@ -46,4 +46,11 @@ class target_chooser_dialogue extends base_chooser_dialogue {
     protected static function get_object_type() {
         return 'target';
     }
+
+    /**
+     * @override \local_licensing\base_chooser_dialogue
+     */
+    protected static function has_subtypes() {
+        return true;
+    }
 }

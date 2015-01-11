@@ -28,6 +28,7 @@ use local_licensing\exception\input_exception;
 use local_licensing\factory\product_factory;
 use local_licensing\factory\target_factory;
 
+// Comment this line to see fatal errors
 define('AJAX_SCRIPT', true);
 
 require_once dirname(dirname(__DIR__)) . '/config.php';
@@ -39,54 +40,71 @@ $PAGE->set_url(new moodle_url('/local/licensing/ajax.php'));
 
 require_login();
 
-$objecttype = required_param('objecttype', PARAM_ALPHA);
-
 $result = (object) array(
     'success'  => true,
     'error'    => '',
     'response' => new stdClass(),
 );
 
-$type = required_param('type',     PARAM_ALPHA);
-$ids  = optional_param('ids',  '', PARAM_TEXT);
-$term = optional_param('term', '', PARAM_TEXT);
+$objecttype = required_param('objecttype', PARAM_ALPHA);
 
-$ids  = strlen($ids)  ? explode(',', $ids) : null;
-$term = strlen($term) ? $term              : null;
+if ($objecttype === 'allocationproduct') {
+    require_capability(capabilities::DISTRIBUTE, $PAGE->context);
 
-if (($ids !== null && $term !== null)
-        || ($ids === null && $term === null)) {
-    throw new input_exception();
+    $productsetid = required_param('productsetid', PARAM_INT);
+
+    $producttypes     = product_factory::get_list();
+    $result->response = array();
+
+    foreach ($producttypes as $producttype) {
+        $typeclass = product_factory::get_class_name($producttype);
+
+        $result->response[$producttype]
+                = $typeclass::get_in_product_set($productsetid);
+    }
+} else {
+    $ids  = optional_param('ids',  '', PARAM_TEXT);
+    $term = optional_param('term', '', PARAM_TEXT);
+
+    $ids  = strlen($ids)  ? explode(',', $ids) : null;
+    $term = strlen($term) ? $term              : null;
+
+    if (($ids !== null && $term !== null)
+            || ($ids === null && $term === null)) {
+        throw new input_exception();
+    }
+
+    switch ($objecttype) {
+        case 'product':
+            $type = required_param('type', PARAM_ALPHA);
+            require_capability(capabilities::ALLOCATE, $PAGE->context);
+
+            $typeclass = product_factory::get_class_name($type);
+
+            break;
+
+        case 'target':
+            $type = required_param('type', PARAM_ALPHA);
+            require_capability(capabilities::MANAGE_TARGET_SETS, $PAGE->context);
+
+            $typeclass = target_factory::get_class_name($type);
+
+            break;
+
+        case 'user':
+            require_capability(capabilities::DISTRIBUTE, $PAGE->context);
+
+            $typeclass = 'local_licensing\user_search_helper';
+
+            break;
+
+        default:
+            throw new moodle_exception();
+    }
+
+    $result->response = $ids !== null ? $typeclass::get($ids)
+                                      : $typeclass::search($term);
 }
-
-switch ($objecttype) {
-    case 'product':
-        require_capability(capabilities::ALLOCATE, $PAGE->context);
-
-        $typeclass = product_factory::get_class_name($type);
-
-        break;
-
-    case 'target':
-        require_capability(capabilities::MANAGE_TARGET_SETS, $PAGE->context);
-
-        $typeclass = target_factory::get_class_name($type);
-
-    case 'user':
-        require_capability(capabilities::DISTRIBUTE, $PAGE->context);
-
-        // todo
-
-        break;
-
-    default:
-        throw new moodle_exception();
-}
-
-
-
-$result->response = $ids !== null ? $typeclass::get($ids)
-                                  : $typeclass::search($term);
 
 echo $OUTPUT->header(),
      json_encode($result),

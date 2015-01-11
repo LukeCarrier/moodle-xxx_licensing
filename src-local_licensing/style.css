@@ -37,7 +37,8 @@
  */
 
 .yui3-moodle-local_licensing-productchooserdialogue-hidden,
-.yui3-moodle-local_licensing-targetchooserdialogue-hidden {
+.yui3-moodle-local_licensing-targetchooserdialogue-hidden,
+.yui3-moodle-local_licensing-userchooserdialogue-hidden {
     visibility: hidden
 }
 

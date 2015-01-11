@@ -82,6 +82,43 @@ class local_licensing_renderer extends plugin_renderer_base {
     }
 
     /**
+     * Distribution table.
+     *
+     * @param \local_licensing\model\distribution[] $distributions
+     *
+     * @return string The generated HTML.
+     */
+    public function distribution_table($distributions) {
+        $head = array(
+            util::string('distribution:productset'),
+            util::string('distribution:product'),
+            util::string('distribution:count'),
+            util::string('actions', null, 'moodle'),
+        );
+
+        $editurl   = url_generator::edit_distribution();
+        $deleteurl = url_generator::delete_distribution();
+
+        list($table, $editurl, $deleteurl)
+                = $this->generic_table($head, $editurl, $deleteurl);
+
+        foreach ($distributions as $distribution) {
+            $editurl->url->param('id', $distribution->id);
+            $deleteurl->url->param('id', $distribution->id);
+            $actionbuttons = array($editurl, $deleteurl);
+
+            $table->data[] = array(
+                $distribution->get_allocation()->get_product_set()->name,
+                $distribution->get_product()->get_name(),
+                $distribution->get_count(),
+                $this->action_buttons($actionbuttons),
+            );
+        }
+
+        return html_writer::table($table);
+    }
+
+    /**
      * Do the ground work for rendering a table.
      *
      * @param mixed[] $head      An array of html_table_cell objects or strings.
@@ -134,7 +171,7 @@ class local_licensing_renderer extends plugin_renderer_base {
         $head = array(
             util::string('allocation:target'),
             util::string('productset'),
-            util::string('allocation:remaining'),
+            util::string('allocation:available'),
             util::string('allocation:progress'),
             util::string('actions', null, 'moodle'),
         );
@@ -153,7 +190,7 @@ class local_licensing_renderer extends plugin_renderer_base {
             $table->data[] = array(
                 $allocation->get_target()->get_name(),
                 $allocation->get_product_set()->name,
-                $allocation->get_remaining(),
+                $allocation->get_available(),
                 $this->allocation_progress($allocation->count,
                                            $allocation->get_consumed()),
                 $this->action_buttons($actionbuttons),

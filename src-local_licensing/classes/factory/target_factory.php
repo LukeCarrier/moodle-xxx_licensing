@@ -26,6 +26,7 @@
 namespace local_licensing\factory;
 
 use local_licensing\base_factory;
+use local_licensing\exception\missing_target_exception;
 use local_licensing\model\target;
 
 class target_factory extends base_factory {
@@ -61,6 +62,8 @@ class target_factory extends base_factory {
                 return $target;
             }
         }
+
+        throw new missing_target_exception();
     }
 
     /**

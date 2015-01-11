@@ -26,6 +26,8 @@
 namespace local_licensing;
 
 use moodle_exception;
+use local_licensing\exception\incomplete_implementation_exception;
+use local_licensing\exception\input_exception;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -62,8 +64,15 @@ abstract class base_chooser_dialogue {
      *
      * @return void
      */
-    public static function add_form_field($mform, $type, $default) {
+    public static function add_form_field($mform, $default, $type=null) {
         global $PAGE;
+
+        $hassubtypes = static::has_subtypes();
+
+        if ($hassubtypes && $type === null
+                || !$hassubtypes && $type !== null) {
+            throw new input_exception();
+        }
 
         static::maybe_setup();
 
@@ -71,11 +80,26 @@ abstract class base_chooser_dialogue {
             throw new moodle_exception();
         }
 
-        $ajaxurl      = url_generator::ajax();
-        $objecttype   = static::get_object_type();
-        $name         = "{$objecttype}s{$type}";
-        $dialoguename = "licensing-chooserdialogue-{$objecttype}-{$type}";
-        $namestring   = static::get_name_string($type);
+        $ajaxurl    = url_generator::ajax();
+        $namestring = static::get_name_string($type);
+        $objecttype = static::get_object_type();
+
+        if ($hassubtypes) {
+            $name         = "{$objecttype}s{$type}";
+            $dialoguename = "licensing-chooserdialogue-{$objecttype}-{$type}";
+        } else {
+            $name         = $objecttype;
+            $dialoguename = "licensing-chooserdialogue-{$objecttype}";
+        }
+
+        $params = array(
+            'ajaxurl' => $ajaxurl->out_as_local_url(),
+            'base'    => $dialoguename,
+        );
+
+        if ($hassubtypes) {
+            $params['type'] = $type;
+        }
 
         $mform->addElement('text', $name, util::string($namestring));
         $mform->setDefault($name, $default);
@@ -84,11 +108,9 @@ abstract class base_chooser_dialogue {
         $PAGE->requires->string_for_js($namestring, static::MOODLE_MODULE);
         $PAGE->requires->yui_module("moodle-local_licensing-{$objecttype}chooserdialogue",
                                     "M.local_licensing.init_{$objecttype}_dialogue",
-                                    array(array(
-            'ajaxurl' => $ajaxurl->out_as_local_url(),
-            'base'    => $dialoguename,
-            'type'    => $type,
-        )));
+                                    array($params));
+
+        static::$instances[] = $hassubtypes ? $type : true;
     }
 
     /**
@@ -99,7 +121,11 @@ abstract class base_chooser_dialogue {
      * @return boolean Whether or not the form field can be added.
      */
     protected static function can_add_form_field($type) {
-        return !in_array($type, static::$instances);
+        if (static::has_subtypes()) {
+            return !in_array($type, static::$instances);
+        } else {
+            return count(static::$instances) === 0;
+        }
     }
 
     /**
@@ -119,6 +145,22 @@ abstract class base_chooser_dialogue {
      * @return string The object type.
      */
     protected static function get_object_type() {
+        throw new incomplete_implementation_exception();
+    }
+
+    /**
+     * Does the dialogue have subtypes?
+     *
+     * A dialogue can be complex in that it has both an objecttype (i.e.
+     * product) and a type (i.e. course), or simple in that it has only an
+     * objecttype (i.e. user).
+     *
+     * Implementation details differ slightly:
+     * -> @todo
+     *
+     * @return boolean True if the dialogue supports subtypes, else false.
+     */
+    protected static function has_subtypes() {
         throw new incomplete_implementation_exception();
     }
 

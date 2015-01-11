@@ -103,7 +103,6 @@ class target_set_form extends moodleform {
     protected function target_chooser_dialogue($type) {
         $default = $this->_customdata['record']->{"targets{$type}"};
 
-        target_chooser_dialogue::add_form_field($this->_form, $type,
-                                                $default);
+        target_chooser_dialogue::add_form_field($this->_form, $default, $type);
     }
 }

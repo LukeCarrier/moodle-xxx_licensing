@@ -24,6 +24,7 @@
  */
 
 use local_licensing\capabilities;
+use local_licensing\exception\form_submission_exception;
 use local_licensing\factory\form_factory;
 use local_licensing\factory\model_factory;
 use local_licensing\factory\product_factory;
@@ -58,24 +59,32 @@ $redirecturl = url_generator::list_url($tab);
 $mform       = form_factory::instance($tab, $mformaction->out(false),
                                       $record->model_to_form());
 
-$renderer = $PAGE->get_renderer('local_licensing');
+$adminrenderer   = $PAGE->get_renderer('admin');
+$renderer        = $PAGE->get_renderer('local_licensing');
+$submissionerror = null;
 
 util::init_requirements();
 
 if ($mform->is_cancelled()) {
     redirect($redirecturl);
 } elseif ($data = $mform->get_data()) {
-    $mform->save();
-
-    redirect($redirecturl);
-} else {
-    echo $OUTPUT->header(),
-         $OUTPUT->heading(util::string('licensing')),
-         $renderer->tabs($tab),
-         $renderer->back_to_all($tab, $tablangstring),
-         $OUTPUT->heading(util::string("{$tablangstring}:{$actionstring}"), 3);
-
-    $mform->display();
-
-    echo $OUTPUT->footer();
+    try {
+        $mform->save();
+        redirect($redirecturl);
+    } catch (form_submission_exception $submissionerror) {
+    }
 }
+
+echo $OUTPUT->header(),
+     $OUTPUT->heading(util::string('licensing')),
+     $renderer->tabs($tab),
+     $renderer->back_to_all($tab, $tablangstring),
+     $OUTPUT->heading(util::string("{$tablangstring}:{$actionstring}"), 3);
+
+if ($submissionerror !== null) {
+    $adminrenderer->warning($submissionerror->getMessage());
+}
+
+$mform->display();
+
+echo $OUTPUT->footer();

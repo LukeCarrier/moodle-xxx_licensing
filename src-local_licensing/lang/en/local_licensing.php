@@ -46,22 +46,34 @@ $string['overview']  = 'Overview';
 $string['error:invalidtab'] = 'Please select a tab from the menu above.';
 
 // Allocation
+$string['addallocation']         = 'Add allocation';
 $string['allocation']            = 'Allocation';
 $string['allocations']           = 'Allocations';
+$string['allocation:available']  = 'Available';
 $string['allocation:backtoall']  = 'Back to all allocations';
 $string['allocation:create']     = 'Allocate licenses for a product set';
 $string['allocation:count']      = 'Licence count';
 $string['allocation:enddate']    = 'End date';
+$string['allocation:name']       = '{$a->productsetname} ({$a->remaining} of {$a->count} remaining)';
 $string['allocation:productset'] = 'Product set';
 $string['allocation:progress']   = 'Progress';
-$string['allocation:remaining']  = 'Remaining';
 $string['allocation:startdate']  = 'Start date';
 $string['allocation:target']     = 'Target';
-$string['addallocation']         = 'Add allocation';
 
 // Distribution
-$string['distribution']  = 'Distribution';
-$string['distributions'] = 'Distributions';
+$string['adddistribution']         = 'Add distribution';
+$string['distribution']            = 'Distribution';
+$string['distributions']           = 'Distributions';
+$string['distribution:backtoall']  = 'Back to all distributions';
+$string['distribution:create']     = 'Create a distribution';
+$string['distribution:allocation'] = 'Allocation';
+$string['distribution:count']      = 'Count';
+$string['distribution:product']    = 'Product';
+$string['distribution:productset'] = 'Product set';
+$string['distribution:users']      = 'Users';
+
+// Distribution exceptions
+$string['exception:formsubmission:insufficientlicences'] = 'The selected allocation has {$a->available} licences, but {$a->users} were selected for enrolment.';
 
 // Product sets
 $string['addproductset']        = 'Add product set';
@@ -94,8 +106,11 @@ $string['targetset:target:organisation'] = 'Organisation';
 $string['addxs'] = 'Add {$a}';
 
 // Exceptions
+$string['exception:formsubmission']           = 'Errors were encountered when processing the submission.';
 $string['exception:input']                    = 'Invalid input';
 $string['exception:incompleteimplementation'] = 'Incomplete implementation';
+$string['exception:missingtarget']            = 'This user does not appear to be a member of any targets';
+
 // Capabilities
 $string['licensing:allocatelicenses']   = 'Allocate licenses to targets';
 $string['licensing:distributelicenses'] = 'Distribute licenses to learners';

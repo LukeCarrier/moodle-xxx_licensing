@@ -43,18 +43,11 @@ class licence extends base_model {
     protected $id;
 
     /**
-     * Allocation ID.
+     * Distribution ID.
      *
      * @var integer
      */
-    protected $allocationid;
-
-    /**
-     * Product ID.
-     *
-     * @var integer
-     */
-    protected $productid;
+    protected $distributionid;
 
     /**
      * User ID.
@@ -64,12 +57,14 @@ class licence extends base_model {
     protected $userid;
 
     /**
-     * Get the associated product.
+     * Initialiser.
      *
-     * @return \local_licensing\model\product The product.
+     * @param integer $allocationid
+     * @param integer $userid
      */
-    public function get_product() {
-        return product::get_by_id($this->productid);
+    public function __construct($distributionid, $userid) {
+        $this->distributionid = $distributionid;
+        $this->userid         = $userid;
     }
 
     /**
@@ -85,8 +80,7 @@ class licence extends base_model {
     final public static function model_fields() {
         return array(
             'id',
-            'allocationid',
-            'productid',
+            'distributionid',
             'userid',
         );
     }

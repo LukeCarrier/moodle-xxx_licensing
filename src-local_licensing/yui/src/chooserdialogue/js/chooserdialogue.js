@@ -99,9 +99,12 @@ Y.extend(ChooserDialogue, M.core.dialogue, {
      */
     getObjectList: function(field, query, onComplete) {
         var params = {
-            objecttype: this.get('objecttype'),
-            type: this.get('type')
+            objecttype: this.get('objecttype')
         };
+
+        if (this.hasSubtypes()) {
+            params['type'] = this.get('type');
+        }
 
         params[field] = query;
 
@@ -138,7 +141,13 @@ Y.extend(ChooserDialogue, M.core.dialogue, {
      * @return string The name of the field.
      */
     getFormFieldId: function() {
-        return 'id_' + this.get('objecttype') + 's' + this.get('type');
+        var formFieldId = 'id_' + this.get('objecttype');
+
+        if (this.hasSubtypes()) {
+            formFieldId += 's' + this.get('type');
+        }
+
+        return formFieldId;
     },
 
     /**
@@ -167,7 +176,7 @@ Y.extend(ChooserDialogue, M.core.dialogue, {
      *
      * @return string
      */
-    getselectedObjectIdstring: function() {
+    getSelectedObjectIdString: function() {
         return this.getSelectedObjectIds().join(',');
     },
 
@@ -273,8 +282,7 @@ Y.extend(ChooserDialogue, M.core.dialogue, {
             textInput = this.getSelectedObjectIdInput();
 
         var formElements = Y.Moodle.local_licensing.formtemplate({
-            add:  this.addString(),
-            type: type
+            add:  this.addString()
         });
 
         textInput.hide();
@@ -289,12 +297,21 @@ Y.extend(ChooserDialogue, M.core.dialogue, {
     },
 
     /**
+     * Does the object type have subtypes?
+     *
+     * @return boolean True if yes, false if no.
+     */
+    hasSubtypes: function() {
+        return !!this.get('type');
+    },
+
+    /**
      * Refresh the list of selected objects displayed in the form.
      *
      * @return void
      */
     refreshObjectList: function() {
-        var ids = this.getselectedObjectIdstring();
+        var ids = this.getSelectedObjectIdString();
 
         if (ids !== '') {
             this.getObjectList('ids', ids, this.updateListBody);

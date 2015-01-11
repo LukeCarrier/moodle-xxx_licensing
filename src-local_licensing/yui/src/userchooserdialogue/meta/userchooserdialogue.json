@@ -1,0 +1,7 @@
+{
+    "moodle-local_licensing-userchooserdialogue": {
+        "requires": [
+            "moodle-local_licensing-chooserdialogue"
+        ]
+    }
+}

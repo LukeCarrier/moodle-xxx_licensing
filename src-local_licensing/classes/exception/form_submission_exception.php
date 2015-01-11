@@ -23,34 +23,35 @@
  * @copyright 2014 Luke Carrier, The Development Manager Ltd
  */
 
-namespace local_licensing\chooser_dialogue;
+namespace local_licensing\exception;
 
-use local_licensing\base_chooser_dialogue;
+use moodle_exception;
 
 defined('MOODLE_INTERNAL') || die;
 
 /**
- * Product chooser dialogue.
+ * Incomplete implementation exception.
+ *
+ * Raised whenever user input is invalid.
  */
-class product_chooser_dialogue extends base_chooser_dialogue {
+class form_submission_exception extends moodle_exception {
     /**
-     * @override \local_licensing\base_chooser_dialogue
+     * Moodle module.
+     *
+     * @var string
      */
-    protected static function get_name_string($name) {
-        return "productset:products:{$name}";
-    }
+    const MOODLE_MODULE = 'local_licensing';
 
     /**
-     * @override \local_licensing\base_chooser_dialogue
+     * @override \moodle_exception
      */
-    protected static function get_object_type() {
-        return 'product';
-    }
+    public function __construct($code=null, $a=null) {
+        $string = 'exception:formsubmission';
 
-    /**
-     * @override \local_licensing\base_chooser_dialogue
-     */
-    protected static function has_subtypes() {
-        return true;
+        if ($code !== null) {
+            $string .= ":{$code}";
+        }
+
+        parent::__construct($string, static::MOODLE_MODULE, $a);
     }
 }
