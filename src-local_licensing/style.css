@@ -19,16 +19,16 @@
  * Action buttons in tables.
  */
 
-.path-admin-local-licensing .action-buttons {
+.path-local-licensing .action-buttons {
     margin: 0;
 }
 
-.path-admin-local-licensing .action-buttons li {
+.path-local-licensing .action-buttons li {
     display: inline-block;
     list-style-type: none;
 }
 
-.path-admin-local-licensing .action-buttons li:not(:first-child) {
+.path-local-licensing .action-buttons li:not(:first-child) {
     padding-left: 5px;
 }
 
