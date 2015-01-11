@@ -4,7 +4,9 @@
             "base",
             "node",
             "io",
-            "json-parse"
+            "json-parse",
+            "moodle-core-notification-ajaxexception",
+            "moodle-core-notification-exception"
         ]
     }
 }
