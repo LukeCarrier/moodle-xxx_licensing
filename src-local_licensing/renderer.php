@@ -278,17 +278,15 @@ class local_licensing_renderer extends plugin_renderer_base {
      * @return string The generated HTML.
      */
     public function tabs($selected=null) {
-        return $this->tabtree(array(
-            new tabobject('overview', url_generator::index(),
-                          util::string('overview')),
-            new tabobject('target_set', url_generator::list_target_sets(),
-                          util::string('targetsets')),
-            new tabobject('product_set', url_generator::list_product_sets(),
-                          util::string('productsets')),
-            new tabobject('allocation', url_generator::list_allocations(),
-                          util::string('allocations')),
-            new tabobject('distribution', url_generator::list_distributions(),
-                          util::string('distributions')),
-        ), $selected);
+        $taburls = url_generator::tabs();
+
+        $tabs = array();
+        foreach ($taburls as $tabname => $taburl) {
+            $tabstring = str_replace('_', '', $tabname);
+            $tabs[] = new tabobject($tabname, $taburl,
+                                    util::string($tabstring));
+        }
+
+        return $this->tabtree($tabs, $selected);
     }
 }

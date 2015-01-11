@@ -23,6 +23,7 @@
  * @copyright 2014 Luke Carrier, The Development Manager Ltd
  */
 
+use local_licensing\capabilities;
 use local_licensing\url_generator;
 use local_licensing\util;
 
@@ -36,12 +37,20 @@ defined('MOODLE_INTERNAL') || die;
  * @return void
  */
 function local_licensing_extends_settings_navigation(settings_navigation $navroot) {
-    if (util::should_show_navigation()) {
-        $navlicensing = $navroot->add(util::string('licensing'), null,
-                                      navigation_node::TYPE_SETTING, null,
-                                      'local_licensing');
+    $navlicensing = $navroot->add(util::string('licensing'), null,
+                                  navigation_node::TYPE_SETTING, null,
+                                  'local_licensing');
 
-        $navlicensing->add(util::string('licensing'), url_generator::index(),
-                           navigation_node::TYPE_SETTING, null, 'local_licensing');
+    $context = context_system::instance();
+    $taburls = url_generator::tabs();
+
+    foreach ($taburls as $tabname => $taburl) {
+        if (capabilities::has_for_tab($tabname, $context)) {
+            $tabstring = str_replace('_', '', $tabname);
+
+            $navlicensing->add(util::string($tabstring), $taburl,
+                               navigation_node::TYPE_SETTING, null,
+                               "local_licensing_{$tabname}");
+        }
     }
 }

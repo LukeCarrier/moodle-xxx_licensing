@@ -109,6 +109,33 @@ class capabilities {
     }
 
     /**
+     * Does the user have any of our capabilities?
+     *
+     * @param \context $context The context.
+     *
+     * @return boolean Whether or not the user has any of our capabilities.
+     */
+    public static function has_any($context) {
+        return has_any_capability(capabilities::all(), $context);
+    }
+
+    /**
+     * Does the user have the capability required for the specified tab?
+     *
+     * @param string   $tab     The name of the tab.
+     * @param \context $context The context.
+     *
+     * @return boolean Whether or not the user has the specified capability.
+     */
+    public static function has_for_tab($tab, $context) {
+        if ($tab === 'overview') {
+            return static::has_any($context);
+        } else {
+            return has_capability(static::for_tab($tab), $context);
+        }
+    }
+
+    /**
      * Require the capability for the active tab.
      *
      * @param string   $tab     The tab being accessed.

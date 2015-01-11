@@ -225,4 +225,20 @@ class url_generator {
 
         return new moodle_url(static::BASE_URL . $url, $params);
     }
+
+    /**
+     * URLs of all tabs.
+     *
+     * @return \moodle_url[] An array of Moodle URLs, indexed by their
+     *                       corresponding tab names.
+     */
+    public static function tabs() {
+        return array(
+            'overview'     => static::index(),
+            'target_set'   => static::list_target_sets(),
+            'product_set'  => static::list_product_sets(),
+            'allocation'   => static::list_allocations(),
+            'distribution' => static::list_distributions(),
+        );
+    }
 }

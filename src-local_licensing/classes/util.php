@@ -116,8 +116,7 @@ class util {
      * @return boolean Whether or not we should display the navigation items.
      */
     public static function should_show_navigation() {
-        return has_any_capability(capabilities::all(),
-                                  context_system::instance());
+        return capabilities::has_any(context_system::instance());
     }
 
     /**
