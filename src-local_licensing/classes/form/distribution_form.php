@@ -31,6 +31,7 @@ use local_licensing\factory\target_factory;
 use local_licensing\model\allocation;
 use local_licensing\model\distribution;
 use local_licensing\model\licence;
+use local_licensing\model\product;
 use local_licensing\url_generator;
 use local_licensing\util;
 use moodleform;
@@ -52,6 +53,8 @@ class distribution_form extends moodleform {
         $data  = $this->_customdata['record'];
         $mform = $this->_form;
 
+        $iscreation = $data->id == 0;
+
         $target = target_factory::for_user($USER->id);
 
         $mform->addElement('hidden', 'id', $data->id);
@@ -63,16 +66,25 @@ class distribution_form extends moodleform {
         $mform->setDefault('allocationid', $data->allocationid);
         $mform->setType('allocationid', PARAM_INT);
 
-        $mform->addElement('select', 'productid',
-                           util::string('distribution:product'));
-        $mform->setDefault('productid', $data->productid);
-        $mform->setType('productid', PARAM_INT);
+        $productstring = util::string('distribution:product');
+        if ($iscreation) {
+            $mform->addElement('select', 'productid',
+                               $productstring);
+            $mform->setDefault('productid', $data->productid);
+            $mform->setType('productid', PARAM_INT);
+            $this->update_select_options('allocationid', 'productid');
+        } else {
+            $mform->addElement('static', 'productid', $productstring,
+                               product::get_by_id($data->productid)->get_name());
+        }
 
-        $this->update_select_options('allocationid', 'productid');
+        $this->user_chooser_dialogue($iscreation);
 
-        $this->user_chooser_dialogue();
-
-        $this->add_action_buttons();
+        if ($iscreation) {
+            $this->add_action_buttons();
+        } else {
+            $this->_form->hardFreeze();
+        }
     }
 
     /**
@@ -152,9 +164,13 @@ class distribution_form extends moodleform {
      *
      * @return void
      */
-    protected function user_chooser_dialogue() {
+    protected function user_chooser_dialogue($editable) {
         $default = $this->_customdata['record']->users;
 
-        user_chooser_dialogue::add_form_field($this->_form, $default);
+        if ($editable) {
+            user_chooser_dialogue::add_form_field($this->_form, $default);
+        } else {
+            user_chooser_dialogue::add_static_list($this->_form, $default);
+        }
     }
 }

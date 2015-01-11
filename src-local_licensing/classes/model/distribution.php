@@ -26,6 +26,7 @@
 namespace local_licensing\model;
 
 use local_licensing\base_model;
+use local_licensing\util;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -110,7 +111,7 @@ LEFT JOIN {lic_licence} l
 WHERE l.distributionid = ?
 SQL;
 
-        return $DB->get_records_sql($sql, array($this->id));
+        return util::reduce($DB->get_records_sql($sql, array($this->id)), 'id');
     }
 
     /**
