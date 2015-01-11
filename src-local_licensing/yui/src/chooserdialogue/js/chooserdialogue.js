@@ -197,11 +197,11 @@ Y.extend(ChooserDialogue, M.core.dialogue, {
      * @return void
      */
     handleQueryComplete: function(onComplete) {
-        onComplete = Y.bind(onComplete, this);
+        var onComplete = Y.bind(onComplete, this);
 
         return function(tid, response, args) {
             try {
-                response = Y.JSON.parse(response.responseText);
+                var response = Y.JSON.parse(response.responseText);
 
                 if (response.error) {
                     new M.core.ajaxException(response);
