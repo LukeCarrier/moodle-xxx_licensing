@@ -132,7 +132,7 @@ LEFT JOIN {lic_distribution} d
     ON d.allocationid = a.id
 LEFT JOIN {lic_licence} l
     ON l.distributionid = d.id
-LEFT JOIN {lic_target_set} ts
+LEFT JOIN {lic_targetset} ts
     ON ts.id = a.targetsetid
 WHERE a.id = ?
 SQL;
