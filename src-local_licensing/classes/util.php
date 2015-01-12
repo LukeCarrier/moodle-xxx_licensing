@@ -89,6 +89,17 @@ class util {
     }
 
     /**
+     * Get a configuration value.
+     *
+     * @param string $name The name of the configuration key.
+     *
+     * @return mixed The configuration value.
+     */
+    public static function get_config($name) {
+        return get_config(static::MOODLE_MODULE, $name);
+    }
+
+    /**
      * Reduce a collection of model objects down to a single field.
      *
      * In the absence of a collection object to wrap sets of models, this is the
@@ -108,6 +119,18 @@ class util {
         }
 
         return $result;
+    }
+
+    /**
+     * Set a configuration value.
+     *
+     * @param string $name  The name of the configuration key.
+     * @param mixed  $value The value of the configuration key.
+     *
+     * @return void
+     */
+    public static function set_config($name, $value) {
+        return set_config($name, $value, static::MOODLE_MODULE);
     }
 
     /**

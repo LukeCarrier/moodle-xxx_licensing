@@ -54,6 +54,22 @@ abstract class base_factory {
     }
 
     /**
+     * Get an array of all classes.
+     *
+     * @return string[]
+     */
+    public static function get_class_names() {
+        $types       = static::get_list();
+        $typeclasses = array();
+
+        foreach ($types as $type) {
+            $types[$type] = static::get_class_name($type);
+        }
+
+        return $types;
+    }
+
+    /**
      * Get an instance of the specified item.
      *
      * If necessary, you may override this implementation in child classes to

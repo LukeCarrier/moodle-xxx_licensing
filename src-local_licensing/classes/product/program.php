@@ -25,14 +25,80 @@
 
 namespace local_licensing\product;
 
+use context_program;
 use coursecat;
+use individuals_category as totara_program_individuals_category;
 use local_licensing\base_product;
 use local_licensing\util;
+use program as totara_program;
+use totara_program\event\program_assignmentsupdated
+        as totara_program_assignmentsupdated;
+
+require_once "{$CFG->dirroot}/totara/program/lib.php";
 
 /**
  * Program product type.
  */
 class program extends base_product {
+    /**
+     * @override \local_licensing\base_product
+     */
+    public static function enrol($allocation, $distribution, $product,
+                                 $userids) {
+        global $DB;
+
+        /* This logic is mostly descended from that in upstream
+         * /totara/program/edit_assignments.php, including emulating the same
+         * format of the data parameter passed to the assignment categories.
+         *
+         * The notable exception is that we exclusively update the
+         * individuals_category. */
+        $program  = new totara_program($product->itemid);
+        $category = new totara_program_individuals_category();
+
+        $completiondate = date('d/m/Y', $allocation->enddate);
+
+        $data = (object) array(
+            'id' => $program->id,
+
+            'item'       => array(
+                ASSIGNTYPE_INDIVIDUAL => array_fill_keys($userids, '1'),
+            ),
+            'completion' => array(
+                ASSIGNTYPE_INDIVIDUAL => array_fill_keys($userids,
+                                                         $completiondate)
+            ),
+        );
+
+        $category->update_assignments($data);
+
+        $assignments = $program->get_assignments();
+        $assignments->init_assignments($program->id);
+        $program->update_learner_assignments();
+
+        $programrecord = (object) array(
+            'id'           => $program->id,
+            'timemodified' => time(),
+            'usermodified' => $distribution->createdby,
+        );
+        $DB->update_record('prog', $programrecord);
+
+        $assignmentrecords = array();
+        foreach ($assignments as $assignment) {
+            $assignmentrecords[] = (array) $assignment;
+        }
+
+        $event = totara_program_assignmentsupdated::create(array(
+            'objectid' => $program->id,
+            'context'  => context_program::instance($program->id),
+            'userid'   => $distribution->createdby,
+            'other'    => array(
+                'assignments' => $assignmentrecords,
+            ),
+        ));
+        $event->trigger();
+    }
+
     /**
      * @override \local_licensing\base_product
      */

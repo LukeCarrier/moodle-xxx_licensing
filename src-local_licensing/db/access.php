@@ -28,7 +28,7 @@ $capabilities = array(
     /*
      * Allocate licenses to organisations.
      */
-    'local/licensing:allocatelicenses' => array(
+    'local/licensing:allocatelicences' => array(
         'captype'      => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
 
@@ -42,7 +42,7 @@ $capabilities = array(
     /*
      * Distribute licenses to users within an organisation.
      */
-    'local/licensing:distributelicenses' => array(
+    'local/licensing:distributelicences' => array(
         'captype'      => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
 

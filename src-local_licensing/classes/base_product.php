@@ -42,6 +42,16 @@ class base_product extends base_pluggable {
     const MOODLE_MODULE = 'local_licensing';
 
     /**
+     * Enrol a given set of users onto this product.
+     *
+     * @param \local_licensing\model\licence $licence
+     * @return void
+     */
+    public static function enrol($allocation, $distribution, $product,
+                                 $userids) {
+    }
+
+    /**
      * Get the type name.
      *
      * @return string The type name.
@@ -86,15 +96,5 @@ class base_product extends base_pluggable {
 
         return count($productids)
                 ? static::get(util::reduce($productids, 'itemid')) : array();
-    }
-
-    /**
-     * Enrol a given set of users onto this product.
-     *
-     * @param integer[] $userids An array of IDs of users to enrol in the
-     *                           product.
-     * @return void
-     */
-    public static function enrol($userids) {
     }
 }

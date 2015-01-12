@@ -180,6 +180,17 @@ abstract class base_model {
     }
 
     /**
+     * Find distributions newer than a specified time.
+     *
+     * @param integer $time The specified time.
+     *
+     * @return \local_licensing\base_model[] An array of matching model objects.
+     */
+    public static function find_newer_than($time) {
+        return static::find_select('createdat > ?', array($time), 'createdat');
+    }
+
+    /**
      * Find objects the given complex criteria.
      *
      * This method is like base_model::find(), except that it allows you to use

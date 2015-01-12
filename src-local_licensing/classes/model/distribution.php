@@ -103,6 +103,15 @@ class distribution extends base_model {
     }
 
     /**
+     * Get the licences associated with this distribution.
+     *
+     * @return \local_licensing\model\licence[] The licences.
+     */
+    public function get_licences() {
+        return licence::find_by_distributionid($this->id);
+    }
+
+    /**
      * Get the associated product.
      *
      * @return \local_licensing\model\product The product.
@@ -116,7 +125,7 @@ class distribution extends base_model {
      *
      * @return integer[] An array of user IDs.
      */
-    protected function get_user_ids() {
+    public function get_user_ids() {
         global $DB;
 
         $sql = <<<SQL

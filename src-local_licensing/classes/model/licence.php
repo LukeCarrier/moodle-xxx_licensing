@@ -76,7 +76,7 @@ class licence extends base_model {
      * @param integer $allocationid
      * @param integer $userid
      */
-    public function __construct($distributionid, $userid) {
+    public function __construct($distributionid=null, $userid=null) {
         $this->distributionid = $distributionid;
         $this->userid         = $userid;
 

@@ -54,3 +54,15 @@ function local_licensing_extends_settings_navigation(settings_navigation $navroo
         }
     }
 }
+
+/**
+ * Legacy cron.
+ *
+ * We have to support Moodle 2.6, so we can't use the new task API and there's
+ * no tidy way to reuse code.
+ */
+function local_licensing_cron() {
+    $cron = new cron();
+
+    return $cron->execute();
+}
