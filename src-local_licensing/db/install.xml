@@ -19,7 +19,7 @@
                        NOTNULL="true" SEQUENCE="false" />
                 <FIELD NAME="productsetid" TYPE="int" LENGTH="10"
                        NOTNULL="true" SEQUENCE="false" />
-                <FIELD NAME="targetid" TYPE="int" LENGTH="10"
+                <FIELD NAME="targetsetid" TYPE="int" LENGTH="10"
                        NOTNULL="true" SEQUENCE="false" />
                 <FIELD NAME="startdate" TYPE="int" LENGTH="10"
                        NOTNULL="false" SEQUENCE="false" />
@@ -30,8 +30,8 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="fk_productsetid" TYPE="foreign" FIELDS="productsetid"
                      REFTABLE="lic_productset" REFFIELDS="id" />
-                <KEY NAME="fk_targetid" TYPE="foreign" FIELDS="targetid"
-                     REFTABLE="lic_target" REFFIELDS="id" />
+                <KEY NAME="fk_targetsetid" TYPE="foreign" FIELDS="targetsetid"
+                     REFTABLE="lic_target_set" REFFIELDS="id" />
             </KEYS>
         </TABLE>
 

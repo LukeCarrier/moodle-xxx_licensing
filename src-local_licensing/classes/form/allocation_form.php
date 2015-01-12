@@ -55,11 +55,11 @@ class allocation_form extends moodleform {
         $mform->setDefault('productsetid', $data->productsetid);
         $mform->setType('productsetid', PARAM_INT);
 
-        $mform->addElement('select', 'targetid',
-                           util::string('allocation:target'),
+        $mform->addElement('select', 'targetsetid',
+                           util::string('allocation:targetset'),
                            target_set::menu());
-        $mform->setDefault('targetid', $data->targetid);
-        $mform->setType('targetid', PARAM_INT);
+        $mform->setDefault('targetsetid', $data->targetsetid);
+        $mform->setType('targetsetid', PARAM_INT);
 
         $mform->addElement('text', 'count', util::string('allocation:count'));
         $mform->setDefault('count', $data->count);

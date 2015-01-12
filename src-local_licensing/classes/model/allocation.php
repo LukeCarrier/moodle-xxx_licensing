@@ -62,7 +62,7 @@ class allocation extends base_model {
      *
      * @var integer
      */
-    protected $targetid;
+    protected $targetsetid;
 
     /**
      * Start date.
@@ -82,15 +82,15 @@ class allocation extends base_model {
      * Initialiser.
      *
      * @param integer $productsetid
-     * @param integer $targetid
+     * @param integer $targetsetid
      * @param integer $count
      * @param integer $startdate
      * @param integer $enddate
      */
-    public function __construct($productsetid=null, $targetid=null, $count=null,
-                                $startdate=null, $enddate=null) {
+    public function __construct($productsetid=null, $targetsetid=null,
+                                $count=null, $startdate=null, $enddate=null) {
         $this->productsetid = $productsetid;
-        $this->targetid     = $targetid;
+        $this->targetsetid  = $targetsetid;
         $this->count        = $count;
         $this->startdate    = $startdate;
         $this->enddate      = $enddate;
@@ -153,7 +153,7 @@ SQL;
      * @return \local_licensing\model\target The target.
      */
     public function get_target() {
-        return target::get_by_id($this->targetid);
+        return target::get_by_id($this->targetsetid);
     }
 
     /**
@@ -183,8 +183,8 @@ SQL;
         return $DB->get_records_sql($sql, array($targetid));
     }
 
-    public static function menu_for_target($targetid) {
-        $allocations = static::get_active_allocations($targetid);
+    public static function menu_for_target($targetsetid) {
+        $allocations = static::get_active_allocations($targetsetid);
         $menu = array();
 
         foreach ($allocations as $allocation) {
@@ -210,7 +210,7 @@ SQL;
             'id',
             'count',
             'productsetid',
-            'targetid',
+            'targetsetid',
             'startdate',
             'enddate',
         );
@@ -220,7 +220,7 @@ SQL;
      * @override \local_licensing\base_model
      */
     final public static function model_from_form($data) {
-        return new static($data->productsetid, $data->targetid, $data->count,
+        return new static($data->productsetid, $data->targetsetid, $data->count,
                           $data->startdate, $data->enddate);
     }
 
