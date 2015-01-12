@@ -71,7 +71,7 @@ class cron {
             $productclass::enrol($allocation, $distribution, $product, $userids);
         }
 
-        //util::set_config(static::CONFIG_LAST_RUN, time());
+        util::set_config(static::CONFIG_LAST_RUN, time());
         util::set_config(static::CONFIG_RUNNING, false);
     }
 }
