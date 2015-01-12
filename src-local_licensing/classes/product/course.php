@@ -26,13 +26,43 @@
 namespace local_licensing\product;
 
 use coursecat;
+use course_enrolment_manager;
 use local_licensing\base_product;
 use local_licensing\util;
+
+require_once "{$CFG->dirroot}/enrol/locallib.php";
 
 /**
  * Course product type.
  */
 class course extends base_product {
+    /**
+     * @override \local_licensing\base_product
+     */
+    public static function enrol($allocation, $distribution, $product,
+                                 $userids) {
+        global $DB, $PAGE;
+
+        $course  = $DB->get_record('course', array('id' => $product->itemid));
+        $manager = new course_enrolment_manager($PAGE, $course);
+
+        $instances = $manager->get_enrolment_instances();
+        foreach ($instances as $instance) {
+            if ($instance->enrol === 'manual') {
+                break;
+            }
+        }
+        $plugins = $manager->get_enrolment_plugins();
+        if (!array_key_exists('manual', $plugins)) {
+            mtrace('manual enrolment not enabled for course ' . $product->itemid);
+        }
+        $plugin = $plugins['manual'];
+
+        foreach ($userids as $userid) {
+            $plugin->enrol_user($instance, $userid, null, $allocation->startdate, $allocation->enddate);
+        }
+    }
+
     /**
      * @override \local_licensing\base_product
      */
