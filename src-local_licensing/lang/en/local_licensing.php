@@ -49,11 +49,13 @@ $string['error:invalidtab'] = 'Please select a tab from the menu above.';
 $string['addallocation']         = 'Add allocation';
 $string['allocation']            = 'Allocation';
 $string['allocations']           = 'Allocations';
-$string['allocation:available']  = 'Available';
+$string['allocation:availablex'] = 'Available: {$a}';
 $string['allocation:backtoall']  = 'Back to all allocations';
-$string['allocation:create']     = 'Allocate licenses for a product set';
+$string['allocation:consumedx']  = 'Consumed: {$a}';
+$string['allocation:countx']     = 'Total: {$a}';
+$string['allocation:counts']     = 'Counts';
+$string['allocation:create']     = 'Allocate licences for a product set';
 $string['allocation:edit']       = 'Edit an allocation for a product set';
-$string['allocation:count']      = 'Licence count';
 $string['allocation:enddate']    = 'End date';
 $string['allocation:name']       = '{$a->productsetname} ({$a->available} of {$a->count} available)';
 $string['allocation:productset'] = 'Product set';
@@ -115,7 +117,7 @@ $string['exception:incompleteimplementation'] = 'Incomplete implementation';
 $string['exception:missingtarget']            = 'This user does not appear to be a member of any targets';
 
 // Capabilities
-$string['licensing:allocatelicenses']   = 'Allocate licenses to target sets';
-$string['licensing:distributelicenses'] = 'Distribute licenses to learners';
+$string['licensing:allocatelicences']   = 'Allocate licences to target sets';
+$string['licensing:distributelicences'] = 'Distribute licences to learners';
 $string['licensing:manageproductsets']  = 'Manage product sets for allocation';
 $string['licensing:managetargetsets']   = 'Manage target sets for allocation';

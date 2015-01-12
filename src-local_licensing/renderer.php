@@ -23,6 +23,7 @@
  * @copyright 2014 Luke Carrier, The Development Manager Ltd
  */
 
+use local_licensing\capabilities;
 use local_licensing\url_generator;
 use local_licensing\util;
 
@@ -161,6 +162,30 @@ class local_licensing_renderer extends plugin_renderer_base {
     }
 
     /**
+     * Allocation counts.
+     *
+     * @param
+     * @param
+     * @param
+     *
+     * @return string The generated HTML.
+     */
+    public function allocation_counts($count, $consumed, $available) {
+        $items = array(
+            'count'     => $count,
+            'consumed'  => $consumed,
+            'available' => $available,
+        );
+
+        $listitems = array();
+        foreach ($items as $name => $value) {
+            $listitems[] = util::string("allocation:{$name}x", $value);
+        }
+
+        return html_writer::alist($listitems);
+    }
+
+    /**
      * Allocation table.
      *
      * @param \local_licensing\model\allocation[] $allocations
@@ -171,7 +196,7 @@ class local_licensing_renderer extends plugin_renderer_base {
         $head = array(
             util::string('allocation:targetset'),
             util::string('productset'),
-            util::string('allocation:available'),
+            util::string('allocation:counts'),
             util::string('allocation:progress'),
             util::string('actions', null, 'moodle'),
         );
@@ -190,7 +215,9 @@ class local_licensing_renderer extends plugin_renderer_base {
             $table->data[] = array(
                 $allocation->targetsetname,
                 $allocation->productsetname,
-                $allocation->available,
+                $this->allocation_counts($allocation->count,
+                                         $allocation->consumed,
+                                         $allocation->available),
                 $this->allocation_progress($allocation->count,
                                            $allocation->consumed),
                 $this->action_buttons($actionbuttons),
@@ -278,13 +305,16 @@ class local_licensing_renderer extends plugin_renderer_base {
      * @return string The generated HTML.
      */
     public function tabs($selected=null) {
+        $context = context_system::instance();
         $taburls = url_generator::tabs();
 
         $tabs = array();
         foreach ($taburls as $tabname => $taburl) {
-            $tabstring = str_replace('_', '', $tabname);
-            $tabs[] = new tabobject($tabname, $taburl,
-                                    util::string($tabstring));
+            if (capabilities::has_for_tab($tabname, $context)) {
+                $tabstring = str_replace('_', '', $tabname);
+                $tabs[] = new tabobject($tabname, $taburl,
+                                        util::string($tabstring));
+            }
         }
 
         return $this->tabtree($tabs, $selected);
