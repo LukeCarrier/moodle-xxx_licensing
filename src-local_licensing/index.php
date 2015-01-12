@@ -55,16 +55,14 @@ switch ($tab) {
         echo $OUTPUT->heading(util::string('allocation'), 3),
              $renderer->allocation_table(allocation::all()),
              $OUTPUT->single_button(url_generator::add_allocation(),
-                                    util::string('addallocation'),
-                                    'get');
+                                    util::string('addallocation'), 'get');
         break;
 
     case 'distribution':
         echo $OUTPUT->heading(util::string('distribution'), 3),
              $renderer->distribution_table(distribution::all()),
              $OUTPUT->single_button(url_generator::add_distribution(),
-                                    util::string('adddistribution'),
-                                    'get');
+                                    util::string('adddistribution'), 'get');
         break;
 
     case 'overview':
@@ -76,16 +74,14 @@ switch ($tab) {
         echo $OUTPUT->heading(util::string('productsets'), 3),
              $renderer->product_set_table(product_set::all()),
              $OUTPUT->single_button(url_generator::add_product_set(),
-                                    util::string('addproductset'),
-                                    'get');
+                                    util::string('addproductset'), 'get');
         break;
 
     case 'target_set':
         echo $OUTPUT->heading(util::string('targetsets'), 3),
              $renderer->target_set_table(target_set::all()),
              $OUTPUT->single_button(url_generator::add_target_set(),
-                                    util::string('addtargetset'),
-                                    'get');
+                                    util::string('addtargetset'), 'get');
         break;
 
     default:
