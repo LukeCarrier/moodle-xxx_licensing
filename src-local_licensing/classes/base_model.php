@@ -464,4 +464,19 @@ abstract class base_model {
                                                       $record);
         }
     }
+
+    /**
+     * Set creation state.
+     *
+     * If the model has the optional createdat and createdby fields, call this
+     * method from the constructor to give the fields their default values.
+     *
+     * @return void
+     */
+    protected function set_created() {
+        global $USER;
+
+        $this->createdat = time();
+        $this->createdby = $USER->id;
+    }
 }

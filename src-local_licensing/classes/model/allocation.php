@@ -79,6 +79,20 @@ class allocation extends base_model {
     protected $enddate;
 
     /**
+     * Created at.
+     *
+     * @param integer
+     */
+    protected $createdat;
+
+    /**
+     * Created by.
+     *
+     * @param integer
+     */
+    protected $createdby;
+
+    /**
      * Initialiser.
      *
      * @param integer $productsetid
@@ -94,6 +108,8 @@ class allocation extends base_model {
         $this->count        = $count;
         $this->startdate    = $startdate;
         $this->enddate      = $enddate;
+
+        $this->set_created();
     }
 
     /**
@@ -233,6 +249,8 @@ SQL;
             'targetsetid',
             'startdate',
             'enddate',
+            'createdat',
+            'createdby',
         );
     }
 

@@ -25,6 +25,10 @@
                        NOTNULL="false" SEQUENCE="false" />
                 <FIELD NAME="enddate" TYPE="int" LENGTH="10"
                        NOTNULL="false" SEQUENCE="false" />
+                <FIELD NAME="createdat" TYPE="int" LENGTH="10"
+                       NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="createdby" TYPE="int" LENGTH="10"
+                       NOTNULL="true" SEQUENCE="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -43,6 +47,10 @@
                        NOTNULL="true" SEQUENCE="false" />
                 <FIELD NAME="productid" TYPE="int" LENGTH="10"
                        NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="createdat" TYPE="int" LENGTH="10"
+                       NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="createdby" TYPE="int" LENGTH="10"
+                       NOTNULL="true" SEQUENCE="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -60,6 +68,10 @@
                 <FIELD NAME="distributionid" TYPE="int" LENGTH="10"
                        NOTNULL="true" SEQUENCE="false" />
                 <FIELD NAME="userid" TYPE="int" LENGTH="10"
+                       NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="createdat" TYPE="int" LENGTH="10"
+                       NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="createdby" TYPE="int" LENGTH="10"
                        NOTNULL="true" SEQUENCE="false" />
             </FIELDS>
             <KEYS>
@@ -97,6 +109,10 @@
                        NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="name" TYPE="char" LENGTH="255"
                        NOTNULL="true" />
+                <FIELD NAME="createdat" TYPE="int" LENGTH="10"
+                       NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="createdby" TYPE="int" LENGTH="10"
+                       NOTNULL="true" SEQUENCE="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -129,6 +145,10 @@
                        NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="name" TYPE="char" LENGTH="255"
                        NOTNULL="true" />
+                <FIELD NAME="createdat" TYPE="int" LENGTH="10"
+                       NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="createdby" TYPE="int" LENGTH="10"
+                       NOTNULL="true" SEQUENCE="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />

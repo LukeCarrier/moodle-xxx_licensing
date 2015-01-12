@@ -57,6 +57,20 @@ class licence extends base_model {
     protected $userid;
 
     /**
+     * Created at.
+     *
+     * @param integer
+     */
+    protected $createdat;
+
+    /**
+     * Created by.
+     *
+     * @param integer
+     */
+    protected $createdby;
+
+    /**
      * Initialiser.
      *
      * @param integer $allocationid
@@ -65,6 +79,8 @@ class licence extends base_model {
     public function __construct($distributionid, $userid) {
         $this->distributionid = $distributionid;
         $this->userid         = $userid;
+
+        $this->set_created();
     }
 
     /**
@@ -82,6 +98,8 @@ class licence extends base_model {
             'id',
             'distributionid',
             'userid',
+            'createdat',
+            'createdby',
         );
     }
 

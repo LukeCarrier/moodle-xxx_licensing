@@ -58,6 +58,20 @@ class distribution extends base_model {
     protected $productid;
 
     /**
+     * Created at.
+     *
+     * @param integer
+     */
+    protected $createdat;
+
+    /**
+     * Created by.
+     *
+     * @param integer
+     */
+    protected $createdby;
+
+    /**
      * Initialiser.
      *
      * @param integer $allocationid
@@ -66,6 +80,8 @@ class distribution extends base_model {
     public function __construct($allocationid=null, $productid=null) {
         $this->allocationid = $allocationid;
         $this->productid    = $productid;
+
+        $this->set_created();
     }
 
     /**
@@ -129,6 +145,8 @@ SQL;
             'id',
             'allocationid',
             'productid',
+            'createdat',
+            'createdby',
         );
     }
 

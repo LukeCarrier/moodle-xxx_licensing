@@ -46,12 +46,28 @@ class target_set extends base_model {
     protected $name;
 
     /**
+     * Created at.
+     *
+     * @param integer
+     */
+    protected $createdat;
+
+    /**
+     * Created by.
+     *
+     * @param integer
+     */
+    protected $createdby;
+
+    /**
      * Initialiser.
      *
      * @param string $name Target set name.
      */
     final public function __construct($name=null) {
         $this->name = $name;
+
+        $this->set_created();
     }
 
     /**
@@ -93,6 +109,8 @@ class target_set extends base_model {
         return array(
             'id',
             'name',
+            'createdat',
+            'createdby',
         );
     }
 
