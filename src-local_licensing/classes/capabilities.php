@@ -35,18 +35,18 @@ use local_licensing\exception\input_exception;
  */
 class capabilities {
     /**
-     * Can allocate licenses to targets.
+     * Can allocate licences to targets.
      *
      * @var string
      */
-    const ALLOCATE = 'local/licensing:allocatelicenses';
+    const ALLOCATE = 'local/licensing:allocatelicences';
 
     /**
-     * Can distribute licenses to users within a target.
+     * Can distribute licences to users within a target.
      *
      * @var string
      */
-    const DISTRIBUTE = 'local/licensing:distributelicenses';
+    const DISTRIBUTE = 'local/licensing:distributelicences';
 
     /**
      * Can manage product sets.
