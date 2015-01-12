@@ -25,6 +25,8 @@
 
 namespace local_licensing;
 
+use moodle_url;
+
 /**
  * I am so sorry about the name of this class.
  */
@@ -44,13 +46,58 @@ abstract class base_pluggable {
     public static function get($ids) {}
 
     /**
-     * Get the name of a given product.
+     * Get the base URL of an item.
      *
-     * @param integer $itemid The ID of the product.
-     *
-     * @return string The name of the product.
+     * @return \moodle_url The item base URL.
      */
-    public static function get_item_name($itemid) {}
+    public static function get_item_base_url() {}
+
+    /**
+     * Get a field from the item table.
+     *
+     * @param integer $itemid The ID of the organisation.
+     * @param string  $field  The field we require.
+     *
+     * @return mixed The field's value.
+     */
+    protected static function get_item_field($itemid, $field) {
+        global $DB;
+
+        return $DB->get_field(static::get_item_table(), $field,
+                              array('id' => $itemid));
+    }
+
+    /**
+     * Get the name of a given item.
+     *
+     * @param integer $itemid The ID of the item.
+     *
+     * @return string The name of the item.
+     */
+    public static function get_item_fullname($itemid) {
+        return static::get_item_field($itemid, 'fullname');
+    }
+
+    /**
+     * Get the item's database table.
+     *
+     * @return string The name of the database table.
+     */
+    public static function get_item_table() {}
+
+    /**
+     * Get the URL of a given item.
+     *
+     * @param integer $itemid The ID of the item.
+     *
+     * @return \moodle_url The URL of the item.
+     */
+    public static function get_item_url($itemid) {
+        $url = new moodle_url(static::get_item_base_url());
+        $url->param('id', static::get_item_field($itemid, 'id'));
+
+        return $url;
+    }
 
     /**
      * Get the friendly name of the product plugin.

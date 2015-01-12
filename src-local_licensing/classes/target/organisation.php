@@ -28,8 +28,6 @@ namespace local_licensing\target;
 use dml_missing_record_exception;
 use local_licensing\base_target;
 use local_licensing\model\target;
-use position_assignment;
-use totara_search_get_keyword_where_clause;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -67,22 +65,6 @@ class organisation extends base_target {
     /**
      * @override \local_licensing\base_target
      */
-    public static function get_name() {
-        return util::string('organisation', null, 'totara_hierarchy');
-    }
-
-    /**
-     * @override \local_licensing\base_target
-     */
-    public static function get_item_fullname($itemid) {
-        global $DB;
-
-        return $DB->get_field('org', 'fullname', array('id' => $itemid));
-    }
-
-    /**
-     * @override \local_licensing\base_target
-     */
     public static function get($ids) {
         global $DB;
 
@@ -93,6 +75,27 @@ FROM {org}
 WHERE id {$sql}
 SQL;
         return array_values($DB->get_records_sql($sql, $params));
+    }
+
+    /**
+     * @override \local_licensing\base_pluggable
+     */
+    public static function get_item_base_url() {
+        return '/totara/hierarchy/item/view.php?prefix=organisation';
+    }
+
+    /**
+     * @override \local_licensing\base_target
+     */
+    public static function get_item_table() {
+        return 'org';
+    }
+
+    /**
+     * @override \local_licensing\base_target
+     */
+    public static function get_name() {
+        return util::string('organisation', null, 'totara_hierarchy');
     }
 
     /**

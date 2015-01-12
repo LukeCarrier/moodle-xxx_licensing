@@ -36,29 +36,6 @@ class program extends base_product {
     /**
      * @override \local_licensing\base_product
      */
-    public static function get_name() {
-        return util::string('program', null, 'totara_program');
-    }
-
-    /**
-     * @override \local_licensing\base_product
-     */
-    public static function get_type() {
-        return 'program';
-    }
-
-    /**
-     * @override \local_licensing\base_product
-     */
-    public static function get_item_fullname($itemid) {
-        global $DB;
-
-        return $DB->get_field('prog', 'fullname', array('id' => $itemid));
-    }
-
-    /**
-     * @override \local_licensing\base_product
-     */
     public static function get($ids) {
         global $DB;
 
@@ -70,6 +47,34 @@ WHERE id {$sql}
 SQL;
 
         return array_values($DB->get_records_sql($sql, $params));
+    }
+
+    /**
+     * @override \local_licensing\base_pluggable
+     */
+    public static function get_item_base_url() {
+        return '/totara/program/view.php?viewtype=program';
+    }
+
+    /**
+     * @override \local_licensing\base_target
+     */
+    public static function get_item_table() {
+        return 'prog';
+    }
+
+    /**
+     * @override \local_licensing\base_product
+     */
+    public static function get_name() {
+        return util::string('program', null, 'totara_program');
+    }
+
+    /**
+     * @override \local_licensing\base_product
+     */
+    public static function get_type() {
+        return 'program';
     }
 
     /**

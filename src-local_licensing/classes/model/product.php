@@ -86,9 +86,29 @@ class product extends base_model {
      * @return string The name of the product.
      */
     final public function get_name() {
-        $productclass = product_factory::get_class_name($this->type);
+        $productclass = $this->get_product_class();
 
         return $productclass::get_item_fullname($this->itemid);
+    }
+
+    /** 
+     * Get the URL of the product.
+     *
+     * @return \moodle_url The URL of the product.
+     */
+    final public function get_url() {
+        $productclass = $this->get_product_class();
+
+        return $productclass::get_item_url($this->itemid);
+    }
+
+    /**
+     * Get the product class.
+     *
+     * @return \local_licensing\base_product The product class.
+     */
+    protected function get_product_class() {
+        return product_factory::get_class_name($this->type);
     }
 
     /**

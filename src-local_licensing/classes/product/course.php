@@ -36,29 +36,6 @@ class course extends base_product {
     /**
      * @override \local_licensing\base_product
      */
-    public static function get_name() {
-        return util::string('course', null, 'moodle');
-    }
-
-    /**
-     * @override \local_licensing\base_product
-     */
-    public static function get_type() {
-        return 'course';
-    }
-
-    /**
-     * @override \local_licensing\base_product
-     */
-    public static function get_item_fullname($itemid) {
-        global $DB;
-
-        return $DB->get_field('course', 'fullname', array('id' => $itemid));
-    }
-
-    /**
-     * @override \local_licensing\base_product
-     */
     public static function get($ids) {
         global $DB;
 
@@ -70,6 +47,34 @@ WHERE id {$sql}
 SQL;
 
         return array_values($DB->get_records_sql($sql, $params));
+    }
+
+    /**
+     * @override \local_licensing\base_pluggable
+     */
+    public static function get_item_base_url() {
+        return '/course/view.php';
+    }
+
+    /**
+     * @override \local_licensing\base_target
+     */
+    public static function get_item_table() {
+        return 'course';
+    }
+
+    /**
+     * @override \local_licensing\base_product
+     */
+    public static function get_name() {
+        return util::string('course', null, 'moodle');
+    }
+
+    /**
+     * @override \local_licensing\base_product
+     */
+    public static function get_type() {
+        return 'course';
     }
 
     /**

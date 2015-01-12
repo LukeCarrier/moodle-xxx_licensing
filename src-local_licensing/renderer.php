@@ -53,6 +53,32 @@ class local_licensing_renderer extends plugin_renderer_base {
     }
 
     /**
+     * Allocation counts.
+     *
+     * @param integer $count     The total number of licences allocated.
+     * @param integer $consumed  The number of licences that have been reserved
+     *                           by distributions.
+     * @param integer $available The number of licences still available for
+     *                           distribution.  
+     *
+     * @return string The generated HTML.
+     */
+    public function allocation_counts($count, $consumed, $available) {
+        $items = array(
+            'count'     => $count,
+            'consumed'  => $consumed,
+            'available' => $available,
+        );
+
+        $listitems = array();
+        foreach ($items as $name => $value) {
+            $listitems[] = util::string("allocation:{$name}x", $value);
+        }
+
+        return html_writer::alist($listitems);
+    }
+
+    /**
      * Allocation progress.
      *
      * @param integer $count    The total number of allocated licences.
@@ -66,6 +92,50 @@ class local_licensing_renderer extends plugin_renderer_base {
             'max'   => $count,
             'value' => $consumed,
         ));
+    }
+
+    /**
+     * Allocation table.
+     *
+     * @param \local_licensing\model\allocation[] $allocations
+     *
+     * @return string The generated HTML.
+     */
+    public function allocation_table($allocations) {
+        $head = array(
+            util::string('allocation:targetset'),
+            util::string('productset'),
+            util::string('allocation:counts'),
+            util::string('allocation:progress'),
+            util::string('actions', null, 'moodle'),
+        );
+
+        $editurl   = url_generator::edit_allocation();
+        $deleteurl = url_generator::delete_allocation();
+
+        list($table, $editurl, $deleteurl)
+                = $this->generic_table($head, $editurl, $deleteurl);
+
+        foreach ($allocations as $allocation) {
+            $editurl->url->param('id', $allocation->id);
+            $deleteurl->url->param('id', $allocation->id);
+            $actionbuttons = array($editurl, $deleteurl);
+
+            $table->data[] = array(
+                $this->edit_link('target_set', $allocation->targetsetid,
+                                 $allocation->targetsetname),
+                $this->edit_link('product_set', $allocation->productsetid,
+                                 $allocation->productsetname),
+                $this->allocation_counts($allocation->count,
+                                         $allocation->consumed,
+                                         $allocation->available),
+                $this->allocation_progress($allocation->count,
+                                           $allocation->consumed),
+                $this->action_buttons($actionbuttons),
+            );
+        }
+
+        return html_writer::table($table);
     }
 
     /**
@@ -108,15 +178,32 @@ class local_licensing_renderer extends plugin_renderer_base {
             $deleteurl->url->param('id', $distribution->id);
             $actionbuttons = array($editurl, $deleteurl);
 
+            $productset = $distribution->get_allocation()->get_product_set();
+            $product    = $distribution->get_product();
+
             $table->data[] = array(
-                $distribution->get_allocation()->get_product_set()->name,
-                $distribution->get_product()->get_name(),
+                $this->edit_link('product_set', $productset->id,
+                                 $productset->name),
+                html_writer::link($product->get_url(), $product->get_name()),
                 $distribution->get_count(),
                 $this->action_buttons($actionbuttons),
             );
         }
 
         return html_writer::table($table);
+    }
+
+    /**
+     * Item edit link.
+     *
+     * @param string  $tab
+     * @param integer $id
+     * @param string  $name
+     *
+     * @return string The rendered HTML.
+     */
+    protected function edit_link($tab, $id, $name) {
+        return html_writer::link(url_generator::edit_url($tab, $id), $name);
     }
 
     /**
@@ -153,78 +240,13 @@ class local_licensing_renderer extends plugin_renderer_base {
      * @return string The generated HTML.
      */
     public function set_list($items) {
-        $itemnames = array();
-        foreach ($items as &$item) {
-            $itemnames[] = $item->get_name();
-        }
-
-        return html_writer::alist($itemnames);
-    }
-
-    /**
-     * Allocation counts.
-     *
-     * @param
-     * @param
-     * @param
-     *
-     * @return string The generated HTML.
-     */
-    public function allocation_counts($count, $consumed, $available) {
-        $items = array(
-            'count'     => $count,
-            'consumed'  => $consumed,
-            'available' => $available,
-        );
-
         $listitems = array();
-        foreach ($items as $name => $value) {
-            $listitems[] = util::string("allocation:{$name}x", $value);
+        foreach ($items as &$item) {
+            $listitems[] = html_writer::link($item->get_url(),
+                                             $item->get_name());
         }
 
         return html_writer::alist($listitems);
-    }
-
-    /**
-     * Allocation table.
-     *
-     * @param \local_licensing\model\allocation[] $allocations
-     *
-     * @return string The generated HTML.
-     */
-    public function allocation_table($allocations) {
-        $head = array(
-            util::string('allocation:targetset'),
-            util::string('productset'),
-            util::string('allocation:counts'),
-            util::string('allocation:progress'),
-            util::string('actions', null, 'moodle'),
-        );
-
-        $editurl   = url_generator::edit_allocation();
-        $deleteurl = url_generator::delete_allocation();
-
-        list($table, $editurl, $deleteurl)
-                = $this->generic_table($head, $editurl, $deleteurl);
-
-        foreach ($allocations as $allocation) {
-            $editurl->url->param('id', $allocation->id);
-            $deleteurl->url->param('id', $allocation->id);
-            $actionbuttons = array($editurl, $deleteurl);
-
-            $table->data[] = array(
-                $allocation->targetsetname,
-                $allocation->productsetname,
-                $this->allocation_counts($allocation->count,
-                                         $allocation->consumed,
-                                         $allocation->available),
-                $this->allocation_progress($allocation->count,
-                                           $allocation->consumed),
-                $this->action_buttons($actionbuttons),
-            );
-        }
-
-        return html_writer::table($table);
     }
 
     /**

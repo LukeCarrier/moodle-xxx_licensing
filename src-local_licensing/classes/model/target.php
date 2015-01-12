@@ -87,9 +87,29 @@ class target extends base_model {
      * @return string The name of the target.
      */
     final public function get_name() {
-        $targetclass = target_factory::get_class_name($this->type);
+        $targetclass = $this->get_target_class();
 
         return $targetclass::get_item_fullname($this->itemid);
+    }
+
+    /**
+     * Get the target class.
+     *
+     * @return \local_licensing\base_target The target class.
+     */
+    final protected function get_target_class() {
+        return target_factory::get_class_name($this->type);
+    }
+
+    /**
+     * Get the URL of the target.
+     *
+     * @return \moodle_url The URL.
+     */
+    final public function get_url() {
+        $targetclass = $this->get_target_class();
+
+        return $targetclass::get_item_url($this->itemid);
     }
 
     /**
