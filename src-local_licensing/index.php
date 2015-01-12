@@ -41,6 +41,7 @@ $PAGE->set_url($ME);
 
 $renderer = $PAGE->get_renderer('local_licensing');
 
+require_login();
 capabilities::require_for_tab($tab, $PAGE->context);
 
 util::init_requirements();

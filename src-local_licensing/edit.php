@@ -47,6 +47,7 @@ if (!in_array($tab, $tabs)) {
 $PAGE->set_context(context_system::instance());
 $PAGE->set_url($ME);
 
+require_login();
 capabilities::require_for_tab($tab, $PAGE->context);
 
 $tablangstring = str_replace('_', '', $tab);
