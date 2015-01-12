@@ -64,6 +64,8 @@ class local_licensing_renderer extends plugin_renderer_base {
      * @return string The generated HTML.
      */
     public function allocation_counts($count, $consumed, $available) {
+        $none = util::string('allocation:none');
+
         $items = array(
             'count'     => $count,
             'consumed'  => $consumed,
@@ -72,6 +74,10 @@ class local_licensing_renderer extends plugin_renderer_base {
 
         $listitems = array();
         foreach ($items as $name => $value) {
+            if ($value == 0) {
+                $value = $none;
+            }
+
             $listitems[] = util::string("allocation:{$name}x", $value);
         }
 
