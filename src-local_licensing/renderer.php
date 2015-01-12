@@ -169,7 +169,7 @@ class local_licensing_renderer extends plugin_renderer_base {
      */
     public function allocation_table($allocations) {
         $head = array(
-            util::string('allocation:target'),
+            util::string('allocation:targetset'),
             util::string('productset'),
             util::string('allocation:available'),
             util::string('allocation:progress'),
@@ -188,11 +188,11 @@ class local_licensing_renderer extends plugin_renderer_base {
             $actionbuttons = array($editurl, $deleteurl);
 
             $table->data[] = array(
-                $allocation->get_target()->get_name(),
-                $allocation->get_product_set()->name,
-                $allocation->get_available(),
+                $allocation->targetsetname,
+                $allocation->productsetname,
+                $allocation->available,
                 $this->allocation_progress($allocation->count,
-                                           $allocation->get_consumed()),
+                                           $allocation->consumed),
                 $this->action_buttons($actionbuttons),
             );
         }

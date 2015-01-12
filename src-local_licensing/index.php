@@ -53,7 +53,7 @@ echo $OUTPUT->header(),
 switch ($tab) {
     case 'allocation':
         echo $OUTPUT->heading(util::string('allocation'), 3),
-             $renderer->allocation_table(allocation::all()),
+             $renderer->allocation_table(allocation::get_active_allocations()),
              $OUTPUT->single_button(url_generator::add_allocation(),
                                     util::string('addallocation'), 'get');
         break;

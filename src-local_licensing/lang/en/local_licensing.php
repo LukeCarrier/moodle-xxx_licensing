@@ -55,11 +55,11 @@ $string['allocation:create']     = 'Allocate licenses for a product set';
 $string['allocation:edit']       = 'Edit an allocation for a product set';
 $string['allocation:count']      = 'Licence count';
 $string['allocation:enddate']    = 'End date';
-$string['allocation:name']       = '{$a->productsetname} ({$a->remaining} of {$a->count} remaining)';
+$string['allocation:name']       = '{$a->productsetname} ({$a->available} of {$a->count} available)';
 $string['allocation:productset'] = 'Product set';
 $string['allocation:progress']   = 'Progress';
 $string['allocation:startdate']  = 'Start date';
-$string['allocation:target']     = 'Target';
+$string['allocation:targetset']  = 'Target set';
 
 // Distribution
 $string['adddistribution']         = 'Add distribution';
@@ -115,7 +115,7 @@ $string['exception:incompleteimplementation'] = 'Incomplete implementation';
 $string['exception:missingtarget']            = 'This user does not appear to be a member of any targets';
 
 // Capabilities
-$string['licensing:allocatelicenses']   = 'Allocate licenses to targets';
+$string['licensing:allocatelicenses']   = 'Allocate licenses to target sets';
 $string['licensing:distributelicenses'] = 'Distribute licenses to learners';
 $string['licensing:manageproductsets']  = 'Manage product sets for allocation';
 $string['licensing:managetargetsets']   = 'Manage target sets for allocation';

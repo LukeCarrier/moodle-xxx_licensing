@@ -102,7 +102,7 @@ class allocation extends base_model {
      * @return integer The number of available licences.
      */
     public function get_available() {
-        return $this->get_consumption()->available;
+        return static::get_consumption($this->id)->available;
     }
 
     /**
@@ -111,7 +111,7 @@ class allocation extends base_model {
      * @return integer The number of consumed licences.
      */
     public function get_consumed() {
-        return $this->get_consumption()->consumed;
+        return static::get_consumption($this->id)->consumed;
     }
 
     /**
@@ -120,22 +120,24 @@ class allocation extends base_model {
      * @return \stdClass An object containing the consumed and available
      *                   properties.
      */
-    protected function get_consumption() {
+    public static function get_consumption($id) {
         global $DB;
 
         $sql = <<<SQL
 SELECT
     COUNT(l.id)           AS consumed,
     a.count - count(l.id) AS available
-FROM mdl_lic_allocation a
-LEFT JOIN mdl_lic_distribution d
+FROM {lic_allocation} a
+LEFT JOIN {lic_distribution} d
     ON d.allocationid = a.id
-LEFT JOIN mdl_lic_licence l
+LEFT JOIN {lic_licence} l
     ON l.distributionid = d.id
+LEFT JOIN {lic_target_set} ts
+    ON ts.id = a.targetsetid
 WHERE a.id = ?
 SQL;
 
-        return $DB->get_record_sql($sql, array($this->id));
+        return $DB->get_record_sql($sql, array($id));
     }
 
     /**
@@ -161,26 +163,44 @@ SQL;
      *
      * @return \stdClass A raw DML record set.
      */
-    protected static function get_active_allocations($targetid) {
+    public static function get_active_allocations($targetsetid=null) {
         global $DB;
 
+        $where  = array();
+        $params = array();
+
+        $where[] = 'a.startdate <= ? AND a.enddate >= ?';
+        $params  = array_pad($params, 2, time());
+
+        if ($targetsetid !== null) {
+            $where[]  = 'a.targetsetid = ?';
+            $params[] = $targetsetid;
+        }
+
+        $whereclause = implode(' AND ', $where);
+
         $sql = <<<SQL
-SELECT a.id, a.count,
-    a.count - count(l.id) AS remaining,
-    ps.name AS productsetname
-FROM mdl_lic_allocation a
-LEFT JOIN mdl_lic_productset ps
+SELECT a.*,
+    a.count - count(l.id) AS available,
+    ps.name               AS productsetname,
+    ts.name               AS targetsetname,
+    COUNT(l.id)           AS consumed,
+    a.count - count(l.id) AS available
+FROM {lic_allocation} a
+LEFT JOIN {lic_productset} ps
     ON ps.id = a.productsetid
-LEFT JOIN mdl_lic_distribution d
+LEFT JOIN {lic_targetset} ts
+    ON ts.id = a.targetsetid
+LEFT JOIN {lic_distribution} d
     ON d.allocationid = a.id
-LEFT JOIN mdl_lic_licence l
+LEFT JOIN {lic_licence} l
     ON l.distributionid = d.id
-WHERE a.targetid = ?
+WHERE {$whereclause}
 GROUP BY a.id
 HAVING COUNT(l.id) < a.count
 SQL;
 
-        return $DB->get_records_sql($sql, array($targetid));
+        return $DB->get_records_sql($sql, $params);
     }
 
     public static function menu_for_target($targetsetid) {
