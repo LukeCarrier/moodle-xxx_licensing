@@ -44,7 +44,7 @@ class user_chooser_dialogue extends base_chooser_dialogue {
      * @override \local_licensing\base_chooser_dialogue
      */
     protected static function get_search_class($type=null) {
-        return 'local_licensing\user_search_helper';
+        return 'local_licensing\user_helper';
     }
 
     /**

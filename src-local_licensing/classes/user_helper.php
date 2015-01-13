@@ -25,12 +25,64 @@
 
 namespace local_licensing;
 
+use context_user;
+use core\event\user_created;
+use dml_write_exception;
+
 require_once "{$CFG->libdir}/datalib.php";
 
 /**
  * User search helper.
  */
-class user_search_helper {
+class user_helper {
+    /**
+     * Create a user.
+     *
+     * @param string  $username  The new user's username.
+     * @param string  $password  The new user's password.
+     * @param string  $email     The new user's email address.
+     * @param string  $idnumber  The new user's ID number.
+     * @param integer $createdby ID of the user that triggered the user
+     *                           creation.
+     *
+     * @return void
+     */
+    public static function create($username, $password, $email, $idnumber) {
+        global $CFG, $DB;
+
+        $creationtime = time();
+
+        $user = (object) array(
+            'username' => strtolower($username),
+            'password' => $password,
+
+            'email'    => $email,
+            'idnumber' => $idnumber,
+
+            'auth'        => 'manual',
+            'confirmed'   => true,
+            'lang'        => $CFG->lang,
+            'mnethostid'  => $CFG->mnet_localhost_id,
+            'timecreated' => $creationtime,
+        );
+
+        $user->id = $DB->insert_record('user', $user);
+
+        $positionassignment = (object) array(
+            'timecreated'  => $creationtime,
+            'timemodified' => $creationtime,
+            'usermodified' => $createdby,
+        );
+
+        $event = user_created::create(array(
+            'objectid' => $user->id,
+            'context' => context_user::instance($user->id),
+        ));
+        $event->trigger();
+
+        return $user;
+    }
+
     /**
      * Get user details by ID.
      *
