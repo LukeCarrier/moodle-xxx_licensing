@@ -89,7 +89,7 @@ Y.extend(UpdateSelectOptions, Y.Base, {
             target   = Y.one(this.get('target'));
 
         Y.Array.each(options, function(item) {
-            optGroup.append(this.makeOption(item));
+            optGroup.append(this.makeOption(item, name));
         }, this);
 
         target.append(optGroup);
@@ -162,8 +162,11 @@ Y.extend(UpdateSelectOptions, Y.Base, {
      *
      * @return Y_Node
      */
-    makeOption: function(item) {
-        return Y.Node.create('<option value="' + item.id + '">' + item.fullname + '</option>');
+    makeOption: function(item, valuePrefix) {
+        var valuePrefix = valuePrefix ? valuePrefix + '-' : '';
+
+        return Y.Node.create('<option value="' + valuePrefix + item.id + '">'
+                + item.fullname + '</option>');
     },
 
     /**

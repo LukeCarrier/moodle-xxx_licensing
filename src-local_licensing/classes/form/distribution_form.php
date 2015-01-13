@@ -99,13 +99,22 @@ class distribution_form extends moodleform {
          * form library will filter out values that weren't in the array of
          * values passed to addElement(). Since we add options to this form on
          * the client, we'll have to work around this requirement. */
-        $data->productid = required_param('productid', PARAM_INT);
+        $productdetails = required_param('productid', PARAM_TEXT);
+        list($producttype, $productid) = explode('-', $productdetails, 2);
 
         $iscreation = $data->id == 0;
 
         if ($iscreation) {
             $allocation = allocation::get_by_id($data->allocationid);
             $userids    = explode(',', $data->user);
+
+            // Deduce the product ID from the product and allocation details
+            $product = product::get(array(
+                'productsetid' => $allocation->productsetid,
+                'type'         => $producttype,
+                'itemid'       => $productid,
+            ));
+            $data->productid = $product->id;
 
             $required  = count($userids);
             $available = $allocation->get_available();
