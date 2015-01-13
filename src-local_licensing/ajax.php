@@ -46,6 +46,7 @@ $result = (object) array(
     'response' => new stdClass(),
 );
 
+$action     = required_param('action',     PARAM_ALPHA);
 $objecttype = required_param('objecttype', PARAM_ALPHA);
 
 if ($objecttype === 'allocationproduct') {
@@ -69,8 +70,9 @@ if ($objecttype === 'allocationproduct') {
     $ids  = strlen($ids)  ? explode(',', $ids) : null;
     $term = strlen($term) ? $term              : null;
 
-    if (($ids !== null && $term !== null)
-            || ($ids === null && $term === null)) {
+    if ($action === 'search'
+            && (($ids !== null && $term !== null)
+                    || ($ids === null && $term === null))) {
         throw new input_exception();
     }
 
@@ -94,7 +96,26 @@ if ($objecttype === 'allocationproduct') {
         case 'user':
             require_capability(capabilities::DISTRIBUTE, $PAGE->context);
 
-            $typeclass = 'local_licensing\user_search_helper';
+            $typeclass = 'local_licensing\user_helper';
+
+            if ($action === 'create') {
+                $firstname = required_param('firstname', PARAM_TEXT);
+                $lastname  = required_param('lastname',  PARAM_TEXT);
+                $username  = required_param('username',  PARAM_TEXT);
+                $password  = required_param('password',  PARAM_TEXT);
+                $email     = required_param('email',     PARAM_TEXT);
+                $idnumber  = required_param('idnumber',  PARAM_TEXT);
+
+                $target      = target_factory::for_user($USER->id);
+                $targetclass = $target->get_target_class();
+
+                $user = $typeclass::create($firstname, $lastname, $username,
+                                           $password, $email, $idnumber);
+                $targetclass::assign_user($target->itemid, $user->id,
+                                          $USER->id);
+
+                $result->response = $user;
+            }
 
             break;
 
@@ -102,8 +123,10 @@ if ($objecttype === 'allocationproduct') {
             throw new moodle_exception();
     }
 
-    $result->response = $ids !== null ? $typeclass::get($ids)
-                                      : $typeclass::search($term);
+    if ($action === 'search') {
+        $result->response = $ids !== null ? $typeclass::get($ids)
+                                          : $typeclass::search($term);
+    }
 }
 
 echo $OUTPUT->header(),

@@ -28,15 +28,30 @@ namespace local_licensing\target;
 use dml_missing_record_exception;
 use local_licensing\base_target;
 use local_licensing\model\target;
+use position_assignment as totara_program_assignment;
 
 defined('MOODLE_INTERNAL') || die;
 
 require_once "{$CFG->dirroot}/totara/core/searchlib.php";
+require_once "{$CFG->dirroot}/totara/program/lib.php";
 
 /**
  * Organisation target type.
  */
 class organisation extends base_target {
+    /**
+     * @override \local_licensing\base_target
+     */
+    public static function assign_user($targetitemid, $assigneeid, $assignerid) {
+        $positionassignment = new totara_program_assignment(array(
+            'userid' => $assigneeid,
+            'type'   => POSITION_TYPE_PRIMARY,
+        ));
+
+        $positionassignment->organisationid = $targetitemid;
+        assign_user_position($positionassignment);
+    }
+
     /**
      * @override \local_licensing\base_target
      */

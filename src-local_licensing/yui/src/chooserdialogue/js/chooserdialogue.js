@@ -81,6 +81,22 @@ Y.extend(ChooserDialogue, M.core.dialogue, {
     },
 
     /**
+     * Add a single object ID to the list of selected objects.
+     *
+     * @param integer objectId
+     *
+     * @return void
+     */
+    addSelectedObjectId: function(objectId) {
+        var selectedObjectIds = this.getSelectedObjectIds();
+
+        selectedObjectIds.push(objectId);
+        this.setSelectedObjectIds(selectedObjectIds);
+
+        this.refreshObjectList();
+    },
+
+    /**
      * Get the 'add {object type}s' string.
      *
      * @return string
@@ -99,6 +115,7 @@ Y.extend(ChooserDialogue, M.core.dialogue, {
      */
     getObjectList: function(field, query, onComplete) {
         var params = {
+            action: 'search',
             objecttype: this.get('objecttype')
         };
 
@@ -108,15 +125,7 @@ Y.extend(ChooserDialogue, M.core.dialogue, {
 
         params[field] = query;
 
-        Y.io(M.cfg.wwwroot + this.get('ajaxurl'), {
-            method: 'GET',
-            data: build_querystring(params),
-
-            context: this,
-            on: {
-                complete: this.handleQueryComplete(onComplete)
-            }
-        });
+        this.io(params, onComplete);
     },
 
     /**
@@ -188,13 +197,9 @@ Y.extend(ChooserDialogue, M.core.dialogue, {
      * @return void
      */
     handleAdd: function(e) {
-        var objectId          = e.target.getData('objectId'),
-            selectedObjectIds = this.getSelectedObjectIds();
+        var objectId = e.target.getData('objectId');
 
-        selectedObjectIds.push(objectId);
-        this.setSelectedObjectIds(selectedObjectIds);
-
-        this.refreshObjectList();
+        this.addSelectedObjectId(objectId);
     },
 
     /**
@@ -240,6 +245,26 @@ Y.extend(ChooserDialogue, M.core.dialogue, {
             term       = termNode.get('value');
 
         this.getObjectList('term', term, this.updateDialogueBody);
+    },
+
+    /**
+     * Shorthand for Y.io.
+     *
+     * @param object   params
+     * @param callable onComplete
+     *
+     * @return void
+     */
+    io: function(params, onComplete) {
+        Y.io(M.cfg.wwwroot + this.get('ajaxurl'), {
+            method: 'GET',
+            data: build_querystring(params),
+
+            context: this,
+            on: {
+                complete: this.handleQueryComplete(onComplete)
+            }
+        });
     },
 
     /**

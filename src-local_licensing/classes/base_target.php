@@ -33,7 +33,16 @@ namespace local_licensing;
  */
 class base_target extends base_pluggable {
     /**
-     * Get the friendly name of the product plugin.
+     * Assign a user to the target.
+     *
+     * @param integer $targetitemid
+     * @param integer $assigneeid
+     * @param integer $assignerid
+     */
+    public static function assign_user($targetitemid, $assigneeid, $assignerid) {}
+
+    /**
+     * Get the friendly name of the plugin.
      *
      * @return string The friendly name.
      */

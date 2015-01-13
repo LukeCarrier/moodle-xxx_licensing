@@ -36,9 +36,15 @@ build/local_licensing.zip:
 			-n Moodle.local_licensing.chooserdialogue \
 			-p moodle-local_licensing-chooserdialogue \
 			-t $(BUILD_LOCAL_LICENSING)mustache.js \
-			-b -v handlebars/chooserdialogue
+			-b -v handlebars/chooserdialogue \
+		&& $(NPM_BIN)wax \
+			-f yui/src/userchooserdialogue/js/templates.js \
+			-n Moodle.local_licensing.userchooserdialogue \
+			-p moodle-local_licensing-userchooserdialogue \
+			-t $(BUILD_LOCAL_LICENSING)mustache.js \
+			-b -v handlebars/userchooserdialogue
 	cd $(TOP)build/local_licensing/licensing/yui/src \
-		&& $(NPM_BIN)shifter --walk
+		&& $(NPM_BIN)shifter --lint-stderr --walk
 	cd $(BUILD_LOCAL_LICENSING)licensing \
 		&& rm -rfv handlebars
 	cd $(BUILD_LOCAL_LICENSING) \

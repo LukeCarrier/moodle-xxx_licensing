@@ -149,6 +149,7 @@ class distribution_form extends moodleform {
             'ajaxurl' => $ajaxurl->out_as_local_url(),
             'param'   => 'productsetid',
             'params'  => array(
+                'action'     => 'search',
                 'objecttype' => 'allocationproduct',
             ),
             'source'  => "#id_{$source}",

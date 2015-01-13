@@ -3,6 +3,7 @@
     "builds": {
         "moodle-local_licensing-userchooserdialogue": {
             "jsfiles": [
+                "templates.js",
                 "userchooserdialogue.js"
             ]
         }

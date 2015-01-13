@@ -38,6 +38,8 @@ class user_helper {
     /**
      * Create a user.
      *
+     * @param string  $firstname The new user's first name.
+     * @param string  $lastname  The new user's last name.
      * @param string  $username  The new user's username.
      * @param string  $password  The new user's password.
      * @param string  $email     The new user's email address.
@@ -47,12 +49,16 @@ class user_helper {
      *
      * @return void
      */
-    public static function create($username, $password, $email, $idnumber) {
+    public static function create($firstname, $lastname, $username, $password,
+                                  $email, $idnumber) {
         global $CFG, $DB;
 
         $creationtime = time();
 
         $user = (object) array(
+            'firstname' => $firstname,
+            'lastname'  => $lastname,
+
             'username' => strtolower($username),
             'password' => $password,
 
@@ -67,12 +73,6 @@ class user_helper {
         );
 
         $user->id = $DB->insert_record('user', $user);
-
-        $positionassignment = (object) array(
-            'timecreated'  => $creationtime,
-            'timemodified' => $creationtime,
-            'usermodified' => $createdby,
-        );
 
         $event = user_created::create(array(
             'objectid' => $user->id,

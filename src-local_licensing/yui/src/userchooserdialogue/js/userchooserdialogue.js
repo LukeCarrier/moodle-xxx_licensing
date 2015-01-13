@@ -41,10 +41,106 @@ UserChooserDialogue.NAME = NAME;
 
 Y.extend(UserChooserDialogue, Y.Moodle.local_licensing.ChooserDialogue, {
     /**
+     * Add the created user to the list of selected objects.
+     *
+     * @param object user The created user.
+     */
+    addCreatedUser: function(user) {
+        this.addSelectedObjectId(user.id);
+    },
+
+    /**
+     * Create a user.
+     *
+     * @param object   user
+     * @param callable onComplete
+     *
+     * @return void
+     */
+    createUser: function(user, onComplete) {
+        var params = Y.merge(user, {
+            action:     'create',
+            objecttype: 'user'
+        });
+
+        this.io(params, onComplete);
+    },
+
+    /**
+     * Handle a click on the create user button.
+     *
+     * @param DOMEventFacade e
+     */
+    handleCreate: function(e) {
+        var form       = e.target.get('parentNode').one('.form'),
+            user       = {},
+            properties = ['firstname', 'lastname', 'username', 'password',
+                          'email', 'idnumber'];
+
+        Y.Array.each(properties, function(property) {
+            user[property]
+                    = form.one('input[name="' + property + '"]').get('value');
+        });
+
+        this.createUser(user, this.addCreatedUser);
+    },
+
+    /**
+     * Handle a click on the create button in the footer.
+     *
+     * @return void
+     */
+    handleSwitch: function(e) {
+        var to = e.target.getData('to');
+
+        if (to === 'create') {
+            var params = {
+                isCreating: true
+            };
+
+            this.setStdModContent(Y.WidgetStdMod.BODY,
+                                  Y.Moodle.local_licensing.userchooserdialogue.formtemplate({}),
+                                  Y.WidgetStdMod.REPLACE);
+            this.setStdModContent(Y.WidgetStdMod.FOOTER,
+                                  Y.Moodle.local_licensing.userchooserdialogue.footertemplate(params),
+                                  Y.WidgetStdMod.REPLACE);
+        } else {
+            this.updateDialogueBody([]);
+        }
+    },
+
+    /**
+     * @override Y.Moodle.local_licensing.ChooserDialogue
+     */
+    initialiseEvents: function(objects) {
+        var root = this.get('srcNode');
+
+        this.constructor.superclass.initialiseEvents.apply(this, arguments);
+
+        root.delegate('click', this.handleCreate, '.create',    this);
+        root.delegate('click', this.handleSwitch, '.switch-ui', this);
+    },
+
+    /**
      * @override Y.Moodle.local_licensing.ChooserDialogue
      */
     typeString: function() {
         return this.string('distribution:users');
+    },
+
+    /**
+     * @override Y.Moodle.local_licensing.ChooserDialogue
+     */
+    updateDialogueBody: function(objects) {
+        var params = {
+            isCreating: false
+        };
+
+        this.constructor.superclass.updateDialogueBody.apply(this, arguments);
+
+        this.setStdModContent(Y.WidgetStdMod.FOOTER,
+                              Y.Moodle.local_licensing.userchooserdialogue.footertemplate(params),
+                              Y.WidgetStdMod.REPLACE);
     }
 });
 
