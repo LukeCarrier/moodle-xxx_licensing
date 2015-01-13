@@ -3,7 +3,7 @@
 moodledirroot="$1"
 
 srcroot="$(readlink -fn "$(dirname "$0")")"
-plugins=( 'local_licensing' 'enrol_licensing' )
+plugins=( 'local_licensing' )
 
 if [ ! -f "${moodledirroot}/lib/moodlelib.php" ]; then
     echo "The supplied directory does not appear to contain a Moodle"
