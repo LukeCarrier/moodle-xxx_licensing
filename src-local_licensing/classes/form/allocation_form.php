@@ -67,7 +67,7 @@ class allocation_form extends moodleform {
 
         foreach (array('start', 'end') as $field) {
             $name = "{$field}date";
-            $time = ($field === 'start') ? time() : (time() + DAYSECS);
+            $time = ($field === 'start') ? time() : (time() + YEARSECS);
 
             $mform->addElement('date_selector', $name,
                                util::string("allocation:{$name}"));
