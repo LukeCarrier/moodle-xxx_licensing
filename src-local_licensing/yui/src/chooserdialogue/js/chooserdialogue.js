@@ -281,7 +281,7 @@ Y.extend(ChooserDialogue, M.core.dialogue, {
             container = Y.one('#fitem_' + this.getFormFieldId() + ' .felement'),
             textInput = this.getSelectedObjectIdInput();
 
-        var formElements = Y.Moodle.local_licensing.formtemplate({
+        var formElements = Y.Moodle.local_licensing.chooserdialogue.formtemplate({
             add:  this.addString()
         });
 
@@ -376,7 +376,7 @@ Y.extend(ChooserDialogue, M.core.dialogue, {
         };
 
         this.setStdModContent(Y.WidgetStdMod.BODY,
-                              Y.Moodle.local_licensing.objectlisttemplate(params),
+                              Y.Moodle.local_licensing.chooserdialogue.objectlisttemplate(params),
                               Y.WidgetStdMod.REPLACE);
     },
 
@@ -393,7 +393,7 @@ Y.extend(ChooserDialogue, M.core.dialogue, {
         };
 
         var objectList      = this.getSelectedObjectList(),
-            objectListItems = Y.Moodle.local_licensing.selectedobjectlisttemplate(params);
+            objectListItems = Y.Moodle.local_licensing.chooserdialogue.selectedobjectlisttemplate(params);
 
         objectList.setHTML(objectListItems);
     },

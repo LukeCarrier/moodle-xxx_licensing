@@ -30,13 +30,13 @@ build/local_licensing.zip:
 	$(TOP)node_modules/mustache-wax/lib/templates/compile.sh \
 		$(TOP)lib/mustache.template.js
 	mv $(TOP)lib/mustache.js $(BUILD_LOCAL_LICENSING)mustache.js
-	cd $(TOP)build/local_licensing/licensing \
+	cd $(TOP)build/local_licensing/licensing  \
 		&& $(NPM_BIN)wax \
 			-f yui/src/chooserdialogue/js/templates.js \
 			-n Moodle.local_licensing.chooserdialogue \
 			-p moodle-local_licensing-chooserdialogue \
 			-t $(BUILD_LOCAL_LICENSING)mustache.js \
-			-b -v handlebars
+			-b -v handlebars/chooserdialogue
 	cd $(TOP)build/local_licensing/licensing/yui/src \
 		&& $(NPM_BIN)shifter --walk
 	cd $(BUILD_LOCAL_LICENSING)licensing \
