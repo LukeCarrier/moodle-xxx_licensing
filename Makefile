@@ -44,7 +44,7 @@ build/local_licensing.zip:
 			-t $(BUILD_LOCAL_LICENSING)mustache.js \
 			-b -v handlebars/userchooserdialogue
 	cd $(TOP)build/local_licensing/licensing/yui/src \
-		&& $(NPM_BIN)shifter --lint-stderr --walk
+		&& $(NPM_BIN)shifter --walk
 	cd $(BUILD_LOCAL_LICENSING)licensing \
 		&& rm -rfv handlebars
 	cd $(BUILD_LOCAL_LICENSING) \
