@@ -107,7 +107,7 @@ class product extends base_model {
      *
      * @return \local_licensing\base_product The product class.
      */
-    protected function get_product_class() {
+    public function get_product_class() {
         return product_factory::get_class_name($this->type);
     }
 
