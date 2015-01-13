@@ -102,6 +102,15 @@ class target extends base_model {
     }
 
     /**
+     * Get the target set the target belongs to.
+     *
+     * @return \local_licensing\model\target_set
+     */
+    final public function get_target_set() {
+        return target_set::get_by_id($this->targetsetid);
+    }
+
+    /**
      * Get the URL of the target.
      *
      * @return \moodle_url The URL.

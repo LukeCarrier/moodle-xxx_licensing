@@ -46,6 +46,13 @@ class target_set extends base_model {
     protected $name;
 
     /**
+     * User ID number format string.
+     *
+     * @var string
+     */
+    protected $useridnumberformat;
+
+    /**
      * Created at.
      *
      * @param integer
@@ -64,10 +71,23 @@ class target_set extends base_model {
      *
      * @param string $name Target set name.
      */
-    final public function __construct($name=null) {
-        $this->name = $name;
+    final public function __construct($name=null, $useridnumberformat=null) {
+        $this->name               = $name;
+        $this->useridnumberformat = $useridnumberformat;
 
         $this->set_created();
+    }
+
+    /**
+     * Format a user's ID number.
+     *
+     * @param string $idnumber The user's raw ID number.
+     *
+     * @return string The formatted ID number, ready to be inserted into the
+     *                user table's idnumber field.
+     */
+    final public function format_user_id_number($idnumber) {
+        return sprintf($this->useridnumberformat, $idnumber);
     }
 
     /**
@@ -109,6 +129,7 @@ class target_set extends base_model {
         return array(
             'id',
             'name',
+            'useridnumberformat',
             'createdat',
             'createdby',
         );
@@ -118,7 +139,7 @@ class target_set extends base_model {
      * @override \local_licensing\base_model
      */
     final public static function model_from_form($data) {
-        return new static($data->name);
+        return new static($data->name, $data->useridnumberformat);
     }
 
     /**

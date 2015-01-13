@@ -107,10 +107,13 @@ if ($objecttype === 'allocationproduct') {
                 $idnumber  = required_param('idnumber',  PARAM_TEXT);
 
                 $target      = target_factory::for_user($USER->id);
+                $targetset   = $target->get_target_set();
                 $targetclass = $target->get_target_class();
 
+                $fmtdidnumber = $targetset->format_user_id_number($idnumber);
+
                 $user = $typeclass::create($firstname, $lastname, $username,
-                                           $password, $email, $idnumber);
+                                           $password, $email, $fmtdidnumber);
                 $targetclass::assign_user($target->itemid, $user->id,
                                           $USER->id);
 

@@ -53,6 +53,12 @@ class target_set_form extends moodleform {
         $mform->setDefault('name', $data->name);
         $mform->setType('name', PARAM_TEXT);
 
+        $mform->addElement('text', 'useridnumberformat',
+                           util::string('targetset:useridnumberformat'));
+        $mform->setDefault('useridnumberformat',
+                ($data->useridnumberformat) ? $data->useridnumberformat : '%s');
+        $mform->setType('useridnumberformat', PARAM_TEXT);
+
         $targettypes = target_factory::get_list();
         foreach ($targettypes as $targettype) {
             $this->target_chooser_dialogue($targettype);
@@ -68,6 +74,10 @@ class target_set_form extends moodleform {
      */
     public function save() {
         $data = $this->get_data();
+
+        if (strpos($data->useridnumberformat, '%s') === false) {
+            throw new form_submission_exception('invaliduseridformatstring');
+        }
 
         $targetset = target_set::model_from_form($data);
         $targetset->id = ($data->id == 0) ? null : $data->id;

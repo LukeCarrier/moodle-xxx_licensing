@@ -93,14 +93,18 @@ $string['productset:edit']      = 'Edit a product set';
 $string['productset:name']      = 'Name';
 
 // Targets
-$string['addtargetset']        = 'Add target set';
-$string['targetset']           = 'Target set';
-$string['targetsets']          = 'Target sets';
-$string['targetset:backtoall'] = 'Back to all target sets';
-$string['targetset:create']    = 'Create a target set';
-$string['targetset:edit']      = 'Edit a target set';
-$string['targetset:name']      = 'Name';
-$string['targetset:targets']   = 'Targets';
+$string['addtargetset']                 = 'Add target set';
+$string['targetset']                    = 'Target set';
+$string['targetsets']                   = 'Target sets';
+$string['targetset:backtoall']          = 'Back to all target sets';
+$string['targetset:create']             = 'Create a target set';
+$string['targetset:edit']               = 'Edit a target set';
+$string['targetset:name']               = 'Name';
+$string['targetset:targets']            = 'Targets';
+$string['targetset:useridnumberformat'] = 'User ID number format string';
+
+// Target set exceptions
+$string['exception:formsubmission:invaliduseridformatstring'] = 'The supplied format string does not contain "%s".';
 
 // Products
 $string['productset:products:course']  = 'Courses';
