@@ -152,8 +152,8 @@ class distribution_form extends moodleform {
 
         $ajaxurl = url_generator::ajax();
 
-        $PAGE->requires->yui_module("moodle-local_licensing-updateselectoptions",
-                                    "M.local_licensing.init_update_select_options",
+        $PAGE->requires->yui_module('moodle-local_licensing-updateselectoptions',
+                                    'M.local_licensing.init_update_select_options',
                                     array(array(
             'ajaxurl' => $ajaxurl->out_as_local_url(),
             'param'   => 'productsetid',

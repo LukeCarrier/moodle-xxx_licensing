@@ -95,7 +95,7 @@ class target extends base_model {
     /**
      * Get the target class.
      *
-     * @return \local_licensing\base_target The target class.
+     * @return string The target class.
      */
     final public function get_target_class() {
         return target_factory::get_class_name($this->type);
