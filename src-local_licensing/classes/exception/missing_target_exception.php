@@ -25,27 +25,21 @@
 
 namespace local_licensing\exception;
 
-use moodle_exception;
+use local_licensing\base_exception;
 
 defined('MOODLE_INTERNAL') || die;
 
 /**
- * Input exception.
+ * Missing target exception.
  *
- * Raised whenever user input is invalid.
+ * This exception is raised when attempts to identify the containing target of
+ * an end user fail.
  */
-class missing_target_exception extends moodle_exception {
+class missing_target_exception extends base_exception {
     /**
-     * Moodle module.
-     *
-     * @var string
+     * @override \local_licensing\base_exception
      */
-    const MOODLE_MODULE = 'local_licensing';
-
-    /**
-     * @override \moodle_exception
-     */
-    public function __construct() {
-        parent::__construct('exception:missingtarget', static::MOODLE_MODULE);
+    public function __construct($code=null, $a=null) {
+        parent::__construct('exception:missingtarget', $code, $a);
     }
 }

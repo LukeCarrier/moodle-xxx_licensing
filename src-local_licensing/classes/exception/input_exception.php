@@ -25,27 +25,21 @@
 
 namespace local_licensing\exception;
 
-use moodle_exception;
+use local_licensing\base_exception;
 
 defined('MOODLE_INTERNAL') || die;
 
 /**
  * Input exception.
  *
- * Raised whenever user input is invalid.
+ * Raised whenever user input is considered invalid and a more specific
+ * exception does not exist.
  */
-class input_exception extends moodle_exception {
-    /**
-     * Moodle module.
-     *
-     * @var string
-     */
-    const MOODLE_MODULE = 'local_licensing';
-
+class input_exception extends base_exception {
     /**
      * @override \moodle_exception
      */
-    public function __construct() {
-        parent::__construct('exception:input', static::MOODLE_MODULE);
+    public function __construct($code=null, $a=null) {
+        parent::__construct('exception:input', $code, $a);
     }
 }

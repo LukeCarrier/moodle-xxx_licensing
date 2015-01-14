@@ -73,6 +73,7 @@ if ($mform->is_cancelled()) {
         $mform->save();
         redirect($redirecturl);
     } catch (form_submission_exception $submissionerror) {
+        // We'll display a message above the edit form -- see below
     }
 }
 

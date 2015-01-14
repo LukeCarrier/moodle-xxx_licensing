@@ -23,24 +23,35 @@
  * @copyright 2014 Luke Carrier, The Development Manager Ltd
  */
 
-namespace local_licensing\exception;
+namespace local_licensing;
 
-use local_licensing\base_exception;
+use moodle_exception;
 
 defined('MOODLE_INTERNAL') || die;
 
 /**
- * Incomplete implementation exception.
- *
- * Raised upon attempts to call static methods which have not yet been
- * implemented. This exception should not be raised outside of development
- * environments.
+ * Base exception.
  */
-class incomplete_implementation_exception extends base_exception {
+class base_exception extends moodle_exception {
     /**
-     * @override \local_licensing\base_exception
+     * Moodle module.
+     *
+     * @var string
      */
-    public function __construct($code=null, $a=null) {
-        parent::__construct('exception:incompleteimplementation', $code, $a);
+    const MOODLE_MODULE = 'local_licensing';
+
+    /**
+     * Initialiser.
+     *
+     * @param string $prefix The exception's language string prefix.
+     * @param string $code   An optional specific error code, appended to the
+     *                       prefix to obtain a language string.
+     * @param mixed  $a      Optional substitions to make with placeholders in
+     *                       the language string.
+     */
+    public function __construct($prefix, $code=null, $a=null) {
+        $string = ($code === null) ? $prefix : "{$prefix}:{$code}";
+
+        parent::__construct($string, static::MOODLE_MODULE, $a);
     }
 }

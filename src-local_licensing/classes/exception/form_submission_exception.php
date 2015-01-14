@@ -25,33 +25,21 @@
 
 namespace local_licensing\exception;
 
-use moodle_exception;
+use local_licensing\base_exception;
 
 defined('MOODLE_INTERNAL') || die;
 
 /**
  * Incomplete implementation exception.
  *
- * Raised whenever user input is invalid.
+ * Raised whenever user input in a form is invalid. The supplied language string
+ * will be displayed to the user above the form upon a failed submission.
  */
-class form_submission_exception extends moodle_exception {
+class form_submission_exception extends base_exception {
     /**
-     * Moodle module.
-     *
-     * @var string
-     */
-    const MOODLE_MODULE = 'local_licensing';
-
-    /**
-     * @override \moodle_exception
+     * @override \local_licensing\base_exception
      */
     public function __construct($code=null, $a=null) {
-        $string = 'exception:formsubmission';
-
-        if ($code !== null) {
-            $string .= ":{$code}";
-        }
-
-        parent::__construct($string, static::MOODLE_MODULE, $a);
+        parent::__construct('exception:formsubmission', $code, $a);
     }
 }
