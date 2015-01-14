@@ -52,6 +52,17 @@ class base_target extends base_pluggable {
     }
 
     /**
+     * Get the JOIN and WHERE query fragments for this target.
+     *
+     * @return string[] An array containing two strings at positions 0 and 1.
+     *                  The former index should contain a set of joins to make
+     *                  against the user table, aliased as u. The latter index
+     *                  should contain a where clause to filter items against
+     *                  the :targetitemid.
+     */
+    public static function get_user_filter_sql() {}
+
+    /**
      * Search for a target for the given user.
      *
      * @param integer $userid The ID of the user we're seeking targets for.

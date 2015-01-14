@@ -29,8 +29,6 @@ use context_user;
 use core\event\user_created;
 use dml_write_exception;
 
-require_once "{$CFG->libdir}/datalib.php";
-
 /**
  * User search helper.
  */
@@ -86,22 +84,34 @@ class user_helper {
     /**
      * Get user details by ID.
      *
-     * @param integer[] $ids The IDs of the users whose details we need to
-     *                       retrieve.
+     * @param integer[] $ids  The IDs of the users whose details we need to
+     *                        retrieve.
+     * @param integer $target The target model object for the target users
+     *                        need to be a member of.
      *
      * @return \stdClass[] An array of DML records containing the fullname,
      *                     shortname, idnumber and id properties.
      */
-    public static function get($ids) {
+    public static function get($ids, $target) {
         global $DB;
 
-        list($insql, $params) = $DB->get_in_or_equal($ids);
+        list($insql, $params) = $DB->get_in_or_equal($ids, SQL_PARAMS_NAMED, 'in');
         $fullnamesql = $DB->sql_fullname();
 
+        $targetclass = $target->get_target_class();
+        list($targetjoinsql, $targetwheresql)
+                = $targetclass::get_user_filter_sql();
+        $params['targetitemid'] = $target->itemid;
+
         $sql = <<<SQL
-SELECT id, idnumber, {$fullnamesql} AS fullname, {$fullnamesql} AS shortname
-FROM {user}
-WHERE id {$insql}
+SELECT u.id, u.idnumber,
+    {$fullnamesql} AS fullname,
+    {$fullnamesql} AS shortname
+FROM {user} u
+{$targetjoinsql}
+WHERE u.deleted = 0 AND u.confirmed = 1
+    AND u.id {$insql}
+    AND {$targetwheresql}
 SQL;
 
         return array_values($DB->get_records_sql($sql, $params));
@@ -110,28 +120,53 @@ SQL;
     /**
      * Search for users by the given query.
      *
-     * @param string $query The search query.
+     * @param string  $query  The search query.
+     * @param integer $target The target model object for the target users
+     *                        need to be a member of.
      *
      * @return \stdClass[] An array of DML records containing the fullname,
      *                     shortname, idnumber and id properties.
      */
-    public static function search($query) {
-        $rawusers = search_users(SITEID, null, $query);
+    public static function search($query, $target) {
+        global $DB;
 
-        $users = array();
-        foreach ($rawusers as $user) {
-            /* We can't use fullname() here, as we don't have all of the
-             * required fields. There isn't a way for us to add them, either. */
-            $name = "{$user->firstname} {$user->lastname}";
+        /* This function has been closely modeled after search_users in
+         * /lib/datalib.php. We have to provide our own implementation in order
+         * to allow filtering users by their assigned targets. */
 
-            $users[] = (object) array(
-                'id'        => $user->id,
-                'idnumber'  => '',        // This isn't in the fields either
-                'fullname'  => $name,
-                'shortname' => $name,
-            );
+        $fullnamesql = $DB->sql_fullname('u.firstname', 'u.lastname');
+
+        $params = array();
+        $fields = array(
+            $fullnamesql,
+            'u.email',
+        );
+
+        $fieldswhere = array();
+        foreach ($fields as $index => $field) {
+            $param = "search{$index}";
+
+            $fieldswhere[]  = $DB->sql_like($field, ":{$param}", false);
+            $params[$param] = "%{$query}%";
         }
+        $fieldswheresql = '(' . implode(' OR ', $fieldswhere) . ')';
 
-        return $users;
+        $targetclass = $target->get_target_class();
+        list($targetjoinsql, $targetwheresql)
+                = $targetclass::get_user_filter_sql();
+        $params['targetitemid'] = $target->itemid;
+
+        $sql = <<<SQL
+SELECT u.id, u.idnumber,
+    {$fullnamesql} AS fullname,
+    {$fullnamesql} AS shortname
+FROM {user} u
+    {$targetjoinsql}
+WHERE u.deleted = 0 AND u.confirmed = 1
+    AND {$fieldswheresql}
+    AND {$targetwheresql}
+SQL;
+
+        return array_values($DB->get_records_sql($sql, $params));
     }
 }

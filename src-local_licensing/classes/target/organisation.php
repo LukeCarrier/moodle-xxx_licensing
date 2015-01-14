@@ -116,6 +116,16 @@ SQL;
     /**
      * @override \local_licensing\base_target
      */
+    public static function get_user_filter_sql() {
+        return array(
+            'LEFT JOIN {pos_assignment} tpa ON tpa.userid = u.id',
+            'tpa.organisationid = :targetitemid',
+        );
+    }
+
+    /**
+     * @override \local_licensing\base_target
+     */
     public static function search($query) {
         global $DB;
 

@@ -97,27 +97,39 @@ if ($objecttype === 'allocationproduct') {
             require_capability(capabilities::DISTRIBUTE, $PAGE->context);
 
             $typeclass = 'local_licensing\user_helper';
+            $target    = target_factory::for_user($USER->id);
 
-            if ($action === 'create') {
-                $firstname = required_param('firstname', PARAM_TEXT);
-                $lastname  = required_param('lastname',  PARAM_TEXT);
-                $username  = required_param('username',  PARAM_TEXT);
-                $password  = required_param('password',  PARAM_TEXT);
-                $email     = required_param('email',     PARAM_TEXT);
-                $idnumber  = required_param('idnumber',  PARAM_TEXT);
+            switch ($action) {
+                case 'create':
+                    $firstname = required_param('firstname', PARAM_TEXT);
+                    $lastname  = required_param('lastname',  PARAM_TEXT);
+                    $username  = required_param('username',  PARAM_TEXT);
+                    $password  = required_param('password',  PARAM_TEXT);
+                    $email     = required_param('email',     PARAM_TEXT);
+                    $idnumber  = required_param('idnumber',  PARAM_TEXT);
 
-                $target      = target_factory::for_user($USER->id);
-                $targetset   = $target->get_target_set();
-                $targetclass = $target->get_target_class();
+                    $targetset   = $target->get_target_set();
+                    $targetclass = $target->get_target_class();
 
-                $fmtdidnumber = $targetset->format_user_id_number($idnumber);
+                    $fmtdidnumber
+                            = $targetset->format_user_id_number($idnumber);
 
-                $user = $typeclass::create($firstname, $lastname, $username,
-                                           $password, $email, $fmtdidnumber);
-                $targetclass::assign_user($target->itemid, $user->id,
-                                          $USER->id);
+                    $user = $typeclass::create($firstname, $lastname, $username,
+                                               $password, $email,
+                                               $fmtdidnumber);
+                    $targetclass::assign_user($target->itemid, $user->id,
+                                              $USER->id);
 
-                $result->response = $user;
+                    $result->response = $user;
+
+                    break;
+
+                case 'search':
+                    $result->response = $ids !== null
+                            ? $typeclass::get($ids, $target)
+                            : $typeclass::search($term, $target);
+
+                    break;
             }
 
             break;
@@ -126,9 +138,9 @@ if ($objecttype === 'allocationproduct') {
             throw new moodle_exception();
     }
 
-    if ($action === 'search') {
-        $result->response = $ids !== null ? $typeclass::get($ids)
-                                          : $typeclass::search($term);
+    if ($action === 'search' && $objecttype !== 'user') {
+        $result->response = $ids !== null
+                ? $typeclass::get($ids) : $typeclass::search($term);
     }
 }
 
