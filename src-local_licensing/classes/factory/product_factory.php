@@ -27,6 +27,8 @@ namespace local_licensing\factory;
 
 use local_licensing\base_factory;
 
+defined('MOODLE_INTERNAL') || die;
+
 class product_factory extends base_factory {
     /**
      * Product types.

@@ -23,6 +23,8 @@
  * @copyright 2014 Luke Carrier, The Development Manager Ltd
  */
 
+defined('MOODLE_INTERNAL') || die;
+
 $capabilities = array(
 
     /*

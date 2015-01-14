@@ -34,6 +34,8 @@ use program as totara_program;
 use totara_program\event\program_assignmentsupdated
         as totara_program_assignmentsupdated;
 
+defined('MOODLE_INTERNAL') || die;
+
 require_once "{$CFG->dirroot}/totara/program/lib.php";
 
 /**

@@ -25,6 +25,8 @@
 
 namespace local_licensing;
 
+defined('MOODLE_INTERNAL') || die;
+
 /**
  * Base product type.
  *

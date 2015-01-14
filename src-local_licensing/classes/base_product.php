@@ -27,6 +27,8 @@ namespace local_licensing;
 
 use local_licensing\model\product;
 
+defined('MOODLE_INTERNAL') || die;
+
 /**
  * Base product type.
  *

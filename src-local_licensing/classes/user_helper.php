@@ -29,6 +29,8 @@ use context_user;
 use core\event\user_created;
 use dml_write_exception;
 
+defined('MOODLE_INTERNAL') || die;
+
 /**
  * User search helper.
  */

@@ -27,6 +27,8 @@ namespace local_licensing;
 
 use local_licensing\exception\input_exception;
 
+defined('MOODLE_INTERNAL') || die;
+
 /**
  * All of our capabilities.
  *

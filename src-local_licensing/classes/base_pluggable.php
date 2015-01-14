@@ -27,6 +27,8 @@ namespace local_licensing;
 
 use moodle_url;
 
+defined('MOODLE_INTERNAL') || die;
+
 /**
  * I am so sorry about the name of this class.
  */

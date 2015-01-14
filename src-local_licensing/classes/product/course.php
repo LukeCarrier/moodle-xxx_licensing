@@ -30,6 +30,8 @@ use course_enrolment_manager;
 use local_licensing\base_product;
 use local_licensing\util;
 
+defined('MOODLE_INTERNAL') || die;
+
 require_once "{$CFG->dirroot}/enrol/locallib.php";
 
 /**

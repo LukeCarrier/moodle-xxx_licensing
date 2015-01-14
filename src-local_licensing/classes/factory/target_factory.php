@@ -29,6 +29,8 @@ use local_licensing\base_factory;
 use local_licensing\exception\missing_target_exception;
 use local_licensing\model\target;
 
+defined('MOODLE_INTERNAL') || die;
+
 class target_factory extends base_factory {
     /**
      * Product types.
