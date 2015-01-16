@@ -133,7 +133,7 @@ class distribution_form extends moodleform {
 
         if ($iscreation) {
             foreach ($userids as $userid) {
-                $licence = new licence($allocation->id, $userid);
+                $licence = new licence($distribution->id, $userid);
                 $licence->save();
             }
         }
