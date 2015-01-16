@@ -60,7 +60,7 @@ class user_helper {
             'lastname'  => $lastname,
 
             'username' => strtolower($username),
-            'password' => $password,
+            'password' => hash_internal_user_password($password),
 
             'email'    => $email,
             'idnumber' => $idnumber,
