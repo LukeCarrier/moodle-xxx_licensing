@@ -128,15 +128,9 @@ class distribution extends base_model {
     public function get_user_ids() {
         global $DB;
 
-        $sql = <<<SQL
-SELECT u.id
-FROM {user} u
-LEFT JOIN {lic_licence} l
-    ON l.userid = u.id
-WHERE l.distributionid = ?
-SQL;
+        $licences = licence::find_by_distributionid($this->id);
 
-        return util::reduce($DB->get_records_sql($sql, array($this->id)), 'id');
+        return util::reduce($licences, 'id');
     }
 
     /**
