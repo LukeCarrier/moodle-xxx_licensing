@@ -24,6 +24,7 @@
  */
 
 use local_licensing\capabilities;
+use local_licensing\cron;
 use local_licensing\url_generator;
 use local_licensing\util;
 
@@ -60,9 +61,12 @@ function local_licensing_extends_settings_navigation(settings_navigation $navroo
  *
  * We have to support Moodle 2.6, so we can't use the new task API and there's
  * no tidy way to reuse code.
+ *
+ * @return boolean True on success, else an exception will be raised.
  */
 function local_licensing_cron() {
     $cron = new cron();
+    $cron->execute();
 
-    return $cron->execute();
+    return true;
 }
