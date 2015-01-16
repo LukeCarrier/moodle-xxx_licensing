@@ -347,4 +347,15 @@ class local_licensing_renderer extends plugin_renderer_base {
 
         return $this->tabtree($tabs, $selected);
     }
+
+    /**
+     * Warning.
+     *
+     * @param string $message
+     *
+     * @return HTML The generated HTML.
+     */
+    public function warning($message) {
+        return $this->notification($message, 'notifyproblem');
+    }
 }

@@ -60,7 +60,6 @@ $redirecturl = url_generator::list_url($tab);
 $mform       = form_factory::instance($tab, $mformaction->out(false),
                                       $record->model_to_form());
 
-$adminrenderer   = $PAGE->get_renderer('admin');
 $renderer        = $PAGE->get_renderer('local_licensing');
 $submissionerror = null;
 
@@ -72,8 +71,9 @@ if ($mform->is_cancelled()) {
     try {
         $mform->save();
         redirect($redirecturl);
-    } catch (form_submission_exception $submissionerror) {
+    } catch (form_submission_exception $e) {
         // We'll display a message above the edit form -- see below
+        $submissionerror = $e->getMessage();
     }
 }
 
@@ -84,7 +84,7 @@ echo $OUTPUT->header(),
      $OUTPUT->heading(util::string("{$tablangstring}:{$actionstring}"), 3);
 
 if ($submissionerror !== null) {
-    $adminrenderer->warning($submissionerror->getMessage());
+    echo $renderer->warning($submissionerror);
 }
 
 $mform->display();
