@@ -364,6 +364,27 @@ abstract class base_model {
     }
 
     /**
+     * Get a query fragment that obtains a UNIX timestamp.
+     *
+     * Unfortunately there doesn't appear to be an easy, cross-platform method
+     * to obtain UNIX timestamps.
+     *
+     * @return string The SQL query fragment.
+     */
+    protected static function model_get_unix_timestamp() {
+        global $DB;
+
+        $dbfamily = $DB->get_dbfamily();
+
+        switch ($dbfamily) {
+            case 'mssql':    static::model_throw_incomplete();
+            case 'mysql':    return 'UNIX_TIMESTAMP()';
+            case 'oracle':   static::model_throw_incomplete();
+            case 'postgres': return 'ROUND(EXTRACT(EPOCH FROM NOW()))';
+        }
+    }
+
+    /**
      * Populate a model object from a DML record.
      *
      * @param \stdClass $record The DML record object.
