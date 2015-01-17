@@ -28,6 +28,8 @@ namespace local_licensing;
 use local_licensing\factory\product_factory;
 use local_licensing\model\distribution;
 
+defined('MOODLE_INTERNAL') || die;
+
 /**
  * Enrolment synchronisation cron.
  *
