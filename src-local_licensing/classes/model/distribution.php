@@ -25,6 +25,7 @@
 
 namespace local_licensing\model;
 
+use context_system;
 use local_licensing\base_model;
 use local_licensing\util;
 
@@ -36,6 +37,18 @@ defined('MOODLE_INTERNAL') || die;
  * A distribution is a set of licenses that have been distributed to learners.
  */
 class distribution extends base_model {
+    /**
+     * Licence count: bulk upload pending cron execution.
+     *
+     * get_count() will return this value when the distribution appears to have
+     * been created by the bulk upload process but is pending cron execution. At
+     * this time, we're not sure of the licence count or whether we even have
+     * sufficient licenses.
+     *
+     * @var integer
+     */
+    const COUNT_BULK_PENDING_CRON = -1;
+
     /**
      * Record ID.
      *
@@ -132,7 +145,30 @@ SQL;
      * @return integer The number of distributed licences.
      */
     public function get_count() {
-        return count($this->get_user_ids());
+        $count = count($this->get_user_ids());
+
+        if (!$count) {
+            /* Bulk uploads from CSV file are a little difficult to handle. We
+             * have to display a distribution record to the user to indicate
+             * that the distribution was created, but we have to allocate the
+             * licences on the cron to protect against timeouts. This means that
+             * the licence count will remain at 0 until the cron runs.
+             *
+             * Returning a different value allows our UI to report a pending
+             * status. */
+            $context     = context_system::instance();
+            $filestorage = get_file_storage();
+
+            $files = $filestorage->get_area_files($context->id,
+                                                  static::MOODLE_MODULE,
+                                                  'csvfile', $this->id);
+
+            if (count($files)) {
+                $count = static::COUNT_BULK_PENDING_CRON;
+            }
+        }
+
+        return $count;
     }
 
     /**

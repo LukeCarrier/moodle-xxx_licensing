@@ -24,6 +24,7 @@
  */
 
 use local_licensing\capabilities;
+use local_licensing\model\distribution;
 use local_licensing\url_generator;
 use local_licensing\util;
 
@@ -176,6 +177,8 @@ class local_licensing_renderer extends plugin_renderer_base {
         $editurl   = url_generator::edit_distribution();
         $deleteurl = url_generator::delete_distribution();
 
+        $countbulkpending = util::string('distribution:count:bulkpending');
+
         list($table, $editurl, $deleteurl)
                 = $this->generic_table($head, $editurl, $deleteurl);
 
@@ -187,11 +190,16 @@ class local_licensing_renderer extends plugin_renderer_base {
             $productset = $distribution->get_allocation()->get_product_set();
             $product    = $distribution->get_product();
 
+            $count = $distribution->get_count();
+            if ($count === distribution::COUNT_BULK_PENDING_CRON) {
+                $count = $countbulkpending;
+            }
+
             $table->data[] = array(
                 $this->edit_link('product_set', $productset->id,
                                  $productset->name),
                 html_writer::link($product->get_url(), $product->get_name()),
-                $distribution->get_count(),
+                $count,
                 $this->action_buttons($actionbuttons),
             );
         }
