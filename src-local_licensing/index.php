@@ -24,6 +24,8 @@
  */
 
 use local_licensing\capabilities;
+use local_licensing\exception\missing_target_exception;
+use local_licensing\factory\target_factory;
 use local_licensing\model\allocation;
 use local_licensing\model\distribution;
 use local_licensing\model\product_set;
@@ -40,6 +42,12 @@ $PAGE->set_context(context_system::instance());
 $PAGE->set_url($ME);
 
 $renderer = $PAGE->get_renderer('local_licensing');
+
+try {
+    $target = target_factory::for_user($USER->id);
+} catch (missing_target_exception $e) {
+    $target = null;
+}
 
 require_login();
 capabilities::require_for_tab($tab, $PAGE->context);
@@ -59,8 +67,14 @@ switch ($tab) {
         break;
 
     case 'distribution':
+        if ($target === null) {
+            require_capability(capabilities::ALLOCATE, $PAGE->context);
+        }
+
+        $distributions = distribution::get_active_distributions($target->id);
+
         echo $OUTPUT->heading(util::string('distribution'), 3),
-             $renderer->distribution_table(distribution::all()),
+             $renderer->distribution_table($distributions),
              $OUTPUT->single_button(url_generator::add_distribution(),
                                     util::string('adddistribution'), 'get');
         break;

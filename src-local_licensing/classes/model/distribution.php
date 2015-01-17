@@ -85,6 +85,39 @@ class distribution extends base_model {
     }
 
     /**
+     * Get active distributions.
+     *
+     * @param integer $targetsetid An (optional) ID of a specific target set,
+     *                             used to filter the distributions.
+     *
+     * @return \local_licensing\model\distribution[]
+     */
+    public static function get_active_distributions($targetsetid=null) {
+        global $DB;
+
+        $timestamp = static::model_get_unix_timestamp();
+
+        $sql = <<<SQL
+SELECT d.*
+FROM {lic_distribution} d
+LEFT JOIN {lic_allocation} a
+    ON a.id = d.allocationid
+WHERE a.startdate <= {$timestamp}
+    AND a.enddate >= {$timestamp}
+SQL;
+        $params = array();
+
+        if ($targetsetid !== null) {
+            $sql      .= ' AND a.targetsetid = 1';
+            $params[]  = $targetsetid;
+        }
+
+        $records = $DB->get_records_sql($sql, $params);
+
+        return static::model_from_many_dml($records);
+    }
+
+    /**
      * Get the associated allocation.
      *
      * @return \local_licensing\model\allocation
