@@ -39,8 +39,11 @@ $string['model:nosuchmethod']             = 'Attempt to call nonexistent method 
 $string['product:incompleteimplementation'] = 'Attempt to use product \'{$a}\' which is incomplete';
 
 // Shared
-$string['licensing'] = 'Licensing';
-$string['overview']  = 'Overview';
+$string['bulkupload']      = 'Bulk upload';
+$string['bulkuploaddesc1'] = 'If you are distributing licences to multiple users, it may be quicker to follow the <a href="{$a->url}">bulk upload process</a>.';
+$string['bulkuploaddesc2'] = 'If you wish to distribute licences manually, please proceed using the form below.';
+$string['licensing']       = 'Licensing';
+$string['overview']        = 'Overview';
 
 // Errors
 $string['error:invalidtab'] = 'Please select a tab from the menu above.';
@@ -71,6 +74,7 @@ $string['distribution']            = 'Distribution';
 $string['distributions']           = 'Distributions';
 $string['distribution:backtoall']  = 'Back to all distributions';
 $string['distribution:create']     = 'Distribute licences to users';
+$string['distribution:csvfile']    = 'CSV file';
 $string['distribution:edit']       = 'Edit an existing distribution';
 $string['distribution:allocation'] = 'Allocation';
 $string['distribution:count']      = 'Count';
@@ -80,6 +84,7 @@ $string['distribution:users']      = 'Users';
 
 // Distribution exceptions
 $string['exception:formsubmission:insufficientlicences'] = 'The selected allocation has {$a->available} licences, but {$a->users} were selected for enrolment.';
+$string['exception:formsubmission:noselectedusers']      = 'No users have been selected for distribution.';
 
 // Product sets
 $string['addproductset']        = 'Add product set';
@@ -115,6 +120,9 @@ $string['targetset:target:organisation'] = 'Organisation';
 
 // Product selector dialogue
 $string['addxs'] = 'Add {$a}';
+
+// Cron exceptions
+$string['exception:croncollision'] = 'Another instance of the licensing cron appears to be running. Running multiple instances of the cron at a time will likely lead to unexpected behaviour and is not supported.';
 
 // Exceptions
 $string['exception:formsubmission']           = 'Errors were encountered when processing the submission.';

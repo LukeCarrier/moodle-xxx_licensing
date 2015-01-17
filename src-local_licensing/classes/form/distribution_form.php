@@ -25,6 +25,7 @@
 
 namespace local_licensing\form;
 
+use context_system;
 use local_licensing\chooser_dialogue\user_chooser_dialogue;
 use local_licensing\exception\form_submission_exception;
 use local_licensing\factory\target_factory;
@@ -35,6 +36,8 @@ use local_licensing\model\product;
 use local_licensing\url_generator;
 use local_licensing\util;
 use moodleform;
+use moodle_url;
+use stdClass;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -53,12 +56,38 @@ class distribution_form extends moodleform {
         $data  = $this->_customdata['record'];
         $mform = $this->_form;
 
+        $context    = context_system::instance();
+        $isbulk     = optional_param('bulk', false, PARAM_BOOL);
         $iscreation = $data->id == 0;
 
         $target = target_factory::for_user($USER->id);
 
         $mform->addElement('hidden', 'id', $data->id);
         $mform->setType('id', PARAM_INT);
+
+        if ($isbulk) {
+            $mform->addElement('filemanager', 'csvfile',
+                               util::string('distribution:csvfile'), null,
+                               static::get_csvfile_options());
+
+            file_prepare_draft_area($draftitemid, $context->id,
+                                    'local_licensing', 'csvfile', $data->id,
+                                    static::get_csvfile_options());
+
+            $mform->setDefault('csvfile', $draftitemid);
+        } else {
+            $bulksubs = new stdClass();
+            $bulksubs->url = new moodle_url($mform->getAttribute('action'));
+            $bulksubs->url->param('bulk', true);
+            if ($iscreation) {
+                $bulksubs->url->remove_params(array('id'));
+            }
+
+            $mform->addElement('static', 'csvfilestatic',
+                               util::string('bulkupload'),
+                               util::paragraphs('bulkuploaddesc', 2, 1,
+                                                $bulksubs));
+        }
 
         $mform->addElement('select', 'allocationid',
                            util::string('distribution:allocation'),
@@ -78,7 +107,9 @@ class distribution_form extends moodleform {
                                product::get_by_id($data->productid)->get_name());
         }
 
-        $this->user_chooser_dialogue($iscreation);
+        if (!$iscreation || ($iscreation && !$isbulk)) {
+            $this->user_chooser_dialogue($iscreation);
+        }
 
         if ($iscreation) {
             $this->add_action_buttons();
@@ -88,12 +119,31 @@ class distribution_form extends moodleform {
     }
 
     /**
+     * Get additional options for the CSV file element.
+     *
+     * @return mixed[] An array of options for the file API.
+     */
+    protected static function get_csvfile_options() {
+        global $CFG;
+
+        return array(
+            'accepted_types' => array('csv'),
+            'maxbytes'       => $CFG->maxbytes,
+            'maxfiles'       => 1,
+            'subdirs'        => 0,
+        );
+    }
+
+    /**
      * Save the form values.
      *
      * @return void
      */
     public function save() {
         $data = $this->get_data();
+
+        $context = context_system::instance();
+        $isbulk  = !!file_get_submitted_draft_itemid('csvfile');
 
         /* Hack - get the selected product ID. This is required since Moodle's
          * form library will filter out values that weren't in the array of
@@ -106,7 +156,6 @@ class distribution_form extends moodleform {
 
         if ($iscreation) {
             $allocation = allocation::get_by_id($data->allocationid);
-            $userids    = explode(',', $data->user);
 
             // Deduce the product ID from the product and allocation details
             $product = product::get(array(
@@ -116,14 +165,23 @@ class distribution_form extends moodleform {
             ));
             $data->productid = $product->id;
 
-            $required  = count($userids);
-            $available = $allocation->get_available();
+            if (!$isbulk) {
+                if ($data->user === '') {
+                    throw new form_submission_exception('noselectedusers');
+                }
+                $userids = explode(',', $data->user);
 
-            if ($required > $available) {
-                throw new form_submission_exception('insufficientlicences', (object) array(
-                    'available' => $available,
-                    'required'  => $required,
-                ));
+                $required  = count($userids);
+                $available = $allocation->get_available();
+
+                if ($required > $available) {
+                    $subs = (object) array(
+                        'available' => $available,
+                        'required'  => $required,
+                    );
+                    throw new form_submission_exception('insufficientlicences',
+                                                        $subs);
+                }
             }
         }
 
@@ -132,9 +190,17 @@ class distribution_form extends moodleform {
         $distribution->save();
 
         if ($iscreation) {
-            foreach ($userids as $userid) {
-                $licence = new licence($distribution->id, $userid);
-                $licence->save();
+            if ($isbulk) {
+                $draftitemid = file_get_submitted_draft_itemid('csvfile');
+                file_save_draft_area_files($draftitemid, $context->id,
+                                           'local_licensing', 'csvfile',
+                                           $distribution->id,
+                                           static::get_csvfile_options());
+            } else {
+                foreach ($userids as $userid) {
+                    $licence = new licence($distribution->id, $userid);
+                    $licence->save();
+                }
             }
         }
     }

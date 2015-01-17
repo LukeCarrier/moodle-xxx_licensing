@@ -26,6 +26,7 @@
 namespace local_licensing;
 
 use context_system;
+use html_writer;
 use lang_string;
 
 defined('MOODLE_INTERNAL') || die;
@@ -97,6 +98,28 @@ class util {
      */
     public static function get_config($name) {
         return get_config(static::MOODLE_MODULE, $name);
+    }
+
+    /**
+     * Generate a series of paragraphs from a set of strings.
+     *
+     * @param string  $stringprefix
+     * @param integer $end
+     * @param integer $start
+     * @param mixed   $a
+     * @param string  $module
+     */
+    public static function paragraphs($stringprefix, $end, $start=1, $a=null,
+                                      $module=null) {
+        $result = '';
+        foreach (range($start, $end) as $paragraph) {
+            $paragraphstring = "{$stringprefix}{$paragraph}";
+
+            $result .= html_writer::tag('p', util::string($paragraphstring, $a,
+                                                          $module));
+        }
+
+        return $result;
     }
 
     /**
