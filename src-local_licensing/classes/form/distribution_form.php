@@ -25,10 +25,10 @@
 
 namespace local_licensing\form;
 
-use context_system;
 use local_licensing\chooser_dialogue\user_chooser_dialogue;
 use local_licensing\exception\form_submission_exception;
 use local_licensing\factory\target_factory;
+use local_licensing\file\distribution_user_csv_file;
 use local_licensing\model\allocation;
 use local_licensing\model\distribution;
 use local_licensing\model\licence;
@@ -48,6 +48,11 @@ require_once "{$CFG->libdir}/formslib.php";
  */
 class distribution_form extends moodleform {
     /**
+     *
+     */
+    const FIELD_USER_CSV = 'usercsv';
+
+    /**
      * @override \moodleform
      */
     public function definition() {
@@ -56,7 +61,7 @@ class distribution_form extends moodleform {
         $data  = $this->_customdata['record'];
         $mform = $this->_form;
 
-        $context    = context_system::instance();
+        $context    = distribution_user_csv_file::get_context();
         $isbulk     = optional_param('bulk', false, PARAM_BOOL);
         $iscreation = $data->id == 0;
 
@@ -66,15 +71,18 @@ class distribution_form extends moodleform {
         $mform->setType('id', PARAM_INT);
 
         if ($isbulk) {
-            $mform->addElement('filemanager', 'csvfile',
-                               util::string('distribution:csvfile'), null,
-                               static::get_csvfile_options());
+            $mform->addElement('filemanager', static::FIELD_USER_CSV,
+                               util::string('distribution:usercsv'), null,
+                               distribution_user_csv_file::get_options());
 
+            $draftitemid = file_get_submitted_draft_itemid(static::FIELD_USER_CSV);
             file_prepare_draft_area($draftitemid, $context->id,
-                                    'local_licensing', 'csvfile', $data->id,
-                                    static::get_csvfile_options());
+                                    distribution_user_csv_file::get_component(),
+                                    distribution_user_csv_file::get_file_area(),
+                                    $data->id,
+                                    distribution_user_csv_file::get_options());
 
-            $mform->setDefault('csvfile', $draftitemid);
+            $mform->setDefault(static::FIELD_USER_CSV, $draftitemid);
         } else {
             $bulksubs = new stdClass();
             $bulksubs->url = new moodle_url($mform->getAttribute('action'));
@@ -83,7 +91,7 @@ class distribution_form extends moodleform {
                 $bulksubs->url->remove_params(array('id'));
             }
 
-            $mform->addElement('static', 'csvfilestatic',
+            $mform->addElement('static', 'usercsvstatic',
                                util::string('bulkupload'),
                                util::paragraphs('bulkuploaddesc', 2, 1,
                                                 $bulksubs));
@@ -119,22 +127,6 @@ class distribution_form extends moodleform {
     }
 
     /**
-     * Get additional options for the CSV file element.
-     *
-     * @return mixed[] An array of options for the file API.
-     */
-    protected static function get_csvfile_options() {
-        global $CFG;
-
-        return array(
-            'accepted_types' => array('csv'),
-            'maxbytes'       => $CFG->maxbytes,
-            'maxfiles'       => 1,
-            'subdirs'        => 0,
-        );
-    }
-
-    /**
      * Save the form values.
      *
      * @return void
@@ -142,8 +134,7 @@ class distribution_form extends moodleform {
     public function save() {
         $data = $this->get_data();
 
-        $context = context_system::instance();
-        $isbulk  = !!file_get_submitted_draft_itemid('csvfile');
+        $isbulk = !!file_get_submitted_draft_itemid(static::FIELD_USER_CSV);
 
         /* Hack - get the selected product ID. This is required since Moodle's
          * form library will filter out values that weren't in the array of
@@ -191,11 +182,14 @@ class distribution_form extends moodleform {
 
         if ($iscreation) {
             if ($isbulk) {
-                $draftitemid = file_get_submitted_draft_itemid('csvfile');
+                $context     = distribution_user_csv_file::get_context();
+                $draftitemid = file_get_submitted_draft_itemid(static::FIELD_USER_CSV);
+
                 file_save_draft_area_files($draftitemid, $context->id,
-                                           'local_licensing', 'csvfile',
+                                           distribution_user_csv_file::get_component(),
+                                           distribution_user_csv_file::get_file_area(),
                                            $distribution->id,
-                                           static::get_csvfile_options());
+                                           distribution_user_csv_file::get_options());
             } else {
                 foreach ($userids as $userid) {
                     $licence = new licence($distribution->id, $userid);
