@@ -32,7 +32,6 @@ distributions made available on Moodle.org.
 
 ## To do
 
-* Write ```enrol_licensing``` to handle the course enrolment process
 * Figure out how on earth program enrolment will work
 * Write a bunch of targets for Totara organisations and audiences
 * Write the UI
