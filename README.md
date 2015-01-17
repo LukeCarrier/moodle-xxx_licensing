@@ -30,6 +30,16 @@ distributions made available on Moodle.org.
 5. Each of the plugins will now be packaged into zip files under the
    ```build/``` directory.
 
+## Frequently asked questions
+
+* How do I use this?
+  Check out [this series of videos](https://www.youtube.com/watch?v=zxJlLgW16DI&list=PLxb6iKYMXKwuaTIiUVpMZ9lHCZYQqBof3)
+  on YouTube.
+* Why does the "Licensing" menu not live under Site Administration?
+  Because this menu is only visible to users who have the
+  ```moodle:site/config``` capability. This would require certain administration
+  privileges to be given to all users distributing licenses.
+
 ## To do
 
 * Figure out how on earth program enrolment will work
