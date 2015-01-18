@@ -74,13 +74,13 @@ $string['distribution']                   = 'Distribution';
 $string['distributions']                  = 'Distributions';
 $string['distribution:backtoall']         = 'Back to all distributions';
 $string['distribution:create']            = 'Distribute licences to users';
-$string['distribution:csvfile']           = 'CSV file';
 $string['distribution:edit']              = 'Edit an existing distribution';
 $string['distribution:allocation']        = 'Allocation';
 $string['distribution:count']             = 'Count';
 $string['distribution:count:bulkpending'] = 'Pending';
 $string['distribution:product']           = 'Product';
 $string['distribution:productset']        = 'Product set';
+$string['distribution:usercsv']           = 'CSV file';
 $string['distribution:users']             = 'Users';
 
 // Distribution exceptions
