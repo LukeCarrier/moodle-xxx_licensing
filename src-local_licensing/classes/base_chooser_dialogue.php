@@ -112,10 +112,10 @@ abstract class base_chooser_dialogue {
      *
      * @param HTML_QuickForm $mform   The form to which the field should be
      *                                added.
-     * @param string         $type    The type of the object the field should
-     *                                allow the selection of.
      * @param string         $default The default value of the hidden form
      *                                field.
+     * @param string         $type    The type of the object the field should
+     *                                allow the selection of.
      *
      * @return void
      */
