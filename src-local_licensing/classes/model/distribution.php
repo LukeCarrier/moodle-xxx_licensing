@@ -27,6 +27,7 @@ namespace local_licensing\model;
 
 use context_system;
 use local_licensing\base_model;
+use local_licensing\file\distribution_user_csv_file;
 use local_licensing\util;
 
 defined('MOODLE_INTERNAL') || die;
@@ -156,12 +157,12 @@ SQL;
              *
              * Returning a different value allows our UI to report a pending
              * status. */
-            $context     = context_system::instance();
+            $context     = distribution_user_csv_file::get_context();
             $filestorage = get_file_storage();
 
             $files = $filestorage->get_area_files($context->id,
-                                                  static::MOODLE_MODULE,
-                                                  'csvfile', $this->id);
+                    distribution_user_csv_file::get_component(),
+                    distribution_user_csv_file::get_file_area(), $this->id);
 
             if (count($files)) {
                 $count = static::COUNT_BULK_PENDING_CRON;
