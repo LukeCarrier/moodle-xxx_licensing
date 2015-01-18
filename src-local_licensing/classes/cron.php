@@ -69,12 +69,38 @@ class cron {
     public function execute() {
         $this->pre_execute();
 
+        $this->bulk_csv_to_distributions();
         $this->distributed_licences_to_enrolments();
 
         $this->post_execute();
     }
+
+    /**
+     * Extract distribution data from CSV files uploaded for batch processing.
+     *
+     * @return void
+     */
+    protected function bulk_csv_to_distributions() {
+        $context     = distribution_user_csv_file::get_context();
+        $filestorage = get_file_storage();
+
+        $files = $filestorage->get_area_files($context->id,
+                distribution_user_csv_file::get_component(),
+                distribution_user_csv_file::get_file_area());
+
+        foreach ($files as $file) {
+            // Skip directory entries -- we can't process these
+            if ($file->get_filename() === '.') {
+                continue;
+            }
+
+            $distribution = distribution::get_by_id($file->get_itemid());
+            $filecontent  = $file->get_content();
+
+            $importer = new user_csv_importer($distribution, $filecontent);
+            $importer->execute();
         }
-        $lastrun = util::get_config(static::CONFIG_LAST_RUN);
+    }
 
     /**
      * Convert distributed licences to enrolments.
