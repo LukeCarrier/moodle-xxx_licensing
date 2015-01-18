@@ -88,22 +88,30 @@ class user_helper {
      *
      * @param integer[] $ids  The IDs of the users whose details we need to
      *                        retrieve.
-     * @param integer $target The target model object for the target users
-     *                        need to be a member of.
+     * @param integer $target The (optional) target model object for the target
+     *                        users need to be a member of. If not supplied, all
+     *                        users with matching IDs will be retrieved.
      *
      * @return \stdClass[] An array of DML records containing the fullname,
      *                     shortname, idnumber and id properties.
      */
-    public static function get($ids, $target) {
+    public static function get($ids, $target=null) {
         global $DB;
 
         list($insql, $params) = $DB->get_in_or_equal($ids, SQL_PARAMS_NAMED, 'in');
         $fullnamesql = $DB->sql_fullname();
 
-        $targetclass = $target->get_target_class();
-        list($targetjoinsql, $targetwheresql)
-                = $targetclass::get_user_filter_sql();
-        $params['targetitemid'] = $target->itemid;
+        if ($target === null) {
+            $targetjoinsql  = null;
+            $targetwheresql = null;
+        } else {
+            $targetclass = $target->get_target_class();
+            list($targetjoinsql, $targetwheresql)
+                    = $targetclass::get_user_filter_sql();
+
+            $targetwheresql         = "AND {$targetwheresql}";
+            $params['targetitemid'] = $target->itemid;
+        }
 
         $sql = <<<SQL
 SELECT u.id, u.idnumber,
@@ -113,7 +121,7 @@ FROM {user} u
 {$targetjoinsql}
 WHERE u.deleted = 0 AND u.confirmed = 1
     AND u.id {$insql}
-    AND {$targetwheresql}
+    {$targetwheresql}
 SQL;
 
         return array_values($DB->get_records_sql($sql, $params));
