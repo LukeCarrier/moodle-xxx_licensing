@@ -190,7 +190,7 @@ SQL;
     }
 
     /**
-     * Get an array of IDs of users who posess licences in this allocation.
+     * Get an array of IDs of users who possess licences in this allocation.
      *
      * @return integer[] An array of user IDs.
      */
