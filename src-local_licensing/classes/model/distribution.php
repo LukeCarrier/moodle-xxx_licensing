@@ -199,7 +199,7 @@ SQL;
 
         $licences = licence::find_by_distributionid($this->id);
 
-        return util::reduce($licences, 'id');
+        return util::reduce($licences, 'userid');
     }
 
     /**
