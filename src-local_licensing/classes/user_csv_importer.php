@@ -27,6 +27,7 @@ namespace local_licensing;
 
 use csv_import_reader;
 use dml_missing_record_exception;
+use local_licensing\factory\target_factory;
 use local_licensing\model\licence;
 use stdClass;
 
@@ -42,8 +43,20 @@ class user_csv_importer {
      */
     const CSV_IMPORT_TYPE = 'local_licensing_usercsv';
 
+    /**
+     * Allocation.
+     *
+     * @var \local_licensing\model\allocation
+     */
     protected $allocation;
 
+    /**
+     * Column map.
+     *
+     * A map of column indexes to column names.
+     *
+     * @var string[]
+     */
     protected $columns;
 
     /**
@@ -87,6 +100,18 @@ class user_csv_importer {
      */
     protected $reader;
 
+    /**
+     * Target.
+     *
+     * @var \local_licensing\model\target
+     */
+    protected $target;
+
+    /**
+     * Target set.
+     *
+     * @var \local_licensing\model\target_set
+     */
     protected $targetset;
 
     /**
@@ -130,21 +155,26 @@ class user_csv_importer {
     public function execute() {
         $this->reader->init();
 
+        $target      = target_factory::for_user($this->distribution->createdby);
+        $targetclass = $target->get_target_class();
+
         while ($line = $this->reader->next()) {
             $data = $this->parse_line($line);
 
-            $formattedidnumber
+            $data->idnumber
                     = $this->targetset->format_user_id_number($data->idnumber);
 
             try {
-                $user = $this->get_user($formattedidnumber);
+                $user = $this->get_user($data->idnumber);
                 if ($this->update_user($user, $data)) {
                     user_helper::update($user);
                 }
             } catch (dml_missing_record_exception $e) {
                 $user = user_helper::create($data->firstname, $data->lastname,
                                             $data->username, $data->password,
-                                            $data->email, $formattedidnumber);
+                                            $data->email, $data->idnumber);
+                $targetclass::assign_user($target->itemid, $user->id,
+                                          $distribution->createdby);
             }
 
             $licence = new licence($this->distribution->id, $user->id);
