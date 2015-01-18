@@ -168,7 +168,7 @@ SQL;
     /**
      * Get the associated target.
      *
-     * @return \local_licensing\model\target The target.
+     * @return \local_licensing\model\target_set The target set.
      */
     public function get_target_set() {
         return target_set::get_by_id($this->targetsetid);
