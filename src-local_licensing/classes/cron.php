@@ -25,7 +25,10 @@
 
 namespace local_licensing;
 
+use context_system;
+use local_licensing\exception\cron_collision_exception;
 use local_licensing\factory\product_factory;
+use local_licensing\file\distribution_user_csv_file;
 use local_licensing\model\distribution;
 
 defined('MOODLE_INTERNAL') || die;
@@ -52,18 +55,36 @@ class cron {
     const CONFIG_RUNNING = 'cronrunning';
 
     /**
+     * Last time the cron completed.
+     *
+     * @var integer
+     */
+    protected $lastrun;
+
+    /**
      * Execute the cron.
+     *
+     * @return void
      */
     public function execute() {
-        $running = util::get_config(static::CONFIG_RUNNING);
-        if ($running == false) {
-            util::set_config(static::CONFIG_RUNNING, true);
+        $this->pre_execute();
+
+        $this->distributed_licences_to_enrolments();
+
+        $this->post_execute();
+    }
         }
         $lastrun = util::get_config(static::CONFIG_LAST_RUN);
 
+    /**
+     * Convert distributed licences to enrolments.
+     *
+     * @return void
+     */
+    protected function distributed_licences_to_enrolments() {
         $productclasses = product_factory::get_class_names();
 
-        $distributions = distribution::find_newer_than($lastrun);
+        $distributions = distribution::find_newer_than($this->lastrun);
         foreach ($distributions as $distribution) {
             $allocation = $distribution->get_allocation();
             $product    = $distribution->get_product();
@@ -72,8 +93,39 @@ class cron {
             $productclass = $productclasses[$product->type];
             $productclass::enrol($allocation, $distribution, $product, $userids);
         }
+    }
 
+    /**
+     * Perform post-execution tasks.
+     *
+     * Updates configuration records with the cron's last completion time and
+     * resets the cron running lock.
+     *
+     * @return void
+     */
+    protected function post_execute() {
         util::set_config(static::CONFIG_LAST_RUN, time());
         util::set_config(static::CONFIG_RUNNING, false);
+    }
+
+    /**
+     * Perform pre-execution tasks.
+     *
+     * Ensures that another instance of the cron is not already running,
+     * raising an exception if the lock appears to be held, then retrieves the
+     * cron's last run time.
+     *
+     * @return void
+     *
+     * @throws \local_licensing\exception\cron_collision_exception
+     */
+    protected function pre_execute() {
+        $running = util::get_config(static::CONFIG_RUNNING);
+        if ($running) {
+            throw new cron_collision_exception();
+        }
+
+        util::set_config(static::CONFIG_RUNNING, true);
+        $this->lastrun = util::get_config(static::CONFIG_LAST_RUN);
     }
 }
