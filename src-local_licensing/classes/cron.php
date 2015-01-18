@@ -99,6 +99,11 @@ class cron {
 
             $importer = new user_csv_importer($distribution, $filecontent);
             $importer->execute();
+
+            $filestorage->delete_area_files($context->id,
+                    distribution_user_csv_file::get_component(),
+                    distribution_user_csv_file::get_file_area(),
+                    $distribution->id);
         }
     }
 

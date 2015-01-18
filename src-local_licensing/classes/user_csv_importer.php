@@ -174,7 +174,7 @@ class user_csv_importer {
                                             $data->username, $data->password,
                                             $data->email, $data->idnumber);
                 $targetclass::assign_user($target->itemid, $user->id,
-                                          $distribution->createdby);
+                                          $this->distribution->createdby);
             }
 
             $licence = new licence($this->distribution->id, $user->id);
@@ -182,6 +182,9 @@ class user_csv_importer {
 
             $this->processed++;
         }
+
+        $this->reader->close();
+        $this->reader->cleanup();
     }
 
     /**
