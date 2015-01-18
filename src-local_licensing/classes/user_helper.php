@@ -31,6 +31,8 @@ use dml_write_exception;
 
 defined('MOODLE_INTERNAL') || die;
 
+require_once "{$CFG->dirroot}/user/lib.php";
+
 /**
  * User search helper.
  */
@@ -51,9 +53,7 @@ class user_helper {
      */
     public static function create($firstname, $lastname, $username, $password,
                                   $email, $idnumber) {
-        global $CFG, $DB;
-
-        $creationtime = time();
+        global $CFG;
 
         $user = (object) array(
             'firstname' => $firstname,
@@ -69,16 +69,12 @@ class user_helper {
             'confirmed'   => true,
             'lang'        => $CFG->lang,
             'mnethostid'  => $CFG->mnet_localhost_id,
-            'timecreated' => $creationtime,
+            'timecreated' => time(),
         );
 
-        $user->id = $DB->insert_record('user', $user);
-
-        $event = user_created::create(array(
-            'objectid' => $user->id,
-            'context' => context_user::instance($user->id),
-        ));
-        $event->trigger();
+        /* TODO: what happens if the user supplies a weak password? Should we
+         *       set $CFG->passwordpolicy to false before creating users? */
+        $user->id = user_create_user($user);
 
         return $user;
     }
@@ -178,5 +174,17 @@ WHERE u.deleted = 0 AND u.confirmed = 1
 SQL;
 
         return array_values($DB->get_records_sql($sql, $params));
+    }
+
+    /**
+     * Update the supplied user record.
+     *
+     * @param \stdClass $user The user record.
+     *
+     * @return void
+     */
+    public static function update($user) {
+        // TODO: do we want to allow updating the password?
+        user_update_user($user, false);
     }
 }
