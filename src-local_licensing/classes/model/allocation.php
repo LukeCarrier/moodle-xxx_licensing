@@ -170,8 +170,8 @@ SQL;
      *
      * @return \local_licensing\model\target The target.
      */
-    public function get_target() {
-        return target::get_by_id($this->targetsetid);
+    public function get_target_set() {
+        return target_set::get_by_id($this->targetsetid);
     }
 
     /**
