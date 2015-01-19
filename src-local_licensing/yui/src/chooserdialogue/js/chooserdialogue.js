@@ -52,6 +52,13 @@ ChooserDialogue.ATTRS = {
     ajaxurl: {},
 
     /**
+     * Extra parameters for object requests.
+     *
+     * @var integer
+     */
+    extraparams: {},
+
+    /**
      * Object type.
      */
     objecttype: {},
@@ -122,6 +129,8 @@ Y.extend(ChooserDialogue, M.core.dialogue, {
         if (this.hasSubtypes()) {
             params['type'] = this.get('type');
         }
+
+        params = Y.merge(params, this.get('extraparams'));
 
         params[field] = query;
 

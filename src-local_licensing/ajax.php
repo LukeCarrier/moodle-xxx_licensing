@@ -25,9 +25,11 @@
 
 use local_licensing\capabilities;
 use local_licensing\exception\input_exception;
+use local_licensing\exception\missing_target_exception;
 use local_licensing\factory\product_factory;
 use local_licensing\factory\target_factory;
 use local_licensing\model\allocation;
+use local_licensing\model\target_set;
 
 // Comment this line to see fatal errors
 define('AJAX_SCRIPT', true);
@@ -99,7 +101,23 @@ if ($objecttype === 'allocationproduct') {
             require_capability(capabilities::DISTRIBUTE, $PAGE->context);
 
             $typeclass = 'local_licensing\user_helper';
-            $target    = target_factory::for_user($USER->id);
+
+            try {
+                $target      = target_factory::for_user($USER->id);
+                $targetsetid = $target->targetsetid;
+            } catch (missing_target_exception $e) {
+                require_capability(capabilities::ALLOCATE, $PAGE->context);
+                $targetsetid = required_param('targetsetid', PARAM_INT);
+            }
+
+            $targetset = target_set::get_by_id($targetsetid);
+            if (!isset($target)) {
+                /* TODO: we shouldn't just put the user into a target without
+                 *       user confirmation, but we didn't actually define the
+                 *       expected behaviour in this scenario. */
+                $targets = $targetset->get_targets();
+                $target  = reset($targets);
+            }
 
             switch ($action) {
                 case 'create':
@@ -109,9 +127,6 @@ if ($objecttype === 'allocationproduct') {
                     $password  = required_param('password',  PARAM_TEXT);
                     $email     = required_param('email',     PARAM_TEXT);
                     $idnumber  = required_param('idnumber',  PARAM_TEXT);
-
-                    $targetset   = $target->get_target_set();
-                    $targetclass = $target->get_target_class();
 
                     $fmtdidnumber
                             = $targetset->format_user_id_number($idnumber);

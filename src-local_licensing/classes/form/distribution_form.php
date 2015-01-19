@@ -25,14 +25,17 @@
 
 namespace local_licensing\form;
 
+use local_licensing\capabilities;
 use local_licensing\chooser_dialogue\user_chooser_dialogue;
 use local_licensing\exception\form_submission_exception;
+use local_licensing\exception\missing_target_exception;
 use local_licensing\factory\target_factory;
 use local_licensing\file\distribution_user_csv_file;
 use local_licensing\model\allocation;
 use local_licensing\model\distribution;
 use local_licensing\model\licence;
 use local_licensing\model\product;
+use local_licensing\model\target_set;
 use local_licensing\url_generator;
 use local_licensing\util;
 use moodleform;
@@ -67,7 +70,18 @@ class distribution_form extends moodleform {
         $isbulk     = optional_param('bulk', false, PARAM_BOOL);
         $iscreation = $data->id == 0;
 
-        $target = target_factory::for_user($USER->id);
+        try {
+            $target      = target_factory::for_user($USER->id);
+            $targetsetid = $target->targetsetid;
+        } catch (missing_target_exception $e) {
+            require_capability(capabilities::ALLOCATE, $context);
+            $targetsetid = required_param('targetsetid', PARAM_INT);
+        }
+
+        $targetset = target_set::get_by_id($targetsetid);
+
+        $mform->addElement('hidden', 'targetsetid', $targetset->id);
+        $mform->setType('targetsetid', PARAM_INT);
 
         $mform->addElement('hidden', 'id', $data->id);
         $mform->setType('id', PARAM_INT);
@@ -91,6 +105,9 @@ class distribution_form extends moodleform {
             $bulksubs->url->param('bulk', true);
             if ($iscreation) {
                 $bulksubs->url->remove_params(array('id'));
+            }
+            if (!isset($target)) {
+                $bulksubs->url->param('targetsetid', $targetset->id);
             }
 
             $mform->addElement('static', 'usercsvstatic',
@@ -118,7 +135,7 @@ class distribution_form extends moodleform {
         }
 
         if (!$iscreation || ($iscreation && !$isbulk)) {
-            $this->user_chooser_dialogue($iscreation);
+            $this->user_chooser_dialogue($iscreation, $targetset->id);
         }
 
         if ($iscreation) {
@@ -231,16 +248,20 @@ class distribution_form extends moodleform {
     /**
      * Add a user chooser dialogue to the form.
      *
-     * @param string $type The type of the product to render the chooser
-     *                     dialogue for.
+     * @param string  $type        The type of the product to render the
+     *                             chooser dialogue for.
+     * @param integer $targetsetid The ID of the target set users must belong
+     *                             to. Only applied if editable.
      *
      * @return void
      */
-    protected function user_chooser_dialogue($editable) {
+    protected function user_chooser_dialogue($editable, $targetsetid=null) {
         $default = $this->_customdata['record']->users;
 
         if ($editable) {
-            user_chooser_dialogue::add_form_field($this->_form, $default);
+            $extraparams = array('targetsetid' => $targetsetid);
+            user_chooser_dialogue::add_form_field($this->_form, $default, null,
+                                                  $extraparams);
         } else {
             user_chooser_dialogue::add_static_list($this->_form, $default);
         }

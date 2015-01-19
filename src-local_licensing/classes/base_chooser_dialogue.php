@@ -56,16 +56,18 @@ abstract class base_chooser_dialogue {
     /**
      * Add a form field to a form.
      *
-     * @param HTML_QuickForm $mform   The form to which the field should be
-     *                                added.
-     * @param string         $type    The type of the object the field should
-     *                                allow the selection of.
-     * @param string         $default The default value of the hidden form
-     *                                field.
+     * @param HTML_QuickForm $mform       The form to which the field should be
+     *                                    added.
+     * @param string         $type        The type of the object the field
+     *                                    should allow the selection of.
+     * @param string         $default     The default value of the hidden form
+     *                                    field.
+     * @param mixed[]        $extraparams Additional parameters to merge.
      *
      * @return void
      */
-    public static function add_form_field($mform, $default, $type=null) {
+    public static function add_form_field($mform, $default, $type=null,
+                                          $extraparams=null) {
         global $PAGE;
 
         static::pre_add($type);
@@ -90,6 +92,10 @@ abstract class base_chooser_dialogue {
 
         if ($hassubtypes) {
             $params['type'] = $type;
+        }
+
+        if ($extraparams !== null) {
+            $params['extraparams'] = $extraparams;
         }
 
         $mform->addElement('text', $name, util::string($namestring));
