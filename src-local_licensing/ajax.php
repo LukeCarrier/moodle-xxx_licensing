@@ -27,6 +27,7 @@ use local_licensing\capabilities;
 use local_licensing\exception\input_exception;
 use local_licensing\factory\product_factory;
 use local_licensing\factory\target_factory;
+use local_licensing\model\allocation;
 
 // Comment this line to see fatal errors
 define('AJAX_SCRIPT', true);
@@ -52,7 +53,8 @@ $objecttype = required_param('objecttype', PARAM_ALPHA);
 if ($objecttype === 'allocationproduct') {
     require_capability(capabilities::DISTRIBUTE, $PAGE->context);
 
-    $productsetid = required_param('productsetid', PARAM_INT);
+    $allocationid = required_param('allocationid', PARAM_INT);
+    $allocation = allocation::get_by_id($allocationid);
 
     $producttypes     = product_factory::get_list();
     $result->response = array();
@@ -61,7 +63,7 @@ if ($objecttype === 'allocationproduct') {
         $typeclass = product_factory::get_class_name($producttype);
 
         $result->response[$producttype]
-                = $typeclass::get_in_product_set($productsetid);
+                = $typeclass::get_in_product_set($allocation->productsetid);
     }
 } else {
     $ids  = optional_param('ids',  '', PARAM_TEXT);
