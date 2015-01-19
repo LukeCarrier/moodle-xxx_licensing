@@ -48,7 +48,9 @@ require_once "{$CFG->libdir}/formslib.php";
  */
 class distribution_form extends moodleform {
     /**
+     * User CSV field.
      *
+     * @var string
      */
     const FIELD_USER_CSV = 'usercsv';
 
