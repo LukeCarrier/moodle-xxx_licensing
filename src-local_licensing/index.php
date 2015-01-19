@@ -69,9 +69,16 @@ switch ($tab) {
     case 'distribution':
         if ($target === null) {
             require_capability(capabilities::ALLOCATE, $PAGE->context);
+
+            $targetsetid = optional_param('targetsetid', 0, PARAM_INT);
+            echo $renderer->target_set_menu(target_set::menu(), $targetsetid);
+        } else {
+            $targetsetid = $target->targetsetid;
         }
 
-        $distributions = distribution::get_active_distributions($target->id);
+        $distributions = $targetsetid
+                ? distribution::get_active_distributions($targetsetid)
+                : array();
 
         echo $OUTPUT->heading(util::string('distribution'), 3),
              $renderer->distribution_table($distributions),

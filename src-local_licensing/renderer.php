@@ -299,6 +299,19 @@ class local_licensing_renderer extends plugin_renderer_base {
     }
 
     /**
+     * Target set menu.
+     *
+     * @param string[] $targetsets An ID-indexed array of target set names.
+     * @param integer  $selectedid The ID of the selected target set.
+     *
+     * @return string The generated HTML.
+     */
+    public function target_set_menu($targetsets, $selectedid) {
+        return $this->single_select(url_generator::list_distributions(),
+                                    'targetsetid', $targetsets, $selectedid);
+    }
+
+    /**
      * Target table.
      *
      * @param \local_licensing\model\target[] $targets
