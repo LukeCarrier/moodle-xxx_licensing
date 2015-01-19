@@ -54,7 +54,7 @@ if ($objecttype === 'allocationproduct') {
     require_capability(capabilities::DISTRIBUTE, $PAGE->context);
 
     $allocationid = required_param('allocationid', PARAM_INT);
-    $allocation = allocation::get_by_id($allocationid);
+    $allocation   = allocation::get_by_id($allocationid);
 
     $producttypes     = product_factory::get_list();
     $result->response = array();
