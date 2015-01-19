@@ -219,7 +219,14 @@ SQL;
         return $DB->get_records_sql($sql, $params);
     }
 
-    public static function menu_for_target($targetsetid) {
+    /**
+     * Get a menu of allocations for a target set.
+     *
+     * @param integer $targetsetid The ID of the target set.
+     *
+     * @return string[] An ID-indexed array of allocation names.
+     */
+    public static function menu_for_target_set($targetsetid) {
         $allocations = static::get_active_allocations($targetsetid);
         $menu = array();
 

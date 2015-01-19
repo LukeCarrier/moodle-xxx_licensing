@@ -101,7 +101,7 @@ class distribution_form extends moodleform {
 
         $mform->addElement('select', 'allocationid',
                            util::string('distribution:allocation'),
-                           allocation::menu_for_target($target->id));
+                           allocation::menu_for_target_set($targetset->id));
         $mform->setDefault('allocationid', $data->allocationid);
         $mform->setType('allocationid', PARAM_INT);
 
