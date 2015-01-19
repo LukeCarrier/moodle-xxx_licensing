@@ -67,10 +67,14 @@ switch ($tab) {
         break;
 
     case 'distribution':
+        $addurl = url_generator::add_distribution();
+
         if ($target === null) {
             require_capability(capabilities::ALLOCATE, $PAGE->context);
 
             $targetsetid = optional_param('targetsetid', 0, PARAM_INT);
+
+            $addurl->param('targetsetid', $targetsetid);
             echo $renderer->target_set_menu(target_set::menu(), $targetsetid);
         } else {
             $targetsetid = $target->targetsetid;
@@ -81,9 +85,13 @@ switch ($tab) {
                 : array();
 
         echo $OUTPUT->heading(util::string('distribution'), 3),
-             $renderer->distribution_table($distributions),
-             $OUTPUT->single_button(url_generator::add_distribution(),
-                                    util::string('adddistribution'), 'get');
+             $renderer->distribution_table($distributions);
+
+        if ($targetsetid) {
+            echo $OUTPUT->single_button($addurl,
+                                        util::string('adddistribution'), 'get');
+        }
+
         break;
 
     case 'overview':
