@@ -122,7 +122,7 @@ SQL;
         $params = array();
 
         if ($targetsetid !== null) {
-            $sql      .= ' AND a.targetsetid = 1';
+            $sql      .= "\n    AND a.targetsetid = ?";
             $params[]  = $targetsetid;
         }
 
