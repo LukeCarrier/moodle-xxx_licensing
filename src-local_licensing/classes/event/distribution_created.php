@@ -23,11 +23,92 @@
  * @copyright 2014 Luke Carrier, The Development Manager Ltd
  */
 
-namespace local_licensing\events;
+namespace local_licensing\event;
 
 use local_licensing\base_event;
+use local_licensing\model\distribution;
+use local_licensing\url_generator;
+use local_licensing\util;
 
 defined('MOODLE_INTERNAL') || die;
 
-class allocation_created extends base_event {
+/**
+ * Allocation created.
+ */
+class distribution_created extends base_event {
+    /**
+     * @override \local_licensing\base_event
+     */
+    public function get_description() {
+        // The event class doesn't handle lang_string objects
+        return util::real_string('event:distributioncreated:desc',
+                                 $this->get_description_subs());
+    }
+
+    /**
+     * @override \local_licensing\base_event
+     */
+    public function get_description_subs() {
+        $a = parent::get_description_subs();
+
+        $a->relateduserid = $this->relateduserid;
+
+        return $a;
+    }
+
+
+    /**
+     * @override \local_licensing\base_event
+     */
+    public function get_legacy_logdata() {
+        $logdata = parent::get_legacy_logdata();
+        $logdata[static::LEGACY_LOGDATA_ACTION] = 'licence distribution create';
+
+        return $logdata;
+    }
+
+    /**
+     * @override \local_licensing\base_event
+     */
+    public static function get_name() {
+        return util::string('event:distributioncreated');
+    }
+
+    /**
+     * @override \local_licensing\base_event
+     */
+    public function get_url() {
+        return url_generator::edit_distribution($this->objectid);
+    }
+
+    /**
+     * @override \local_licensing\base_event
+     */
+    public function init() {
+        global $CFG;
+
+        // Work around for MDL-43661
+        $edulevel = ($CFG->version >= 2014111000) ? 'edulevel' : 'level';
+
+        $this->data['crud']        = 'c';
+        $this->data[$edulevel]     = static::LEVEL_OTHER;
+        $this->data['objecttable'] = distribution::model_table();
+    }
+
+    /**
+     * Rapidly instantiate the event.
+     *
+     * @param \local_licensing\model\distribution $distribution The affected
+     *                                                      distribution.
+     * @param \context_system                   $context    The system context.
+     *
+     * @return \local_licensing\event\distribution_created The event.
+     */
+    final public static function instance($distribution, $context) {
+        return static::create(array(
+            'objectid'      => $distribution->id,
+            'context'       => $context,
+            'relateduserid' => $distribution->createdby,
+        ));
+    }
 }

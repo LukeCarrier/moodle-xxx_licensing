@@ -122,6 +122,17 @@ $string['targetset:target:organisation'] = 'Organisation';
 // Product selector dialogue
 $string['addxs'] = 'Add {$a}';
 
+// Allocation created message
+$string['messageprovider:allocationcreated']         = 'New licence allocations';
+$string['messageprovider:allocationcreated:full']    = '<p>Hello {$a->userfullname},<p>
+<p>A new allocation of <strong>{$a->licencecount}</strong> licences for <strong>{$a->productsetname}</strong> has been created and is now available for distribution.</p>
+<p>{$a->signoff}</p>';
+$string['messageprovider:allocationcreated:small']   = 'New allocation of {$a->licencecount} licences created for {$a->productsetname}';
+$string['messageprovider:allocationcreated:subject'] = 'New allocation created';
+
+// Distribution created message
+$string['messageprovider:distributioncreated'] = 'New licence distributions';
+
 // Cron exceptions
 $string['exception:croncollision'] = 'Another instance of the licensing cron appears to be running. Running multiple instances of the cron at a time will likely lead to unexpected behaviour and is not supported.';
 
@@ -132,10 +143,11 @@ $string['exception:incompleteimplementation'] = 'Incomplete implementation';
 $string['exception:missingtarget']            = 'This user does not appear to be a member of any targets';
 
 // Capabilities
-$string['licensing:allocatelicences']   = 'Allocate licences to target sets';
-$string['licensing:distributelicences'] = 'Distribute licences to learners';
-$string['licensing:manageproductsets']  = 'Manage product sets for allocation';
-$string['licensing:managetargetsets']   = 'Manage target sets for allocation';
+$string['licensing:allocatelicences']         = 'Allocate licences to target sets';
+$string['licensing:distributelicences']       = 'Distribute licences to learners';
+$string['licensing:manageproductsets']        = 'Manage product sets for allocation';
+$string['licensing:managetargetsets']         = 'Manage target sets for allocation';
+$string['licensing:receiveenrolnotification'] = 'Receive enrolment notification';
 
 // Events
 $string['event:allocationcreated:desc'] = 'Allocation {$a->objectid} created by {a->userid}';

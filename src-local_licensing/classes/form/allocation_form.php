@@ -86,14 +86,17 @@ class allocation_form extends moodleform {
      * @return void
      */
     public function save() {
-        $data = $this->get_data();
+        $data       = $this->get_data();
+        $iscreation = $data->id == 0;
 
         $allocation = allocation::model_from_form($data);
-        $allocation->id = ($data->id == 0) ? null : $data->id;
+        $allocation->id = $iscreation ? null : $data->id;
         $allocation->save();
 
-        $event = allocation_created::instance($allocation,
-                                              context_system::instance());
-        $event->trigger();
+        if ($iscreation) {
+            $event = allocation_created::instance($allocation,
+                                                  context_system::instance());
+            $event->trigger();
+        }
     }
 }

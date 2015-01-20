@@ -40,7 +40,6 @@ class allocation_created extends base_event {
      * @override \local_licensing\base_event
      */
     public function get_description() {
-        // The event class doesn't handle lang_string objects
         return util::real_string('event:allocationcreated:desc',
                                  $this->get_description_subs());
     }

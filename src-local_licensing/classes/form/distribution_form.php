@@ -25,8 +25,10 @@
 
 namespace local_licensing\form;
 
+use context_system;
 use local_licensing\capabilities;
 use local_licensing\chooser_dialogue\user_chooser_dialogue;
+use local_licensing\event\distribution_created;
 use local_licensing\exception\form_submission_exception;
 use local_licensing\exception\missing_target_exception;
 use local_licensing\factory\target_factory;
@@ -215,6 +217,10 @@ class distribution_form extends moodleform {
                     $licence->save();
                 }
             }
+
+            $event = distribution_created::instance($distribution,
+                                                    context_system::instance());
+            $event->trigger();
         }
     }
 

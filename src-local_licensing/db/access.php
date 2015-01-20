@@ -83,4 +83,18 @@ $capabilities = array(
         'clonepermissionsfrom' => 'moodle/site:config',
     ),
 
+    /*
+     * Receive enrolment notification.
+     */
+    'local/licensing:receiveenrolnotification' => array(
+        'captype'      => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+
+        'riskbitmask' => RISK_CONFIG,
+
+        'archetypes' => array(),
+
+        'clonepermissionsfrom' => 'moodle/block:view',
+    ),
+
 );
