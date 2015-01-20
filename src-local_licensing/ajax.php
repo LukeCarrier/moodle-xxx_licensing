@@ -115,8 +115,9 @@ if ($objecttype === 'allocationproduct') {
                 /* TODO: we shouldn't just put the user into a target without
                  *       user confirmation, but we didn't actually define the
                  *       expected behaviour in this scenario. */
-                $targets = $targetset->get_targets();
-                $target  = reset($targets);
+                $targets     = $targetset->get_targets();
+                $target      = reset($targets);
+                $targetclass = $target->get_target_class();
             }
 
             switch ($action) {
