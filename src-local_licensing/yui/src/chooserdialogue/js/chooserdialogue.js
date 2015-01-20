@@ -130,8 +130,6 @@ Y.extend(ChooserDialogue, M.core.dialogue, {
             params['type'] = this.get('type');
         }
 
-        params = Y.merge(params, this.get('extraparams'));
-
         params[field] = query;
 
         this.io(params, onComplete);
@@ -265,6 +263,8 @@ Y.extend(ChooserDialogue, M.core.dialogue, {
      * @return void
      */
     io: function(params, onComplete) {
+        params = Y.merge(params, this.get('extraparams'));
+
         Y.io(M.cfg.wwwroot + this.get('ajaxurl'), {
             method: 'GET',
             data: build_querystring(params),
