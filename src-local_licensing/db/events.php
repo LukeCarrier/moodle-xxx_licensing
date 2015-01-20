@@ -46,4 +46,12 @@ $observers = array(
         'callback'  => '\local_licensing\observer::distribution_created',
     ),
 
+    /*
+     * User created.
+     */
+    array(
+        'eventname' => '\local_licensing\event\user_created',
+        'callback'  => '\local_licensing\observer::user_created',
+    ),
+
 );

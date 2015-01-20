@@ -173,6 +173,17 @@ class url_generator {
     }
 
     /**
+     * Get user edit URL.
+     *
+     * @param integer $userid The ID of the user to edit.
+     *
+     * @return \moodle_url The user edit URL.
+     */
+    public static function edit_user($userid=null) {
+        return new moodle_url('/user/edit.php', array('id' => $userid));
+    }
+
+    /**
      * Get the URL of the index page.
      *
      * @return \moodle_url The URL.
@@ -226,6 +237,15 @@ class url_generator {
         }
 
         return new moodle_url(static::BASE_URL . $url, $params);
+    }
+
+    /**
+     * Get the login URL.
+     *
+     * @return \moodle_url The login URL.
+     */
+    public static function login() {
+        return new moodle_url('/login/index.php');
     }
 
     /**

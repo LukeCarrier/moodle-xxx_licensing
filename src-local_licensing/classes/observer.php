@@ -26,8 +26,10 @@
 namespace local_licensing;
 
 use core_user;
+use local_licensing\event\user_created;
 use local_licensing\mailer\allocation_created_mailer;
 use local_licensing\mailer\distribution_created_mailer;
+use local_licensing\mailer\user_created_mailer;
 use local_licensing\model\allocation;
 use local_licensing\model\distribution;
 
@@ -104,5 +106,33 @@ class observer {
             $a->userfullname = fullname($user);
             $mailer->mail($user, $a);
         }
+    }
+
+    /**
+     * New user created.
+     *
+     * @param \local_licensing\event\user_created $event
+     *
+     * @return void
+     */
+    public static function user_created($event) {
+        $site = get_site();
+        $user = core_user::get_user($event->objectid);
+
+        $loginurl = url_generator::login();
+
+        $a = (object) array(
+            'loginurl'      => (string) $loginurl,
+            'signoff'       => generate_email_signoff(),
+            'sitefullname'  => $site->fullname,
+            'siteshortname' => $site->shortname,
+            'userfullname'  => fullname($user),
+            'userpassword'  => $event->other['password'],
+            'userusername'  => $event->other['username'],
+        );
+
+        $mailer = new user_created_mailer(core_user::get_noreply_user());
+
+        $mailer->mail($user, $a);
     }
 }

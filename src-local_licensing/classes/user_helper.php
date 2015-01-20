@@ -25,8 +25,9 @@
 
 namespace local_licensing;
 
+use context_system;
 use context_user;
-use core\event\user_created;
+use local_licensing\event\user_created;
 use dml_write_exception;
 
 defined('MOODLE_INTERNAL') || die;
@@ -79,6 +80,9 @@ class user_helper {
         /* Although an event is raised in user_create_user(), it's not easy to
          * uniquely identify the users we're creating in our observer. For this
          * reason, we'll also raise our own. */
+        $event = user_created::instance($user, $password,
+                                        context_system::instance());
+        $event->trigger();
 
         return $user;
     }

@@ -139,6 +139,21 @@ $string['messageprovider:distributioncreated:full']    = '<p>Hello {$a->userfull
 $string['messageprovider:distributioncreated:small']   = 'New distribution of {$a->licencecount} licence(s) for {$a->productname} created by {$a->createdbyfullname}';
 $string['messageprovider:distributioncreated:subject'] = 'New licence distribution #{$a->id}';
 
+// User created message
+$string['messageprovider:usercreated']         = 'New user creations';
+$string['messageprovider:usercreated:full']    = '<p>Hello {$a->userfullname},</p>
+<p>Welcome to {$a->sitefullname}.</p>
+<p>Your user account has now been created and your course content will be accessible to you very soon. We\'ll send you another email as soon as it\'s ready.</p>
+<p>Your login details are as follows:</p>
+<ul>
+    <li>Login at <a href="{$a->loginurl}">{$a->loginurl}</a></li>
+    <li>Username: {$a->userusername}</li>
+    <li>Password: {$a->userpassword}</li>
+</ul>
+<p>{$a->signoff}</p>';
+$string['messageprovider:usercreated:small']   = 'Your account at {$a->loginurl} has been created with username {$a->userusername} and password {$a->userpasword}';
+$string['messageprovider:usercreated:subject'] = 'Welcome to {$a->siteshortname}, {$a->userfullname}';
+
 // Cron exceptions
 $string['exception:croncollision'] = 'Another instance of the licensing cron appears to be running. Running multiple instances of the cron at a time will likely lead to unexpected behaviour and is not supported.';
 
@@ -158,3 +173,4 @@ $string['licensing:receiveenrolnotification'] = 'Receive enrolment notification'
 // Events
 $string['event:allocationcreated:desc']   = 'Allocation {$a->objectid} created by {a->userid}';
 $string['event:distributioncreated:desc'] = 'Distribution {$a->objectid} created by {$a->userid}';
+$string['event:usercreated:desc']         = 'User {$a->objectid} created';
