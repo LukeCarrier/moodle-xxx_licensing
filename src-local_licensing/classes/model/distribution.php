@@ -196,11 +196,31 @@ SQL;
      * @return integer[] An array of user IDs.
      */
     public function get_user_ids() {
+        return util::reduce($this->get_users('u.id'), 'id');
+    }
+
+    /**
+     * Get an array of records for users who possess licences in this allocation.
+     *
+     * @param string $fields An (optional) array of field names to include. If
+     *                       none are specified, all of the fields on the user
+     *                       table will be returned.
+     *
+     * @return \stdClass[] The user records.
+     */
+    public function get_users($fields='u.*') {
         global $DB;
 
-        $licences = licence::find_by_distributionid($this->id);
-
-        return util::reduce($licences, 'userid');
+        $sql = <<<SQL
+SELECT {$fields}
+FROM {user} u
+LEFT JOIN {lic_licence} l
+    ON l.userid = u.id
+LEFT JOIN {lic_distribution} d
+    ON d.id = l.distributionid
+WHERE d.allocationid = ?
+SQL;
+        return $DB->get_records_sql($sql, array($this->allocationid));
     }
 
     /**
