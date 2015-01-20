@@ -25,6 +25,8 @@
 
 namespace local_licensing\form;
 
+use context_system;
+use local_licensing\event\allocation_created;
 use local_licensing\model\allocation;
 use local_licensing\model\target_set;
 use local_licensing\model\product_set;
@@ -89,5 +91,9 @@ class allocation_form extends moodleform {
         $allocation = allocation::model_from_form($data);
         $allocation->id = ($data->id == 0) ? null : $data->id;
         $allocation->save();
+
+        $event = allocation_created::instance($allocation,
+                                              context_system::instance());
+        $event->trigger();
     }
 }

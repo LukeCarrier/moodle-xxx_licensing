@@ -136,3 +136,6 @@ $string['licensing:allocatelicences']   = 'Allocate licences to target sets';
 $string['licensing:distributelicences'] = 'Distribute licences to learners';
 $string['licensing:manageproductsets']  = 'Manage product sets for allocation';
 $string['licensing:managetargetsets']   = 'Manage target sets for allocation';
+
+// Events
+$string['event:allocationcreated:desc'] = 'Allocation {$a->objectid} created by {a->userid}';
