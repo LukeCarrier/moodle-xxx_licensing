@@ -124,14 +124,20 @@ $string['addxs'] = 'Add {$a}';
 
 // Allocation created message
 $string['messageprovider:allocationcreated']         = 'New licence allocations';
-$string['messageprovider:allocationcreated:full']    = '<p>Hello {$a->userfullname},<p>
+$string['messageprovider:allocationcreated:full']    = '<p>Hello {$a->userfullname},</p>
 <p>A new allocation of <strong>{$a->licencecount}</strong> licences for <strong>{$a->productsetname}</strong> has been created and is now available for distribution.</p>
 <p>{$a->signoff}</p>';
 $string['messageprovider:allocationcreated:small']   = 'New allocation of {$a->licencecount} licences created for {$a->productsetname}';
-$string['messageprovider:allocationcreated:subject'] = 'New allocation created';
+$string['messageprovider:allocationcreated:subject'] = 'New licence allocation #{$a->id}';
 
 // Distribution created message
 $string['messageprovider:distributioncreated'] = 'New licence distributions';
+$string['messageprovider:distributioncreated:full']    = '<p>Hello {$a->userfullname},</p>
+<p>A new distribution of <strong>{$a->licencecount}</strong> licences for <strong>{$a->productname}</strong> was created by {$a->createdbyfullname}.</p>
+<p>The selected users are now being enrolled onto the the specified course content. You will receive another email once the user enrolment process is complete.</p>
+<p>{$a->signoff}</p>';
+$string['messageprovider:distributioncreated:small']   = 'New distribution of {$a->licencecount} licences for {$a->productname} created by {$a->createdbyfullname}';
+$string['messageprovider:distributioncreated:subject'] = 'New licence distribution #{$a->id}';
 
 // Cron exceptions
 $string['exception:croncollision'] = 'Another instance of the licensing cron appears to be running. Running multiple instances of the cron at a time will likely lead to unexpected behaviour and is not supported.';
@@ -150,4 +156,5 @@ $string['licensing:managetargetsets']         = 'Manage target sets for allocati
 $string['licensing:receiveenrolnotification'] = 'Receive enrolment notification';
 
 // Events
-$string['event:allocationcreated:desc'] = 'Allocation {$a->objectid} created by {a->userid}';
+$string['event:allocationcreated:desc']   = 'Allocation {$a->objectid} created by {a->userid}';
+$string['event:distributioncreated:desc'] = 'Distribution {$a->objectid} created by {$a->userid}';

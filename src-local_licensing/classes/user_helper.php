@@ -76,6 +76,10 @@ class user_helper {
          *       set $CFG->passwordpolicy to false before creating users? */
         $user->id = user_create_user($user);
 
+        /* Although an event is raised in user_create_user, it's not easy to
+         * uniquely identify the users we're creating in our observer. For this
+         * reason, we'll also raise our own. */
+
         return $user;
     }
 

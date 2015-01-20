@@ -27,7 +27,9 @@ namespace local_licensing;
 
 use core_user;
 use local_licensing\mailer\allocation_created_mailer;
+use local_licensing\mailer\distribution_created_mailer;
 use local_licensing\model\allocation;
+use local_licensing\model\distribution;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -40,6 +42,10 @@ defined('MOODLE_INTERNAL') || die;
 class observer {
     /**
      * New allocation created.
+     *
+     * @param \local_licensing\event\allocation_created $event
+     *
+     * @return void
      */
     public static function allocation_created($event) {
         $allocation = allocation::get_by_id($event->objectid);
@@ -47,10 +53,14 @@ class observer {
         $targetset  = $allocation->get_target_set();
         $users      = $targetset->get_distributors();
 
+        $createdby = core_user::get_user($allocation->createdby);
+
         $a = (object) array(
-            'licencecount'   => $allocation->count,
-            'productsetname' => $productset->name,
-            'signoff'        => generate_email_signoff(),
+            'createdbyfullname' => fullname($createdby),
+            'id'                => $allocation->id,
+            'licencecount'      => $allocation->count,
+            'productsetname'    => $productset->name,
+            'signoff'           => generate_email_signoff(),
         );
 
         $mailer = new allocation_created_mailer(core_user::get_noreply_user());
@@ -63,6 +73,36 @@ class observer {
 
     /**
      * New distribution created.
+     *
+     * @param \local_licensing\event\allocation_created $event
+     *
+     * @return void
      */
-    public static function distribution_created($event) {}
+    public static function distribution_created($event) {
+        $distribution = distribution::get_by_id($event->objectid);
+        $count        = $distribution->get_count();
+        $allocation   = $distribution->get_allocation();
+        $product      = $distribution->get_product();
+        $targetset    = $allocation->get_target_set();
+        $users        = $targetset->get_distributors();
+
+        $ispending = $count === distribution::COUNT_BULK_PENDING_CRON;
+        $createdby = core_user::get_user($allocation->createdby);
+
+        $a = (object) array(
+            'createdbyfullname' => fullname($createdby),
+            'id'                => $distribution->id,
+            'licencecount'      => $count,
+            'productname'       => $product->get_name(),
+            'signoff'           => generate_email_signoff(),
+        );
+
+        $mailer = new distribution_created_mailer(core_user::get_noreply_user(),
+                                                  $ispending);
+
+        foreach ($users as $user) {
+            $a->userfullname = fullname($user);
+            $mailer->mail($user, $a);
+        }
+    }
 }

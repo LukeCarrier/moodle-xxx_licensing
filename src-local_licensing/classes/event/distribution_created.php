@@ -40,7 +40,6 @@ class distribution_created extends base_event {
      * @override \local_licensing\base_event
      */
     public function get_description() {
-        // The event class doesn't handle lang_string objects
         return util::real_string('event:distributioncreated:desc',
                                  $this->get_description_subs());
     }
@@ -99,8 +98,9 @@ class distribution_created extends base_event {
      * Rapidly instantiate the event.
      *
      * @param \local_licensing\model\distribution $distribution The affected
-     *                                                      distribution.
-     * @param \context_system                   $context    The system context.
+     *                                                          distribution.
+     * @param \context_system                   $context        The system
+     *                                                          context.
      *
      * @return \local_licensing\event\distribution_created The event.
      */
