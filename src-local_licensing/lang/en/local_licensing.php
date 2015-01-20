@@ -127,17 +127,25 @@ $string['messageprovider:allocationcreated']         = 'New licence allocations'
 $string['messageprovider:allocationcreated:full']    = '<p>Hello {$a->userfullname},</p>
 <p>A new allocation of <strong>{$a->licencecount}</strong> licence(s) for <strong>{$a->productsetname}</strong> has been created and is now available for distribution.</p>
 <p>{$a->signoff}</p>';
-$string['messageprovider:allocationcreated:small']   = 'New allocation of {$a->licencecount} licence(s) created for {$a->productsetname}';
+$string['messageprovider:allocationcreated:small']   = 'New allocation #{$a->id} of {$a->licencecount} licence(s) created for {$a->productsetname}';
 $string['messageprovider:allocationcreated:subject'] = 'New licence allocation #{$a->id}';
 
 // Distribution created message
-$string['messageprovider:distributioncreated'] = 'New licence distributions';
+$string['messageprovider:distributioncreated']         = 'New licence distributions';
 $string['messageprovider:distributioncreated:full']    = '<p>Hello {$a->userfullname},</p>
 <p>A new distribution of <strong>{$a->licencecount}</strong> licence(s) for <strong>{$a->productname}</strong> was created by {$a->createdbyfullname}.</p>
 <p>The selected users are now being enrolled onto the the specified course content. You will receive another email once the user enrolment process is complete.</p>
 <p>{$a->signoff}</p>';
-$string['messageprovider:distributioncreated:small']   = 'New distribution of {$a->licencecount} licence(s) for {$a->productname} created by {$a->createdbyfullname}';
+$string['messageprovider:distributioncreated:small']   = 'New distribution #{$a->id} of {$a->licencecount} licence(s) for {$a->productname} created by {$a->createdbyfullname}';
 $string['messageprovider:distributioncreated:subject'] = 'New licence distribution #{$a->id}';
+
+// Distribution licences created message
+$string['messageprovider:distributionlicencescreated:full']    = '<p>Hello {$a->userfullname},</p>
+<p>The user enrolment process is now complete. The following users were enrolled:</p>
+{$a->learnerlist}
+<p>{$a->signoff}</p>';
+$string['messageprovider:distributionlicencescreated:small']   = 'The user enrolment process for distribution #{$a->id} is now complete';
+$string['messageprovider:distributionlicencescreated:subject'] = 'New licence distribution #{$a->id}';
 
 // User created message
 $string['messageprovider:usercreated']         = 'New user creations';
@@ -171,6 +179,7 @@ $string['licensing:managetargetsets']         = 'Manage target sets for allocati
 $string['licensing:receiveenrolnotification'] = 'Receive enrolment notification';
 
 // Events
-$string['event:allocationcreated:desc']   = 'Allocation {$a->objectid} created by {a->userid}';
-$string['event:distributioncreated:desc'] = 'Distribution {$a->objectid} created by {$a->userid}';
-$string['event:usercreated:desc']         = 'User {$a->objectid} created';
+$string['event:allocationcreated:desc']           = 'Allocation {$a->objectid} created by {a->userid}';
+$string['event:distributioncreated:desc']         = 'Distribution {$a->objectid} created by {$a->userid}';
+$string['event:distributionlicencescreated:desc'] = 'Licences for distribution {$a->objectid} created';
+$string['event:usercreated:desc']                 = 'User {$a->objectid} created';

@@ -33,14 +33,14 @@ use local_licensing\util;
 defined('MOODLE_INTERNAL') || die;
 
 /**
- * Distribution created.
+ * Licences for a distribution created.
  */
-class distribution_created extends base_event {
+class distribution_licences_created extends base_event {
     /**
      * @override \local_licensing\base_event
      */
     public function get_description() {
-        return util::real_string('event:distributioncreated:desc',
+        return util::real_string('event:distributionlicencescreated:desc',
                                  $this->get_description_subs());
     }
 
@@ -61,7 +61,7 @@ class distribution_created extends base_event {
      */
     public function get_legacy_logdata() {
         $logdata = parent::get_legacy_logdata();
-        $logdata[static::LEGACY_LOGDATA_ACTION] = 'licence distribution create';
+        $logdata[static::LEGACY_LOGDATA_ACTION] = 'licence licences create';
 
         return $logdata;
     }
@@ -70,7 +70,7 @@ class distribution_created extends base_event {
      * @override \local_licensing\base_event
      */
     public static function get_name() {
-        return util::string('event:distributioncreated');
+        return util::string('event:distributionlicencescreated');
     }
 
     /**
@@ -99,7 +99,7 @@ class distribution_created extends base_event {
      *
      * @param \local_licensing\model\distribution $distribution The affected
      *                                                          distribution.
-     * @param \context_system                   $context        The system
+     * @param \context_system                      $context     The system
      *                                                          context.
      *
      * @return \local_licensing\event\distribution_created The event.

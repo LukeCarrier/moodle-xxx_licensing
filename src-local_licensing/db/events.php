@@ -47,6 +47,14 @@ $observers = array(
     ),
 
     /*
+     * Distribution licence creation complete.
+     */
+    array(
+        'eventname' => '\local_licensing\event\distribution_licences_created',
+        'callback'  => '\local_licensing\observer::distribution_licences_created',
+    ),
+
+    /*
      * User created.
      */
     array(

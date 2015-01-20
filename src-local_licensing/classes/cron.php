@@ -26,6 +26,7 @@
 namespace local_licensing;
 
 use context_system;
+use local_licensing\event\distribution_licences_created;
 use local_licensing\exception\cron_collision_exception;
 use local_licensing\factory\product_factory;
 use local_licensing\file\distribution_user_csv_file;
@@ -55,11 +56,25 @@ class cron {
     const CONFIG_RUNNING = 'cronrunning';
 
     /**
+     * System context.
+     *
+     * @var \context_system
+     */
+    protected $context;
+
+    /**
      * Last time the cron completed.
      *
      * @var integer
      */
     protected $lastrun;
+
+    /**
+     * Initialiser.
+     */
+    public function __construct() {
+        $this->context = context_system::instance();
+    }
 
     /**
      * Execute the cron.
@@ -81,10 +96,9 @@ class cron {
      * @return void
      */
     protected function bulk_csv_to_distributions() {
-        $context     = distribution_user_csv_file::get_context();
         $filestorage = get_file_storage();
 
-        $files = $filestorage->get_area_files($context->id,
+        $files = $filestorage->get_area_files($this->context->id,
                 distribution_user_csv_file::get_component(),
                 distribution_user_csv_file::get_file_area());
 
@@ -100,7 +114,7 @@ class cron {
             $importer = new user_csv_importer($distribution, $filecontent);
             $importer->execute();
 
-            $filestorage->delete_area_files($context->id,
+            $filestorage->delete_area_files($this->context->id,
                     distribution_user_csv_file::get_component(),
                     distribution_user_csv_file::get_file_area(),
                     $distribution->id);
@@ -122,7 +136,12 @@ class cron {
             $userids    = $distribution->get_user_ids();
 
             $productclass = $productclasses[$product->type];
-            $productclass::enrol($allocation, $distribution, $product, $userids);
+            $productclass::enrol($allocation, $distribution, $product,
+                                 $userids);
+
+            $event = distribution_licences_created::instance($distribution,
+                                                             $this->context);
+            $event->trigger();
         }
     }
 

@@ -26,9 +26,11 @@
 namespace local_licensing;
 
 use core_user;
+use html_writer;
 use local_licensing\event\user_created;
 use local_licensing\mailer\allocation_created_mailer;
 use local_licensing\mailer\distribution_created_mailer;
+use local_licensing\mailer\distribution_licences_created_mailer;
 use local_licensing\mailer\user_created_mailer;
 use local_licensing\model\allocation;
 use local_licensing\model\distribution;
@@ -101,6 +103,41 @@ class observer {
 
         $mailer = new distribution_created_mailer(core_user::get_noreply_user(),
                                                   $ispending);
+
+        foreach ($users as $user) {
+            $a->userfullname = fullname($user);
+            $mailer->mail($user, $a);
+        }
+    }
+
+    /**
+     * All licences for a distribution created.
+     *
+     * @param \local_licensing\event\distribution_licences_created $event
+     *
+     * @return void
+     */
+    public static function distribution_licences_created($event) {
+        $distribution = distribution::get_by_id($event->objectid);
+        $allocation   = $distribution->get_allocation();
+        $targetset    = $allocation->get_target_set();
+        $users        = $targetset->get_distributors();
+
+        // This belongs in a renderer
+        $learners         = $distribution->get_users();
+        $learnerlistitems = '';
+        foreach ($learners as $learner) {
+            $learnerlistitems
+                    .= html_writer::tag('li', fullname($learner) . " ($learner->id)");
+        }
+
+        $a = (object) array(
+            'id'          => $distribution->id,
+            'learnerlist' => html_writer::tag('ul', $learnerlistitems),
+            'signoff'     => generate_email_signoff(),
+        );
+
+        $mailer = new distribution_licences_created_mailer(core_user::get_noreply_user());
 
         foreach ($users as $user) {
             $a->userfullname = fullname($user);

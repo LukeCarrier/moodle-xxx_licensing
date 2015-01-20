@@ -33,7 +33,7 @@ use local_licensing\util;
 defined('MOODLE_INTERNAL') || die;
 
 /**
- * Allocation created.
+ * User created.
  */
 class user_created extends base_event {
     /**
