@@ -128,7 +128,7 @@ class base_mailer {
             $this->update_strings($a);
         }
 
-        message_send($this-> message);
+        message_send($this->message);
     }
 
     /**

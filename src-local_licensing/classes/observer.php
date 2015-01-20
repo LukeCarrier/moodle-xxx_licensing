@@ -74,7 +74,7 @@ class observer {
     /**
      * New distribution created.
      *
-     * @param \local_licensing\event\allocation_created $event
+     * @param \local_licensing\event\distribution_created $event
      *
      * @return void
      */
