@@ -94,7 +94,7 @@ class user_helper {
     public static function get($ids, $target=null) {
         global $DB;
 
-        list($insql, $params) = $DB->get_in_or_equal($ids, SQL_PARAMS_NAMED, 'in');
+        list($insql, $idparams) = $DB->get_in_or_equal($ids, SQL_PARAMS_NAMED, 'in');
         $fullnamesql = $DB->sql_fullname();
 
         if ($target === null) {
@@ -102,11 +102,10 @@ class user_helper {
             $targetwheresql = null;
         } else {
             $targetclass = $target->get_target_class();
-            list($targetjoinsql, $targetwheresql)
-                    = $targetclass::get_user_filter_sql();
+            list($targetjoinsql, $targetwheresql, $targetparams)
+                    = $targetclass::get_users_in(array($target->itemid));
 
             $targetwheresql         = "AND {$targetwheresql}";
-            $params['targetitemid'] = $target->itemid;
         }
 
         $sql = <<<SQL
@@ -120,7 +119,8 @@ WHERE u.deleted = 0 AND u.confirmed = 1
     {$targetwheresql}
 SQL;
 
-        return array_values($DB->get_records_sql($sql, $params));
+        return array_values($DB->get_records_sql($sql,
+                                                 $idparams + $targetparams));
     }
 
     /**
@@ -158,9 +158,8 @@ SQL;
         $fieldswheresql = '(' . implode(' OR ', $fieldswhere) . ')';
 
         $targetclass = $target->get_target_class();
-        list($targetjoinsql, $targetwheresql)
-                = $targetclass::get_user_filter_sql();
-        $params['targetitemid'] = $target->itemid;
+        list($targetjoinsql, $targetwheresql, $targetparams)
+                = $targetclass::get_users_in($target->itemid);
 
         $sql = <<<SQL
 SELECT u.id, u.idnumber,
@@ -173,7 +172,8 @@ WHERE u.deleted = 0 AND u.confirmed = 1
     AND {$targetwheresql}
 SQL;
 
-        return array_values($DB->get_records_sql($sql, $params));
+        return array_values($DB->get_records_sql($sql,
+                                                 $params + $targetparams));
     }
 
     /**

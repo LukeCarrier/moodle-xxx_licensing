@@ -101,6 +101,33 @@ class util {
     }
 
     /**
+     * Get all of the roles with the specified capability.
+     *
+     * Note that we disregard any other role which explicitly prevents the
+     * capability assignment. This will not pose any risk to users following
+     * our recommended configuration.
+     *
+     * @param string $capability The name of the capability.
+     *
+     * @return integer[] An array of role IDs.
+     */
+    public static function get_roles_with_capability($capability) {
+        global $DB;
+
+        $sql = <<<SQL
+SELECT r.id
+FROM {role} r
+LEFT JOIN {role_capabilities} rc
+    ON rc.roleid = r.id
+WHERE rc.capability = ?
+    AND rc.permission = 1
+SQL;
+        
+        return static::reduce($DB->get_records_sql($sql, array($capability)),
+                              'id');
+    }
+
+    /**
      * Generate a series of paragraphs from a set of strings.
      *
      * @param string  $stringprefix

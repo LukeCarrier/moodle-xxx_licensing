@@ -93,6 +93,20 @@ SQL;
     }
 
     /**
+     * @override \local_licensing\base_target
+     */
+    public static function get_users_in($itemids) {
+        global $DB;
+
+        $joinsql = 'LEFT JOIN {pos_assignment} pa ON pa.userid = u.id';
+
+        list($wheresql, $params)
+                = $DB->get_in_or_equal($itemids, SQL_PARAMS_NAMED, 'targetid');
+
+        return array($joinsql, "pa.organisationid {$wheresql}", $params);
+    }
+
+    /**
      * @override \local_licensing\base_pluggable
      */
     public static function get_item_base_url() {
@@ -111,16 +125,6 @@ SQL;
      */
     public static function get_name() {
         return util::string('organisation', null, 'totara_hierarchy');
-    }
-
-    /**
-     * @override \local_licensing\base_target
-     */
-    public static function get_user_filter_sql() {
-        return array(
-            'LEFT JOIN {pos_assignment} tpa ON tpa.userid = u.id',
-            'tpa.organisationid = :targetitemid',
-        );
     }
 
     /**
