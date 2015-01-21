@@ -179,7 +179,11 @@ $string['licensing:managetargetsets']         = 'Manage target sets for allocati
 $string['licensing:receiveenrolnotification'] = 'Receive enrolment notification';
 
 // Events
+$string['event:allocationcreated']                = 'New licence allocation created';
 $string['event:allocationcreated:desc']           = 'Allocation {$a->objectid} created by {a->userid}';
+$string['event:distributioncreated']              = 'New licence distribution created';
 $string['event:distributioncreated:desc']         = 'Distribution {$a->objectid} created by {$a->userid}';
+$string['event:distributionlicencescreated']      = 'All licences for a distribution created';
 $string['event:distributionlicencescreated:desc'] = 'Licences for distribution {$a->objectid} created';
+$string['event:usercreated']                      = 'New user created for a distribution';
 $string['event:usercreated:desc']                 = 'User {$a->objectid} created';
