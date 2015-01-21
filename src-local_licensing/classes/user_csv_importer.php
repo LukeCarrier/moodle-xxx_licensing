@@ -186,6 +186,11 @@ class user_csv_importer {
             throw new input_exception('csvcolumns');
         }
 
+        $available = $this->allocation->get_available();
+        if ($this->count > $available) {
+            throw new input_exception('csvtoomanyusers');
+        }
+
         $target      = target_factory::for_user($this->distribution->createdby);
         $targetclass = $target->get_target_class();
 
