@@ -40,6 +40,22 @@ class util {
     const MOODLE_MODULE = 'local_licensing';
 
     /**
+     * Format a date for a user.
+     *
+     * @param integer $date         The timestamp to format as a date.
+     * @param string  $formatstring The strftime string in the langconfig file
+     *                              to format it with.
+     *
+     * @return string The formatted date.
+     */
+    public static function date($date, $formatstring='date') {
+        $format = static::real_string("strftime{$formatstring}", null,
+                                      'langconfig');
+
+        return userdate($date, $format);
+    }
+
+    /**
      * Delta diff a set of objects to determine which need creating and
      * deleting.
      *

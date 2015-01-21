@@ -140,6 +140,7 @@ class cron {
                                  $userids);
 
             $event = distribution_licences_created::instance($distribution,
+                                                             $userids,
                                                              $this->context);
             $event->trigger();
         }

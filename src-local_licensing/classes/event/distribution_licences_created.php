@@ -97,18 +97,24 @@ class distribution_licences_created extends base_event {
     /**
      * Rapidly instantiate the event.
      *
-     * @param \local_licensing\model\distribution $distribution The affected
-     *                                                          distribution.
-     * @param \context_system                      $context     The system
-     *                                                          context.
+     * @param \local_licensing\model\distribution  $distribution The affected
+     *                                                           distribution.
+     * @param integer[]                            $userids      The IDs of the
+     *                                                           affected users.
+     * @param \context_system                      $context      The system
+     *                                                           context.
      *
      * @return \local_licensing\event\distribution_created The event.
      */
-    final public static function instance($distribution, $context) {
+    final public static function instance($distribution, $userids, $context) {
         return static::create(array(
             'objectid'      => $distribution->id,
             'context'       => $context,
             'relateduserid' => $distribution->createdby,
+            'other' => array(
+                // Users to notify about new enrolments
+                'userids' => $userids,
+            ),
         ));
     }
 }

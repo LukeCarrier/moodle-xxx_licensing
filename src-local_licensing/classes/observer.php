@@ -31,6 +31,7 @@ use local_licensing\event\user_created;
 use local_licensing\mailer\allocation_created_mailer;
 use local_licensing\mailer\distribution_created_mailer;
 use local_licensing\mailer\distribution_licences_created_mailer;
+use local_licensing\mailer\enrolment_created_mailer;
 use local_licensing\mailer\user_created_mailer;
 use local_licensing\model\allocation;
 use local_licensing\model\distribution;
@@ -90,8 +91,7 @@ class observer {
         $targetset    = $allocation->get_target_set();
         $users        = $targetset->get_distributors();
 
-        $ispending = $count === distribution::COUNT_BULK_PENDING_CRON;
-        $createdby = core_user::get_user($allocation->createdby);
+        $createdby   = core_user::get_user($allocation->createdby);
 
         $a = (object) array(
             'createdbyfullname' => fullname($createdby),
@@ -101,9 +101,7 @@ class observer {
             'signoff'           => generate_email_signoff(),
         );
 
-        $mailer = new distribution_created_mailer(core_user::get_noreply_user(),
-                                                  $ispending);
-
+        $mailer = new distribution_created_mailer(core_user::get_noreply_user());
         foreach ($users as $user) {
             $a->userfullname = fullname($user);
             $mailer->mail($user, $a);
@@ -122,9 +120,14 @@ class observer {
         $allocation   = $distribution->get_allocation();
         $targetset    = $allocation->get_target_set();
         $users        = $targetset->get_distributors();
+        $product      = $distribution->get_product();
+
+        $learners    = $distribution->get_users();
+        $noreplyuser = core_user::get_noreply_user();
+        $site        = get_site();
+        $signoff     = generate_email_signoff();
 
         // This belongs in a renderer
-        $learners         = $distribution->get_users();
         $learnerlistitems = '';
         foreach ($learners as $learner) {
             $learnerlistitems
@@ -134,13 +137,28 @@ class observer {
         $a = (object) array(
             'id'          => $distribution->id,
             'learnerlist' => html_writer::tag('ul', $learnerlistitems),
-            'signoff'     => generate_email_signoff(),
+            'signoff'     => $signoff,
         );
 
-        $mailer = new distribution_licences_created_mailer(core_user::get_noreply_user());
-
+        $mailer = new distribution_licences_created_mailer($noreplyuser);
         foreach ($users as $user) {
             $a->userfullname = fullname($user);
+            $mailer->mail($user, $a);
+        }
+
+        $a = (object) array(
+            'allocationenddate'   => util::date($allocation->enddate),
+            'allocationstartdate' => util::date($allocation->startdate),
+            'loginurl'            => (string) url_generator::login(),
+            'productname'         => $product->get_name(),
+            'sitefullname'        => $site->fullname,
+            'siteshortname'       => $site->shortname,
+            'signoff'             => $signoff,
+        );
+
+        $mailer = new enrolment_created_mailer($noreplyuser);
+        foreach ($learners as $learner) {
+            $a->userfullname = fullname($learner);
             $mailer->mail($user, $a);
         }
     }

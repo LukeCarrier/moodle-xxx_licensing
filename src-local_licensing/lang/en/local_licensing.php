@@ -162,6 +162,16 @@ $string['messageprovider:usercreated:full']    = '<p>Hello {$a->userfullname},</
 $string['messageprovider:usercreated:small']   = 'Your account at {$a->loginurl} has been created with username {$a->userusername} and password {$a->userpasword}';
 $string['messageprovider:usercreated:subject'] = 'Welcome to {$a->siteshortname}, {$a->userfullname}';
 
+// User enrolment created message
+$string['messageprovider:userenrolmentcreated']         = 'New user enrolment creations';
+$string['messageprovider:userenrolmentcreated:full']    = '<p>Hello {$a->userfullname},</p>
+<p>Your account at {$a->sitefullname} has been enrolled in <strong>{$a->productname}</strong>.</p>
+<p>Your enrolment will be active from <strong>{$a->allocationstartdate}</strong> and will expire on <strong>{$a->allocationenddate}</strong>. Please be sure to complete the content between these dates.</p>
+<p>Visit <a href="{$a->loginurl}">{$a->loginurl}</a> to get started.</p>
+<p>{$a->signoff}</p>';
+$string['messageprovider:userenrolmentcreated:small']   = 'Your account at {$a->loginurl} will be enrolled on to {$a->productname} between {$a->allocationstartdate} and {$a->allocationenddate}';
+$string['messageprovider:userenrolmentcreated:subject'] = 'New learning content available at {$a->siteshortname}, {$a->userfullname}';
+
 // Cron exceptions
 $string['exception:croncollision'] = 'Another instance of the licensing cron appears to be running. Running multiple instances of the cron at a time will likely lead to unexpected behaviour and is not supported.';
 
