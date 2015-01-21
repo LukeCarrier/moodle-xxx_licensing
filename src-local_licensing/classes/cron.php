@@ -27,6 +27,7 @@ namespace local_licensing;
 
 use context_system;
 use local_licensing\event\distribution_licences_created;
+use local_licensing\event\user_csv_import_failed;
 use local_licensing\exception\cron_collision_exception;
 use local_licensing\factory\product_factory;
 use local_licensing\file\distribution_user_csv_file;
@@ -119,6 +120,12 @@ class cron {
                 /* Ordinarily, it would do this by itself in execute(), but we
                  * ought to be sure. */
                 $importer->cleanup();
+
+                $event = user_csv_import_failed::instance($distribution, $e,
+                                                          $this->context);
+                $event->trigger();
+
+                $distribution->delete();
             }
 
             $filestorage->delete_area_files($this->context->id,

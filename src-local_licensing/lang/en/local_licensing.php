@@ -172,6 +172,19 @@ $string['messageprovider:userenrolmentcreated:full']    = '<p>Hello {$a->userful
 $string['messageprovider:userenrolmentcreated:small']   = 'Your account at {$a->loginurl} will be enrolled on to {$a->productname} between {$a->allocationstartdate} and {$a->allocationenddate}';
 $string['messageprovider:userenrolmentcreated:subject'] = 'New learning content available at {$a->siteshortname}, {$a->userfullname}';
 
+// User CSV import failure
+$string['messageprovider:usercsvimportfailure:full']    = '<p>Hi {$a->userfullname},</p>
+<p>Our attempt to process your bulk user upload for your distribution failed with the following error:</p>
+<ul>
+    <li>Distribution ID: <code>{$a->id}</code></li>
+    <li>Message: <code>{$a->message}</code></li>
+    <li>Code: <code>{$a->errorcode}</code></li>
+</ul>
+<p>As the import failed, the distribution has been removed and no licences were deducted. Please ensure that the the CSV file you uploaded was well formed and try again.</p>
+<p>{$a->signoff}</p>';
+$string['messageprovider:usercsvimportfailure:small']   = 'Bulk upload of user data for distribution #{$a->id} failed with code {$a->errorcode}';
+$string['messageprovider:usercsvimportfailure:subject'] = 'New licence distribution #{$a->id}';
+
 // Cron exceptions
 $string['exception:croncollision'] = 'Another instance of the licensing cron appears to be running. Running multiple instances of the cron at a time will likely lead to unexpected behaviour and is not supported.';
 
@@ -197,3 +210,5 @@ $string['event:distributionlicencescreated']      = 'All licences for a distribu
 $string['event:distributionlicencescreated:desc'] = 'Licences for distribution {$a->objectid} created';
 $string['event:usercreated']                      = 'New user created for a distribution';
 $string['event:usercreated:desc']                 = 'User {$a->objectid} created';
+$string['event:usercsvimportfailed']              = 'User CSV import failure';
+$string['event:usercsvimportfailed:desc']         = 'Import of user data for distribution {$a->objectid} failed';

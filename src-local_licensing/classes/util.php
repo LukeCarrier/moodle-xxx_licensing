@@ -40,6 +40,18 @@ class util {
     const MOODLE_MODULE = 'local_licensing';
 
     /**
+     * Are the supplied arrays equal?
+     *
+     * @param mixed[] $a The first array.
+     * @param mixed[] $b The second array.
+     *
+     * @return boolean True if they're equal, else false.
+     */
+    public static function arrays_equal($a, $b) {
+        return !(array_diff($a, $b) || array_diff($b, $a));
+    }
+
+    /**
      * Format a date for a user.
      *
      * @param integer $date         The timestamp to format as a date.

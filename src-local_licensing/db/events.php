@@ -62,4 +62,12 @@ $observers = array(
         'callback'  => '\local_licensing\observer::user_created',
     ),
 
+    /**
+     * User CSV import operation failed.
+     */
+    array(
+        'eventname' => '\local_licensing\event\user_csv_import_failed',
+        'callback'  => '\local_licensing\observer::user_csv_import_failed',
+    ),
+
 );

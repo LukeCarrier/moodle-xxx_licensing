@@ -28,6 +28,7 @@ namespace local_licensing;
 use csv_import_reader;
 use dml_missing_record_exception;
 use local_licensing\exception\input_exception;
+use local_licensing\exception\missing_target_exception;
 use local_licensing\factory\target_factory;
 use local_licensing\model\licence;
 use stdClass;
@@ -191,8 +192,20 @@ class user_csv_importer {
             throw new input_exception('csvtoomanyusers');
         }
 
-        $target      = target_factory::for_user($this->distribution->createdby);
-        $targetclass = $target->get_target_class();
+        try {
+            $target      = target_factory::for_user($this->distribution->createdby);
+            $targetsetid = $target->targetsetid;
+        } catch (missing_target_exception $e) {
+            /* Handle cases where the distribution was created by a user
+             * outside of the target set with the allocation capability. */
+
+            /* TODO: we shouldn't just put the user into a target without
+             *       user confirmation, but we didn't actually define the
+             *       expected behaviour in this scenario. */
+            $targets     = $this->targetset->get_targets();
+            $target      = reset($targets);
+            $targetclass = $target->get_target_class();
+        }
 
         while ($line = $this->reader->next()) {
             $data = $this->parse_line($line);

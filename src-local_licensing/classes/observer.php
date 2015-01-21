@@ -33,6 +33,7 @@ use local_licensing\mailer\distribution_created_mailer;
 use local_licensing\mailer\distribution_licences_created_mailer;
 use local_licensing\mailer\enrolment_created_mailer;
 use local_licensing\mailer\user_created_mailer;
+use local_licensing\mailer\user_csv_import_failure_mailer;
 use local_licensing\model\allocation;
 use local_licensing\model\distribution;
 
@@ -193,5 +194,30 @@ class observer {
         $mailer = new user_created_mailer(core_user::get_noreply_user());
 
         $mailer->mail($user, $a);
+    }
+
+    /**
+     * User CSV import operation failed.
+     *
+     * @param \local_licensing\event\user_csv_import_failed $event
+     *
+     * @return void
+     */
+    public static function user_csv_import_failed($event) {
+        $distribution = distribution::get_by_id($event->objectid);
+        $users = $distribution->get_allocation()->get_target_set()->get_distributors();
+
+        $a = (object) array(
+            'id'           => $event->objectid,
+            'errorcode'    => $event->other['errorcode'],
+            'message'      => $event->other['message'],
+            'signoff'      => generate_email_signoff(),
+        );
+
+        $mailer = new user_csv_import_failure_mailer(core_user::get_noreply_user());
+        foreach ($users as $user) {
+            $a->userfullname = fullname($user);
+            $mailer->mail($user, $a);
+        }
     }
 }
