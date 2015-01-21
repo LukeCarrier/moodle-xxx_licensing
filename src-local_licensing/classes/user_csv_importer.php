@@ -27,6 +27,7 @@ namespace local_licensing;
 
 use csv_import_reader;
 use dml_missing_record_exception;
+use local_licensing\exception\input_exception;
 use local_licensing\factory\target_factory;
 use local_licensing\model\licence;
 use stdClass;
@@ -35,6 +36,9 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once "{$CFG->libdir}/csvlib.class.php";
 
+/**
+ * User CSV file importer.
+ */
 class user_csv_importer {
     /**
      * CSV import type.
@@ -115,6 +119,20 @@ class user_csv_importer {
     protected $targetset;
 
     /**
+     * Required columns.
+     *
+     * @var string[]
+     */
+    static $requiredcolumns = array(
+        'idnumber',
+        'username',
+        'email',
+        'firstname',
+        'lastname',
+        'password',
+    );
+
+    /**
      * Initialiser.
      *
      * @param \local_licensing\model\distribution $distribution The distribution
@@ -142,7 +160,6 @@ class user_csv_importer {
         }
 
         $this->columns = $this->reader->get_columns();
-        // TODO: validate columns
 
         $this->processed = 0;
     }
@@ -164,6 +181,10 @@ class user_csv_importer {
      */
     public function execute() {
         $this->reader->init();
+
+        if (!util::arrays_equal(static::$requiredcolumns, $this->columns)) {
+            throw new input_exception('csvcolumns');
+        }
 
         $target      = target_factory::for_user($this->distribution->createdby);
         $targetclass = $target->get_target_class();
