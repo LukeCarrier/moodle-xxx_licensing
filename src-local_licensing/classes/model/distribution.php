@@ -200,7 +200,7 @@ SQL;
     }
 
     /**
-     * Get an array of records for users who possess licences in this allocation.
+     * Get an array of records for users who possess licences in this distribution.
      *
      * @param string $fields An (optional) array of field names to include. If
      *                       none are specified, all of the fields on the user
@@ -213,14 +213,12 @@ SQL;
 
         $sql = <<<SQL
 SELECT {$fields}
-FROM {user} u
-LEFT JOIN {lic_licence} l
-    ON l.userid = u.id
-LEFT JOIN {lic_distribution} d
-    ON d.id = l.distributionid
-WHERE d.allocationid = ?
+FROM {lic_licence} l
+LEFT JOIN {user} u
+    ON u.id = l.userid
+WHERE l.distributionid = ?
 SQL;
-        return $DB->get_records_sql($sql, array($this->allocationid));
+        return $DB->get_records_sql($sql, array($this->id));
     }
 
     /**
