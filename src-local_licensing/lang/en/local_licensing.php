@@ -186,7 +186,9 @@ $string['messageprovider:usercsvimportfailure:small']   = 'Bulk upload of user d
 $string['messageprovider:usercsvimportfailure:subject'] = 'New licence distribution #{$a->id}';
 
 // Cron exceptions
-$string['exception:croncollision'] = 'Another instance of the licensing cron appears to be running. Running multiple instances of the cron at a time will likely lead to unexpected behaviour and is not supported.';
+$string['exception:croncollision']         = 'Another instance of the licensing cron appears to be running. Running multiple instances of the cron at a time will likely lead to unexpected behaviour and is not supported.';
+$string['exception:input:csvcolumns']      = 'The supplied CSV file either did not contain the required columns or contained unrecognised columns. Please refer to the template for the correct columns.';
+$string['exception:input:csvtoomanyusers'] = 'The supplied CSV file contained too many users. Please ensure that there are an adequate number of available licences in the selected allocation.';
 
 // Exceptions
 $string['exception:formsubmission']           = 'Errors were encountered when processing the submission.';
