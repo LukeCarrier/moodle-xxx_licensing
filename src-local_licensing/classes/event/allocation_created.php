@@ -55,7 +55,6 @@ class allocation_created extends base_event {
         return $a;
     }
 
-
     /**
      * @override \local_licensing\base_event
      */
