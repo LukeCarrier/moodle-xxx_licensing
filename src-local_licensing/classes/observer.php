@@ -91,7 +91,11 @@ class observer {
         $targetset    = $allocation->get_target_set();
         $users        = $targetset->get_distributors();
 
-        $createdby   = core_user::get_user($allocation->createdby);
+        if ($count === distribution::COUNT_BULK_PENDING_CRON) {
+            $count = util::real_string('distribution:count:bulkpending');
+        }
+
+        $createdby = core_user::get_user($allocation->createdby);
 
         $a = (object) array(
             'createdbyfullname' => fullname($createdby),
