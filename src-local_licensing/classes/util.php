@@ -226,7 +226,7 @@ SQL;
      */
     public static function real_string($string, $a=null, $module=null) {
         $module = $module ?: static::MOODLE_MODULE;
-        return get_string($string, static::MOODLE_MODULE, $a);
+        return get_string($string, $module, $a);
     }
 
     /**
