@@ -148,6 +148,16 @@ class user_csv_importer {
     }
 
     /**
+     * Post-import cleanup.
+     *
+     * @return void
+     */
+    public function cleanup() {
+        $this->reader->close();
+        $this->reader->cleanup();
+    }
+
+    /**
      * Execute the importer.
      *
      * Imports each user and creates each licence, line by line.
@@ -183,8 +193,7 @@ class user_csv_importer {
             $this->processed++;
         }
 
-        $this->reader->close();
-        $this->reader->cleanup();
+        $this->cleanup();
     }
 
     /**

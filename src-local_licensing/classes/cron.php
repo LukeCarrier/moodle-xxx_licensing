@@ -31,6 +31,7 @@ use local_licensing\exception\cron_collision_exception;
 use local_licensing\factory\product_factory;
 use local_licensing\file\distribution_user_csv_file;
 use local_licensing\model\distribution;
+use Exception;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -111,8 +112,14 @@ class cron {
             $distribution = distribution::get_by_id($file->get_itemid());
             $filecontent  = $file->get_content();
 
-            $importer = new user_csv_importer($distribution, $filecontent);
-            $importer->execute();
+            try {
+                $importer = new user_csv_importer($distribution, $filecontent);
+                $importer->execute();
+            } catch (Exception $e) {
+                /* Ordinarily, it would do this by itself in execute(), but we
+                 * ought to be sure. */
+                $importer->cleanup();
+            }
 
             $filestorage->delete_area_files($this->context->id,
                     distribution_user_csv_file::get_component(),
